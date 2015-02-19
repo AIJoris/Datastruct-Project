@@ -1,13 +1,8 @@
 
 public class LegendsOfArborea {
 
-	/**
-	 * sysout + ctrl space = systemprintout shit
-	 * ctrl shift f = code layout fix
-	 */
-	public static void main(String[] args) {
-		System.out.println("Legends of Arborea");
-
+	LegendsOfArborea(){
+		System.out.println("The game environment has to be set up");
+		Grid grid = new Grid();
 	}
-
 }
