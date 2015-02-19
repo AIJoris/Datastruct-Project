@@ -2,11 +2,11 @@
 public class LegendsOfArborea {
 
 	/**
-	 * @param args
+	 * sysout + ctrl space = systemprintout shit
+	 * ctrl shift f = code layout fix
 	 */
 	public static void main(String[] args) {
-		System.out.println("Hello World!");
-		System.out.println("Test 1");
+		System.out.println("Legends of Arborea");
 
 	}
 
