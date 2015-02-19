@@ -1,7 +1,7 @@
 /* 
  * This class implements the orc unit
  */
-public class Orc {
+public class Orc extends Unit {
 	int hitPoints = 10;
 	int weaponSkill = 8;
 	

@@ -1,7 +1,7 @@
 /* 
  * This class implements the general unit
  */
-public class General {
+public class General extends Unit {
 	int hitPoints = 5;
 	int weaponSkill = 8;
 

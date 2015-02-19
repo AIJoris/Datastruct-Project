@@ -1,7 +1,7 @@
 /* 
  * This class implements the goblin unit
  */
-public class Goblin {
+public class Goblin extends Unit {
 	int hitPoints = 3;
 	int weaponSkill = 4;
 	

@@ -1,7 +1,7 @@
 /* 
  * This class implements the swordsman unit
  */
-public class Swordsman {
+public class Swordsman extends Unit {
 	int hitPoints = 4;
 	int weaponSkill = 6;
 	
