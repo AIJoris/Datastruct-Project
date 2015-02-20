@@ -1,7 +1,13 @@
 /* 
  * This abstract class describes what every unit should have
  */
-public abstract class Unit {
+public class Unit {
 	int hitPoints;
 	int weaponSkill;
+	String name;
+	String team;
+	
+	public Unit() {
+		
+	}
 }
