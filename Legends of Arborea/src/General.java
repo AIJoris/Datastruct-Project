@@ -6,6 +6,6 @@ public class General extends Unit {
 	int weaponSkill = 8;
 
 	public General() {
-		System.out.println("Create an instance of General");
+		System.out.println("Create an instance of Generaljh");
 	}
 }
