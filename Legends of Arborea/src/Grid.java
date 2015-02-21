@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /* 
@@ -6,10 +7,13 @@ import java.util.HashMap;
 public class Grid {
 	HashMap<String,Tile> grid;
 	String key;
-	String ownTeam;
+	String team;
 	int skillAttacker;
 	int skillDefender;
 	double hitChance;
+	ArrayList<String> beasts = new ArrayList<String>();
+	ArrayList<String> humans = new ArrayList<String>();
+	
 	
 	/*
 	 * Grid constructor which initializes the grid and 
@@ -61,15 +65,19 @@ public class Grid {
 		// Place all units on their tiles
 		for (String coord : generals) {
 			grid.get(coord).addUnit(new General());
+			humans.add(coord);
 		}
 		for (String coord : swordsmen) {
 			grid.get(coord).addUnit(new Swordsman());
+			humans.add(coord);
 		}
 		for (String coord : orcs) {
 			grid.get(coord).addUnit(new Orc());
+			beasts.add(coord);
 		}
 		for (String coord : goblins) {
 			grid.get(coord).addUnit(new Goblin());
+			beasts.add(coord);
 		}
 	}
 	
@@ -87,8 +95,31 @@ public class Grid {
 	 * This method returns the unit currently at the specified position
 	 */
 	public Unit getUnit(int x, int y) {
-		Unit unit = grid.get(toKey(x, y)).unit;
-		return unit;
+		try {
+			Unit unit = grid.get(toKey(x, y)).unit;
+			return unit;
+		}
+		catch (NullPointerException e){
+			return null;
+		}
+		
+	}
+	
+	/*
+	 * This method removes a unit from the grid
+	 */
+	public void removeUnit(int x, int y) {
+		grid.get(toKey(x,y)).removeUnit();
+		
+		// Remove the unit also from the lists of units
+		if (team.equals("Humans")) {
+			beasts.remove(toKey(x,y));
+			return;
+		}
+		else if (team.equals("Beasts")) {
+			humans.remove(toKey(x, y));
+			return;
+		}
 	}
 	
 	
@@ -100,10 +131,24 @@ public class Grid {
 		if (isPossible(x,y,x1,y1) == false) {
 			return false;
 		}
+		// Check if the attacker is a friendly unit
+		if (!getUnit(x,y).team.equals(team)) {
+//			System.out.println("You can not move hostile units!");
+			return false;
+		}
+		
 		// Move unit if the move is legal and the goal tile is not occupied
 		if (legalMove(x, y, x1, y1) == true && getUnit(x1,y1) == null) {
 			grid.get(toKey(x1,y1)).unit = grid.get(toKey(x,y)).unit;
 			grid.get(toKey(x,y)).unit = null;	
+			
+			// Update the lists containing all the units
+			if (team.equals("Humans")) {
+				humans.set(humans.indexOf(toKey(x,y)), toKey(x1,y1));
+			}
+			else {
+				beasts.set(beasts.indexOf(toKey(x,y)), toKey(x1,y1));
+			}
 			return true;
 		}
 		// If the move isn't legal, return false
@@ -115,32 +160,42 @@ public class Grid {
 	 * Attack a unit with another unit
 	 */
 	public boolean attackUnit(int x, int y , int x1, int y1) {
-		ownTeam = "Humans";
 		// Check if the attack is possible and legal
 		if (isPossible(x,y,x1,y1) == false || legalMove(x,y,x1,y1) == false) {
 			return false;
 		}
 		// Check if there is a unit to attack
 		if (getUnit(x1,y1) == null) {
-			System.err.println("Stop attacking air");
-			return false;
-		}
-		// Check if the defender is friendly or hostile
-		else if (!getUnit(x1,y1).team.equals(ownTeam)) {
-			System.err.println("Friendly fire!");
+			System.out.println("Stop attacking air");
 			return false;
 		}
 		
-		// Attack the defender
-		skillAttacker = getUnit(x,y).weaponSkill + getBuffer(x,y);
-		if (skillAttacker < 0) {
-			
+		// Check if the attacker is a friendly unit
+//		if (!getUnit(x,y).team.equals(team)) {
+//			System.out.println("You can not attack with hostile units!");
+//			return false;
+//		}
+		
+		// Check if the defender is friendly or hostile
+		if (getUnit(x1,y1).team.equals(team)) {
+			System.out.println("Friendly fire!");
+			return false;
 		}
-		skillDefender = getUnit(x1,y1).weaponSkill;
+		
+		// Get weapon skills
+		skillAttacker = getUnit(x,y).weaponSkill + getBuffer(x,y);
+		skillDefender = getUnit(x1,y1).weaponSkill + getBuffer(x1,y1);
 		hitChance = 1 / (1 + Math.exp(0.4 * (skillAttacker - skillDefender)));
+		
+		// Attack the defender
 		if (Math.random() <= hitChance ) {
 			getUnit(x1,y1).hitPoints -= 1;
 			System.out.println("BOOM in the balls!");
+			
+			// Remove the unit if he died
+			if (getUnit(x1, y1).hitPoints == 0) {
+				removeUnit(x1,y1);
+			}
 			return true;
 		}
 		System.out.println("Ha, you missed!");
@@ -150,7 +205,7 @@ public class Grid {
 	
 	/*
 	 * Convert the coordinate of a tile to a string, so it
-	 * can be used as key to acces a tile in the hashmap
+	 * can be used as key to access a tile in the hashmap
 	 */
 	public String toKey(int x, int y) {
 		return new Integer(x).toString() + new Integer(y).toString();
@@ -170,20 +225,24 @@ public class Grid {
 				return true;
 			}
 		}
-		System.err.println("You can only move one tile!");
+//		System.out.println("You can only move one tile!");
 		return false;
 	}
 	
+	/*
+	 * This method prevents null pointers exceptions by checking if the 
+	 * tiles exist and if there is a unit a the starting tile
+	 */
 	public boolean isPossible(int x, int y, int x1, int y1) {
 		// Check if the tiles exist
 		if (getTile(x1, y1) == null || getTile(x,y) == null) {
-			System.err.println("This tile does not exist on the board!");
+//			System.out.println("This tile does not exist on the board!");
 			return false;
 		}
 		
 		// Check if there is a unit at the start position
 		if (getUnit(x,y) == null) {
-			System.out.println("There is no unit to be moved!");
+//			System.out.println("There is no unit to be moved!");
 			return false;
 		}
 		return true;
@@ -199,7 +258,7 @@ public class Grid {
 		Unit friendlyInfantryUnit;
 		Unit hostileGeneralUnit;
 		Unit hostileInfantryUnit;
-		if (ownTeam.equals("Humans")) {
+		if (team.equals("Humans")) {
 			friendlyGeneralUnit = new General();
 			friendlyInfantryUnit = new Swordsman();
 			hostileGeneralUnit = new Orc();
@@ -238,5 +297,42 @@ public class Grid {
 		}
 		return buffer;
 	}
+
+	/*
+	 * This method returns all hostile forces around a position
+	 */
+	public ArrayList<String> allHostiles(int x, int y) {
+		ArrayList<String> hostiles = new ArrayList<String>();
+		
+		// Lists with adjacent tiles
+		int[] xMoves = {x-1, x-1, x, x, x+1, x+1};
+		int[] yMoves = {y, y+1, y-1, y+1, y-1, y};
+		Unit unit;
+		
+		// Loop over adjacent tiles to find hostile units
+		for (int i = 0; i < 6; i++) {
+			unit = getUnit(xMoves[i], yMoves[i]); 
+			if (unit != null) {
+				if (!unit.team.equals(team)) {
+					hostiles.add(toKey(xMoves[i], yMoves[i]));
+				}
+			}
+		}
+		return hostiles;
+	}
 	
+	/*
+	 * This method calculates if the move is legal
+	 */
+	public ArrayList<Integer> legalMoves(int x, int y) {	
+		// Lists with adjacent tiles
+		int[] xMoves = {x-1, x-1, x, x, x+1, x+1};
+		int[] yMoves = {y, y+1, y-1, y+1, y-1, y};
+		ArrayList<Integer> legalMoves = new ArrayList<Integer>();
+		for (int i = 0; i < 6; i++) {
+			legalMoves.add(xMoves[i]);
+			legalMoves.add(yMoves[i]);
+		}
+		return legalMoves;
+	}
 }
