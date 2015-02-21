@@ -10,6 +10,7 @@ public class Grid {
 	int skillAttacker;
 	int skillDefender;
 	double hitChance;
+	
 	/*
 	 * Grid constructor which initializes the grid and 
 	 * places the units according to the start position
@@ -55,7 +56,7 @@ public class Grid {
 		String[] generals = {toKey(4,-4), toKey(4,-1), toKey(3,1)};
 		String[] swordsmen = {toKey(3,-4), toKey(3,-3), toKey(3,-2), toKey(3,-1), toKey(3,0), toKey(4,-3)};
 		String[] orcs = {toKey(-4,4), toKey(-3,-1)};
-		String[] goblins = {toKey(-4,1), toKey(-3,0), toKey(-3,1), toKey(-3,2), toKey(-3,3), toKey(-3,4), toKey(-2,4), toKey(-2,1)};
+		String[] goblins = {toKey(-4,1), toKey(-3,0), toKey(-3,1), toKey(-3,2), toKey(-3,3), toKey(-3,4), toKey(-2,4), toKey(-2,-1)};
 		
 		// Place all units on their tiles
 		for (String coord : generals) {
@@ -100,13 +101,12 @@ public class Grid {
 			return false;
 		}
 		// Move unit if the move is legal and the goal tile is not occupied
-		if (legalMove(x, y, x1, y1) == true && grid.get(toKey(x1,y1)).unit != null) {
+		if (legalMove(x, y, x1, y1) == true && getUnit(x1,y1) == null) {
 			grid.get(toKey(x1,y1)).unit = grid.get(toKey(x,y)).unit;
 			grid.get(toKey(x,y)).unit = null;	
 			return true;
 		}
 		// If the move isn't legal, return false
-		System.out.println("hier?");
 		return false;
 	}
 	
@@ -122,26 +122,29 @@ public class Grid {
 		}
 		// Check if there is a unit to attack
 		if (getUnit(x1,y1) == null) {
-			System.err.println("There is no unit to attack!");
+			System.err.println("Stop attacking air");
 			return false;
 		}
-		// Check if the unit is friendly or hostile
+		// Check if the defender is friendly or hostile
 		else if (!getUnit(x1,y1).team.equals(ownTeam)) {
-			System.err.println("You can't attack your own team!");
+			System.err.println("Friendly fire!");
 			return false;
 		}
-		// Attack the unit
-		skillAttacker = getUnit(x,y).weaponSkill;
+		
+		// Attack the defender
+		skillAttacker = getUnit(x,y).weaponSkill + getBuffer(x,y);
+		if (skillAttacker < 0) {
+			
+		}
 		skillDefender = getUnit(x1,y1).weaponSkill;
 		hitChance = 1 / (1 + Math.exp(0.4 * (skillAttacker - skillDefender)));
 		if (Math.random() <= hitChance ) {
 			getUnit(x1,y1).hitPoints -= 1;
-			System.out.println("Attack succeeded!");
+			System.out.println("BOOM in the balls!");
+			return true;
 		}
-		else {
-			System.out.println("Attack deflected!");
-		}
-		return true;
+		System.out.println("Ha, you missed!");
+		return false;
 	}
 	
 	
@@ -179,11 +182,61 @@ public class Grid {
 		}
 		
 		// Check if there is a unit at the start position
-		if (grid.get(toKey(x,y)).unit == null) {
-			System.err.println("There is no unit to be moved!");
+		if (getUnit(x,y) == null) {
+			System.out.println("There is no unit to be moved!");
 			return false;
 		}
 		return true;
+	}
+	
+	/*
+	 * This method checks if and how many friendly units 
+	 * are present at tiles nearby, and calculates the buffer 
+	 */
+	public int getBuffer(int x, int y) {
+		// Specify who are friendly and who are hostile
+		Unit friendlyGeneralUnit;
+		Unit friendlyInfantryUnit;
+		Unit hostileGeneralUnit;
+		Unit hostileInfantryUnit;
+		if (ownTeam.equals("Humans")) {
+			friendlyGeneralUnit = new General();
+			friendlyInfantryUnit = new Swordsman();
+			hostileGeneralUnit = new Orc();
+			hostileInfantryUnit = new Goblin();
+		}
+		else {
+			friendlyGeneralUnit = new Orc();
+			friendlyInfantryUnit = new Goblin();
+			hostileGeneralUnit = new General();
+			hostileInfantryUnit = new Swordsman();
+		}
+		
+		// Lists with adjacent tiles
+		int[] xMoves = {x-1, x-1, x, x, x+1, x+1};
+		int[] yMoves = {y, y+1, y-1, y+1, y-1, y};
+		
+		Unit unit;
+		int buffer = 0;
+		// Loop over adjacent tiles
+		for (int i = 0; i < 6; i++) {
+			unit = getUnit(xMoves[i], yMoves[i]); 
+			if (unit != null) {
+				if (unit.name.equals(friendlyGeneralUnit.name)){
+					buffer += 2;
+				}
+				else if (unit.name.equals(friendlyInfantryUnit.name)){
+					buffer += 1;
+				}
+				else if (unit.name.equals(hostileGeneralUnit.name)) {
+					buffer -= 2;
+				}
+				else if (unit.name.equals(hostileInfantryUnit.name)) {
+					buffer -= 1;
+				}
+			}
+		}
+		return buffer;
 	}
 	
 }
