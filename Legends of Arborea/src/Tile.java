@@ -3,6 +3,7 @@ public class Tile {
 	int x;
 	int y;
 	Unit unit;
+	String key;
 	
 	/*
 	 * Constructor with only coordinates

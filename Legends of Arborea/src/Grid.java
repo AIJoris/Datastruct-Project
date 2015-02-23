@@ -24,7 +24,6 @@ public class Grid {
 		this.placeUnits();
 	}
 	
-	
 	/* 
 	 * Initialize the grid
 	 */
@@ -48,7 +47,6 @@ public class Grid {
 			}
 		}
 	}
-	
 	
 	/* 
 	 * Place all units on the grid in the right starting position
@@ -81,7 +79,6 @@ public class Grid {
 		}
 	}
 	
-	
 	/*
 	 * Get the tile at the specific position
 	 */
@@ -89,7 +86,6 @@ public class Grid {
 		key = toKey(x,y);
 		return grid.get(key);
 	}
-	
 	
 	/*
 	 * This method returns the unit currently at the specified position
@@ -122,23 +118,12 @@ public class Grid {
 		}
 	}
 	
-	
 	/*
 	 * Move a unit to a specified position
 	 */
-	public boolean moveUnit(int x, int y, int x1, int y1) {	
-		// Prevent null pointer exceptions by checking if the tile and unit exist
-		if (isPossible(x,y,x1,y1) == false) {
-			return false;
-		}
-		// Check if the attacker is a friendly unit
-		if (!getUnit(x,y).team.equals(team)) {
-//			System.out.println("You can not move hostile units!");
-			return false;
-		}
-		
+	public boolean moveUnit(int x, int y, int x1, int y1) {			
 		// Move unit if the move is legal and the goal tile is not occupied
-		if (legalMove(x, y, x1, y1) == true && getUnit(x1,y1) == null) {
+		if (isLegalMove(x, y, x1, y1) == true) {
 			grid.get(toKey(x1,y1)).unit = grid.get(toKey(x,y)).unit;
 			grid.get(toKey(x,y)).unit = null;	
 			
@@ -146,39 +131,22 @@ public class Grid {
 			if (team.equals("Humans")) {
 				humans.set(humans.indexOf(toKey(x,y)), toKey(x1,y1));
 			}
-			else {
+			else if (team.equals("Beasts")) {
 				beasts.set(beasts.indexOf(toKey(x,y)), toKey(x1,y1));
 			}
 			return true;
 		}
 		// If the move isn't legal, return false
+		System.out.println("This is not a legal move!");
 		return false;
 	}
-	
 	
 	/*
 	 * Attack a unit with another unit
 	 */
 	public boolean attackUnit(int x, int y , int x1, int y1) {
-		// Check if the attack is possible and legal
-		if (isPossible(x,y,x1,y1) == false || legalMove(x,y,x1,y1) == false) {
-			return false;
-		}
-		// Check if there is a unit to attack
-		if (getUnit(x1,y1) == null) {
-			System.out.println("Stop attacking air");
-			return false;
-		}
-		
-		// Check if the attacker is a friendly unit
-//		if (!getUnit(x,y).team.equals(team)) {
-//			System.out.println("You can not attack with hostile units!");
-//			return false;
-//		}
-		
-		// Check if the defender is friendly or hostile
-		if (getUnit(x1,y1).team.equals(team)) {
-			System.out.println("Friendly fire!");
+		// Check if it is possible to attack
+		if (attackIsPossible(x,y,x1,y1) == false) {
 			return false;
 		}
 		
@@ -202,6 +170,35 @@ public class Grid {
 		return false;
 	}
 	
+	/*
+	 * This method implements a couple of checks explained above each check
+	 * to make sure it is possible to attack the unit at (x1,y1) with unit (x,y)
+	 */
+	public boolean attackIsPossible(int x, int y, int x1, int y1) {
+		// Check if the tiles exist
+		if (getTile(x1, y1) == null || getTile(x,y) == null) {
+			return false;
+		}		
+		
+		// Check if the attacker exists and is friendly
+		if (getUnit(x,y) == null || !getUnit(x,y).team.equals(team)) {
+			System.out.println("There must be a (friendly) unit to attack with!");
+			return false;
+		}
+		
+		// Check if there is a unit to attack
+		if (getUnit(x1,y1) == null) {
+			System.out.println("Stop attacking air");
+			return false;
+		}
+		
+		// Check if the defender is friendly or hostile
+		if (getUnit(x1,y1).team.equals(team)) {
+			System.out.println("Friendly fire!");
+			return false;
+		}
+		return true;
+	}
 	
 	/*
 	 * Convert the coordinate of a tile to a string, so it
@@ -211,41 +208,15 @@ public class Grid {
 		return new Integer(x).toString() + new Integer(y).toString();
 	}
 	
-	
 	/*
 	 * This method calculates if the move is legal
 	 */
-	public boolean legalMove(int x, int y, int x1, int y1) {	
-		// Lists with adjacent tiles
-		int[] xMoves = {x-1, x-1, x, x, x+1, x+1};
-		int[] yMoves = {y, y+1, y-1, y+1, y-1, y};
-
-		for (int i = 0; i < 6; i++) {
-			if (xMoves[i] == x1 && yMoves[i] == y1) {
-				return true;
-			}
+	public boolean isLegalMove(int x, int y, int x1, int y1) {	
+		ArrayList<String> legalMoves = legalMoves(x,y);
+		if (legalMoves.contains(toKey(x1,y1))) {
+			return true;
 		}
-//		System.out.println("You can only move one tile!");
 		return false;
-	}
-	
-	/*
-	 * This method prevents null pointers exceptions by checking if the 
-	 * tiles exist and if there is a unit a the starting tile
-	 */
-	public boolean isPossible(int x, int y, int x1, int y1) {
-		// Check if the tiles exist
-		if (getTile(x1, y1) == null || getTile(x,y) == null) {
-//			System.out.println("This tile does not exist on the board!");
-			return false;
-		}
-		
-		// Check if there is a unit at the start position
-		if (getUnit(x,y) == null) {
-//			System.out.println("There is no unit to be moved!");
-			return false;
-		}
-		return true;
 	}
 	
 	/*
@@ -322,16 +293,34 @@ public class Grid {
 	}
 	
 	/*
-	 * This method calculates if the move is legal
+	 * This method calculates all possible legal moves from a position (x,y)
 	 */
-	public ArrayList<Integer> legalMoves(int x, int y) {	
+	public ArrayList<String> legalMoves(int x, int y) {	
 		// Lists with adjacent tiles
 		int[] xMoves = {x-1, x-1, x, x, x+1, x+1};
 		int[] yMoves = {y, y+1, y-1, y+1, y-1, y};
-		ArrayList<Integer> legalMoves = new ArrayList<Integer>();
+		
+		// Generate all adjacent tiles and check which ones make a legal move
+		int x1;
+		int y1;
+		ArrayList<String> legalMoves = new ArrayList<String>();
 		for (int i = 0; i < 6; i++) {
-			legalMoves.add(xMoves[i]);
-			legalMoves.add(yMoves[i]);
+			x1 = xMoves[i];
+			y1 = yMoves[i];
+			
+			// Check if the tiles exist
+			if (getTile(x1, y1) == null || getTile(x,y) == null) {
+				continue;
+			}
+			
+			// Check if there is a unit at the start position and no unit on the goal position
+			if (getUnit(x,y) == null || getUnit(x1,y1) != null) {
+				continue;
+			}
+			
+			// The move is legal, so add it to the list
+			legalMoves.add(toKey(x1,y1));
+			
 		}
 		return legalMoves;
 	}
