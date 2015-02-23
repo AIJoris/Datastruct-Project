@@ -1,6 +1,10 @@
 // Bijhouden wie waar staat (onderscheid infantry/generals??), heb ik nu in arraylist gedaan (slim)?
 // Elke turn het team updaten
 import java.util.ArrayList;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.*;
 // Moet er nog een if in voor een negatieve hitchance?
 // Functie allHostiles die kijkt of er hostiles in de buurt zijn, kan in/samen met buffer/legalmoves? en returned arraylist (slim?)
 // isPossible en legalmove samenvoegen?
@@ -8,17 +12,41 @@ import java.util.ArrayList;
 // Het opslaan van de coordinaten in strings begint onhandig te worden omdat je niet makkelijk terug kunt converten naar ints
 // Iets nieuws geprobeerd: de method die alle legal moves returned die stopt er geen keys in maar gewoon x,y achter elkaar
 import java.util.Random;
-
-public class LegendsOfArborea {
-
+public class LegendsOfArborea{
+	/* Width and height of application window in pixels */
+	public static final int WIDTH = 1000;
+	public static final int HEIGHT = 700;
+	
+	/* Place to start drawing the board */
+	private static final Point HEXSTART = new Point((int)(WIDTH*0.1), (int)(HEIGHT*0.28));
+	
+	/* Size of the sides of the hexagon */
+	public static final Point HEXSIZE  = new Point(44,36);
+	Polygon points;
+	PaintGraphics graphics;
+	
 	public static void main(String[] args) {
 		// Set up the game environment
 		Grid grid = new Grid();
-		
+		LegendsOfArborea game =  new LegendsOfArborea(grid);
 		// Play the game
 		grid.team = "Humans";
 		playGame(grid);
 		
+	}
+	
+	public LegendsOfArborea(Grid grid) {
+		JFrame frame = new JFrame("Legends of Arborea");
+		graphics = new PaintGraphics(HEXSTART, HEXSIZE, grid);
+		frame.add(graphics);
+		frame.setSize( WIDTH, HEIGHT );
+		frame.setLocationRelativeTo( null );
+		frame.setVisible(true);
+		frame.addWindowListener( new WindowAdapter() {
+	    	 public void windowClosing ( WindowEvent e ) {
+	    	 	System.exit(0); 
+	    	 }
+	    });
 	}
 	
 	/*
@@ -29,7 +57,7 @@ public class LegendsOfArborea {
 		int turn = 0;
 		String positionSelf;
 		String positionHostile;
-		Unit unit;
+//		Unit unit;
 		ArrayList<String> hostiles;
 		ArrayList<Integer> legalMoves;
 		int x;
@@ -112,7 +140,7 @@ public class LegendsOfArborea {
 			// Update turn
 			turn ++;
 			try {
-				Thread.sleep(10);
+				Thread.sleep(500);
 			}
 			catch (InterruptedException e) {
 				System.err.println(e);
