@@ -17,12 +17,16 @@ public class PaintGraphics extends JComponent{
 	Point HEXSTART;
 	Point HEXSIZE;
 	Grid grid;
+	Point selectedTile;
+	MouseHandler mouseHandler;
 	
 	// CONSTRUCTER
-	public PaintGraphics(Point HEXSTART1, Point HEXSIZE1, Grid grid1){
+	public PaintGraphics(Point HEXSTART1, Point HEXSIZE1, Grid grid1, Point selectedTileNr, MouseHandler handler){
 		this.HEXSTART = HEXSTART1;
 		this.HEXSIZE = HEXSIZE1;
 		this.grid = grid1;
+		this.selectedTile = selectedTileNr;
+		this.mouseHandler = handler;
 	}
 	
 	public void paint(Graphics g){
@@ -74,7 +78,12 @@ public class PaintGraphics extends JComponent{
 		location.move(HEXSTART.x + 2, HEXSTART.y + 2);
 		for(int j = 0; j < 5; j++){
 			for(int i = 0; i < 5+j; i++){
+				if (location == selectedTile){
+					color = new Color(0, 230,0);
+					System.out.println(selectedTile);
+				}
 				drawHexagon(g, location, HEXSIZE.x-4, HEXSIZE.y-4, color);
+				color = new Color(0, 180,0);
 				int a = location.x;
 				int b = location.y + (int)(Math.sqrt(3) / 2 *(HEXSIZE.y*2));
 				location.move(a ,b);
@@ -89,7 +98,12 @@ public class PaintGraphics extends JComponent{
 		
 		for(int j = 4; j > 0; j--){
 			for(int i = 5; i > 1-j; i--){
+				if (location == selectedTile){
+					color = new Color(0, 230,0);
+					System.out.println(selectedTile);
+				}
 				drawHexagon(g, location, HEXSIZE.x-4, HEXSIZE.y-4, color);
+				color = new Color(0, 180,0);
 				int a = location.x;
 				int b = location.y + (int)(Math.sqrt(3) / 2 *(HEXSIZE.y*2));
 				location.move(a ,b);
@@ -148,6 +162,13 @@ public class PaintGraphics extends JComponent{
 	    int pixely = (int) (HEXSIZE.y * Math.sqrt(3) * (y + x*0.5) + HEXSIZE.y);
 	    return new Point(pixelx, pixely);
 	}
+	
+	public Point pixelToHex(int x, int y){
+		int hexX = (int) (x * 2/3 / HEXSIZE.x);
+		int hexY = (int) ((-x / 3 + Math.sqrt(3)/3 * y) / HEXSIZE.y);
+		return new Point(hexX, hexY);
+	}
+	
 }
 
 

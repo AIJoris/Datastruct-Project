@@ -2,19 +2,20 @@
 public class Tile {
 	int x;
 	int y;
+	int nr;
 	Unit unit;
 	
 	/*
 	 * Constructor with only coordinates
 	 */
-	public Tile(int newX, int newY) {
-		this(newX, newY, null);
+	public Tile(int newX, int newY, int newNr) {
+		this(newX, newY, null, newNr);
 	}
 	
 	/*
 	 * Constructor that also initialized a unit on the tile
 	 */
-	public Tile(int newX, int newY, Unit newUnit) {
+	public Tile(int newX, int newY, Unit newUnit,int newNr) {
 		x = newX;
 		y = newY;
 		unit = newUnit;
