@@ -11,6 +11,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
 
+
 public class LegendsOfArborea{
 	/* Width and height of application window in pixels */
 	public static final int WIDTH = 1000;
@@ -23,6 +24,8 @@ public class LegendsOfArborea{
 	public static final Point HEXSIZE  = new Point(44,36);
 	Polygon points;
 	PaintGraphics graphics;
+	public static Point selectedTileNr = new Point(0,0);
+
 	
 	/* 
 	 * Main method
@@ -43,7 +46,10 @@ public class LegendsOfArborea{
 	 */
 	public LegendsOfArborea(Grid grid) {
 		JFrame frame = new JFrame("Legends of Arborea");
-		graphics = new PaintGraphics(HEXSTART, HEXSIZE, grid);
+		MouseHandler mouseHandler = new MouseHandler();
+		frame.addMouseListener(mouseHandler);
+		frame.addMouseMotionListener(mouseHandler);
+		graphics = new PaintGraphics(HEXSTART, HEXSIZE, grid, selectedTileNr, mouseHandler);
 		frame.add(graphics);
 		frame.setSize( WIDTH, HEIGHT );
 		frame.setLocationRelativeTo( null );
