@@ -50,9 +50,24 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 		
 	}
 	
+//	public Point pixelToHex(int x, int y){
+//		int hexX = (int) ((x- HEXSTART.x-HEXSIZE.x*5) * 2/3 / HEXSIZE.x);
+//		int hexY = (int) (((-x + HEXSTART.x)*0.333 + Math.sqrt(3)*0.333 * (y-HEXSTART.y-(HEXSIZE.y))) / HEXSIZE.y);
+//		return new Point(hexX, hexY);
+//	}
+//	public Point pixelToHex(int x, int y){
+//		x = x-HEXSTART.x - HEXSIZE.x*5;
+//		y = y-HEXSTART.y-HEXSIZE.y*2;
+//		int hexX = (int) (x * 2/3 / HEXSIZE.x);
+//		int hexY = (int) ((-x*(1/3) + Math.sqrt(3)*(1/3) * y) / HEXSIZE.y);
+//		System.out.println(y);
+//		return new Point(hexX, hexY);
+//	}
 	public Point pixelToHex(int x, int y){
-		int hexX = (int) ((x- HEXSTART.x-HEXSIZE.x*5) * 2/3 / HEXSIZE.x);
-		int hexY = (int) (((-x + HEXSTART.x)*0.333 + Math.sqrt(3)*0.333 * (y-HEXSTART.y-(HEXSIZE.y))) / HEXSIZE.y);
+		x = x-5-HEXSTART.x - HEXSIZE.x*5;
+		y = y-HEXSTART.y-(int)(HEXSIZE.y*2.5);
+		int hexX = (int) (x / 2*3 / HEXSIZE.x);
+		int hexY = (int) ((0.5/x - y) / Math.sqrt(3)  / HEXSIZE.y);
 		return new Point(hexX, hexY);
 	}
 }

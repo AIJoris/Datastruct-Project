@@ -1,8 +1,12 @@
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -125,6 +129,8 @@ public class PaintGraphics extends JComponent{
 		Image orc = ImageIO.read(input);
 		input = classLoader.getResourceAsStream("Swordsman.png");
 		Image swordsman = ImageIO.read(input);
+		input = classLoader.getResourceAsStream("selected.png");
+		Image selected = ImageIO.read(input);
 		
 		Map<String, Image> characters = new HashMap<>();
 		characters.put("General", general);
@@ -139,8 +145,12 @@ public class PaintGraphics extends JComponent{
 				if(foundCharacter != null){
 					Point location = hexToPixel(tile.x, tile.y);
 					int newLocX = location.x+HEXSTART.x+HEXSIZE.x*5;
-					int newLocY = location.y+HEXSTART.y+HEXSIZE.y;
+					int newLocY = location.y+HEXSTART.y+HEXSIZE.y*2;
+					if(tile.unit.selected){
+						g.drawImage(selected, newLocX, newLocY, this);
+				    }
 					g.drawImage(characters.get(foundCharacter), newLocX, newLocY, this);
+				    
 					
 				}
 			}
@@ -159,16 +169,27 @@ public class PaintGraphics extends JComponent{
 	
 	public Point hexToPixel(int x, int y){
 		int pixelx = (int) (HEXSIZE.x * 3/2 * x)+5;
-	    int pixely = (int) (HEXSIZE.y * Math.sqrt(3) * (y + x*0.5) + HEXSIZE.y);
+	    int pixely = (int) (HEXSIZE.y * Math.sqrt(3) * (y + x*0.5)); 
 	    return new Point(pixelx, pixely);
 	}
 	
 	public Point pixelToHex(int x, int y){
-		int hexX = (int) (x * 2/3 / HEXSIZE.x);
-		int hexY = (int) ((-x / 3 + Math.sqrt(3)/3 * y) / HEXSIZE.y);
+		x = x-5-HEXSTART.x - HEXSIZE.x*5;
+		y = y-HEXSTART.y-HEXSIZE.y*2;
+		int hexX = (int) (x / 2*3 / HEXSIZE.x);
+		int hexY = (int) ((0.5/x - y) / 9  / HEXSIZE.y);
 		return new Point(hexX, hexY);
 	}
-	
+
+//	function hex_to_pixel(hex):
+//	    x = size * 3/2 * hex.q
+//	    y = size * sqrt(3) * (hex.r + hex.q/2)
+//	    return Point(x, y)
+//	    		
+//	function pixel_to_hex(x, y):
+//	    q = x * 2/3 / size
+//	    r = (-x / 3 + sqrt(3)/3 * y) / size
+//	    return hex_round(Hex(q, r))
 }
 
 
