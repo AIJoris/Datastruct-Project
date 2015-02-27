@@ -1,12 +1,8 @@
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.image.BufferedImage;
-import java.awt.image.RescaleOp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -23,6 +19,7 @@ public class PaintGraphics extends JComponent{
 	Grid grid;
 	Point selectedTile;
 	MouseHandler mouseHandler;
+	Graphics g;
 	
 	// CONSTRUCTER
 	public PaintGraphics(Point HEXSTART1, Point HEXSIZE1, Grid grid1, Point selectedTileNr, MouseHandler handler){
@@ -82,9 +79,8 @@ public class PaintGraphics extends JComponent{
 		location.move(HEXSTART.x + 2, HEXSTART.y + 2);
 		for(int j = 0; j < 5; j++){
 			for(int i = 0; i < 5+j; i++){
-				if (location == selectedTile){
+				if (mouseHandler.pixelToHex(location.x, location.y).equals(mouseHandler.currenTileCoords)){
 					color = new Color(0, 230,0);
-					System.out.println(selectedTile);
 				}
 				drawHexagon(g, location, HEXSIZE.x-4, HEXSIZE.y-4, color);
 				color = new Color(0, 180,0);
@@ -97,19 +93,18 @@ public class PaintGraphics extends JComponent{
 			location.move(a ,b);
 		}
 		
-		b1 = HEXSTART.y - (int)(((1.5)*(Math.sqrt(3) / 2 *(HEXSIZE.y*2))));
+		b1 = HEXSTART.y - (int)(((1.5)*(Math.sqrt(3f) / 2f *(HEXSIZE.y*2f))));
 		location.move(location.x ,b1);
 		
 		for(int j = 4; j > 0; j--){
 			for(int i = 5; i > 1-j; i--){
-				if (location == selectedTile){
+				if (mouseHandler.pixelToHex(location.x, location.y).equals(mouseHandler.currenTileCoords)){
 					color = new Color(0, 230,0);
-					System.out.println(selectedTile);
 				}
 				drawHexagon(g, location, HEXSIZE.x-4, HEXSIZE.y-4, color);
 				color = new Color(0, 180,0);
 				int a = location.x;
-				int b = location.y + (int)(Math.sqrt(3) / 2 *(HEXSIZE.y*2));
+				int b = location.y + (int)(Math.sqrt(3f) / 2f *(HEXSIZE.y*2f));
 				location.move(a ,b);
 			}
 			int a = location.x + (int)(HEXSIZE.x*1.5);
@@ -137,16 +132,16 @@ public class PaintGraphics extends JComponent{
 		characters.put("Goblin", goblin);
 		characters.put("Orc", orc);
 		characters.put("Swordsman", swordsman);
-
+		
 		HashMap<String,Tile> tiles = grid.grid;
 		for(Tile tile: tiles.values()){
 			if(tile.unit != null){
 				String foundCharacter = tile.unit.name;
 				if(foundCharacter != null){
-					Point location = hexToPixel(tile.x, tile.y);
-					int newLocX = location.x+HEXSTART.x+HEXSIZE.x*5;
-					int newLocY = location.y+HEXSTART.y+HEXSIZE.y*2;
-					if(tile.unit.selected){
+					Point location = mouseHandler.hexToPixel(tile.x, tile.y);
+					int newLocX = location.x+HEXSTART.x+HEXSIZE.x*5 +2;
+					int newLocY = location.y+HEXSTART.y+HEXSIZE.y*2+6;
+					if(tile.unit == mouseHandler.currentUnit){
 						g.drawImage(selected, newLocX, newLocY, this);
 				    }
 					g.drawImage(characters.get(foundCharacter), newLocX, newLocY, this);
@@ -167,29 +162,7 @@ public class PaintGraphics extends JComponent{
 		g.fillPolygon(points);
 	}
 	
-	public Point hexToPixel(int x, int y){
-		int pixelx = (int) (HEXSIZE.x * 3/2 * x)+5;
-	    int pixely = (int) (HEXSIZE.y * Math.sqrt(3) * (y + x*0.5)); 
-	    return new Point(pixelx, pixely);
-	}
 	
-	public Point pixelToHex(int x, int y){
-		x = x-5-HEXSTART.x - HEXSIZE.x*5;
-		y = y-HEXSTART.y-HEXSIZE.y*2;
-		int hexX = (int) (x / 2*3 / HEXSIZE.x);
-		int hexY = (int) ((0.5/x - y) / 9  / HEXSIZE.y);
-		return new Point(hexX, hexY);
-	}
-
-//	function hex_to_pixel(hex):
-//	    x = size * 3/2 * hex.q
-//	    y = size * sqrt(3) * (hex.r + hex.q/2)
-//	    return Point(x, y)
-//	    		
-//	function pixel_to_hex(x, y):
-//	    q = x * 2/3 / size
-//	    r = (-x / 3 + sqrt(3)/3 * y) / size
-//	    return hex_round(Hex(q, r))
 }
 
 

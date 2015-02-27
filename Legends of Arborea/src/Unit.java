@@ -9,7 +9,6 @@ public class Unit {
 	String name;
 	String team;
 	boolean selected;
-	Point pixelLocation;
 	
 	public Unit() {
 		

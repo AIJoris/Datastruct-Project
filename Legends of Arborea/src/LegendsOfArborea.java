@@ -21,11 +21,12 @@ public class LegendsOfArborea{
 	private static final Point HEXSTART = new Point((int)(WIDTH*0.1), (int)(HEIGHT*0.28));
 	
 	/* Size of the sides of the hexagon */
-	public static final Point HEXSIZE  = new Point(44,36);
+	// kan niet width meer an length want dan gaat ie spacen met de select
+	public static final Point HEXSIZE  = new Point(44,44);
 	Polygon points;
 	PaintGraphics graphics;
 	public static Point selectedTileNr = new Point(0,0);
-
+	public static MouseHandler mouseHandler;
 	
 	/* 
 	 * Main method
@@ -37,7 +38,7 @@ public class LegendsOfArborea{
 		
 		// Play the game
 		grid.team = "Beasts";
-		playGame(grid);
+//		playGame(grid);
 		
 	}
 	
@@ -46,7 +47,7 @@ public class LegendsOfArborea{
 	 */
 	public LegendsOfArborea(Grid grid) {
 		JFrame frame = new JFrame("Legends of Arborea");
-		MouseHandler mouseHandler = new MouseHandler();
+		mouseHandler = new MouseHandler(grid);
 		frame.addMouseListener(mouseHandler);
 		frame.addMouseMotionListener(mouseHandler);
 		graphics = new PaintGraphics(HEXSTART, HEXSIZE, grid, selectedTileNr, mouseHandler);
@@ -68,6 +69,7 @@ public class LegendsOfArborea{
 		// Create the AI's
 		AI player1 = new AI(grid, "Humans");
 		AI player2 = new AI(grid, "Beasts");
+		HumanPlayer player3 = new HumanPlayer(grid, "Humans", mouseHandler);
 		int turn = 0;
 		
 		// Main game loop
