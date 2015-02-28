@@ -8,7 +8,7 @@ public class Tile {
 	Unit unit;
 	String team;
 	String key;
-	Tile[] adjacentTiles;
+	Tile[] adjacentTiles = new Tile[6];
 	int buffer;
 	ArrayList<String> surroundingHostiles;
 	ArrayList<String> legalMoves;
@@ -41,7 +41,9 @@ public class Tile {
 		int[] xMoves = {x-1, x-1, x, x, x+1, x+1};
 		int[] yMoves = {y, y+1, y-1, y+1, y-1, y};
 		for (int i = 0; i < 6; i++) {
-			adjacentTiles[i] =  gridMap.get(toKey(xMoves[i], yMoves[i]));
+			if(gridMap.get(toKey(xMoves[i], yMoves[i])) != null){
+				adjacentTiles[i] =  gridMap.get(toKey(xMoves[i], yMoves[i]));
+			}
 		}
 	}
 	
