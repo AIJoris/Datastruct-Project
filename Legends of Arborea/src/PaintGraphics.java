@@ -133,7 +133,7 @@ public class PaintGraphics extends JComponent{
 		characters.put("Orc", orc);
 		characters.put("Swordsman", swordsman);
 		
-		HashMap<String,Tile> tiles = grid.grid;
+		HashMap<String,Tile> tiles = grid.gridMap;
 		for(Tile tile: tiles.values()){
 			if(tile.unit != null){
 				String foundCharacter = tile.unit.name;

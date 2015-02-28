@@ -6,6 +6,7 @@ import java.util.Random;
  */
 public class AI {
 	String positionSelf;
+	Tile tileSelf;
 	String positionHostiles;
 	String toPosition;
 	ArrayList<String> hostiles;
@@ -40,32 +41,34 @@ public class AI {
 		if (playerTeam.equals("Humans")) {
 			index = rand.nextInt(humansTemp.size());
 			positionSelf = humansTemp.get(index);
+			tileSelf = grid.gridMap.get(positionSelf);
 //			humansTemp.remove(index);
 		}
 		else if (playerTeam.equals("Beasts")) {
 			index = rand.nextInt(beastsTemp.size());
 			positionSelf = beastsTemp.get(index);
+			tileSelf = grid.gridMap.get(positionSelf);
 //			humansTemp.remove(index);
 		}
-		x = grid.grid.get(positionSelf).x;
-		y = grid.grid.get(positionSelf).y;
+		x = tileSelf.x;
+		y = tileSelf.y;
 		
 		// Attack a hostile unit if possible
-		hostiles = grid.allHostiles(x, y);
+		hostiles = tileSelf.surroundingHostiles(x, y);
 		if (!hostiles.isEmpty()) {
 			positionHostiles = hostiles.get(rand.nextInt(hostiles.size()));
-			x1 = grid.grid.get(positionHostiles).x;
-			y1 = grid.grid.get(positionHostiles).y;
+			x1 = grid.gridMap.get(positionHostiles).x;
+			y1 = grid.gridMap.get(positionHostiles).y;
 			grid.attackUnit(x,y, x1, y1);
 		}
 		
 		// Make a random move if not possible to attack
-		else if (grid.legalMoves(x,y).size() > 0){
+		else if (tileSelf.legalMoves().size() > 0){
 			// Randomly pick one of the legal moves to be made from (x,y)
-			legalMoves = grid.legalMoves(x,y);
+			legalMoves = tileSelf.legalMoves();
 			toPosition = legalMoves.get(rand.nextInt(legalMoves.size()));
-			x1 = grid.grid.get(toPosition).x;
-			y1 = grid.grid.get(toPosition).y;
+			x1 = grid.gridMap.get(toPosition).x;
+			y1 = grid.gridMap.get(toPosition).y;
 			
 			// Move to the position
 			grid.moveUnit(x, y, x1, y1);	

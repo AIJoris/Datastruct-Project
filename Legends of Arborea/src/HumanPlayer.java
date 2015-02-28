@@ -47,8 +47,8 @@ public class HumanPlayer {
 		
 		System.out.println("werkt");
 		
-		x = grid.grid.get(positionSelf).x;
-		y = grid.grid.get(positionSelf).y;
+//		x = grid.grid.get(positionSelf).x;
+//		y = grid.grid.get(positionSelf).y;
 		
 		
 		

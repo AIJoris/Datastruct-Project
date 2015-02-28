@@ -23,7 +23,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 		int pixelX = e.getX();
 		int pixelY = e.getY();
 		currentTile = grid.getTile(pixelToHex(pixelX, pixelY).x, pixelToHex(pixelX, pixelY).y);
-		currentUnit = grid.getUnit(currentTile.x, currentTile.y);
+		currentUnit = currentTile.unit;
 	}
 	@Override
 	public void mouseEntered(MouseEvent e) {
