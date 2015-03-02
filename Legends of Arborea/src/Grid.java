@@ -13,8 +13,8 @@ public class Grid {
 	int skillAttacker;
 	int skillDefender;
 	double hitChance;
-	ArrayList<String> beasts = new ArrayList<String>();
-	ArrayList<String> humans = new ArrayList<String>();
+	ArrayList<String> beasts;
+	ArrayList<String> humans;
 	
 	
 	/*
@@ -62,6 +62,10 @@ public class Grid {
 		String[] orcs = {toKey(-4,4), toKey(-3,-1)};
 		String[] goblins = {toKey(-4,1), toKey(-3,0), toKey(-3,1), toKey(-3,2), toKey(-3,3), toKey(-3,4), toKey(-2,4), toKey(-2,-1)};
 		
+		// Keep a list of humans and beasts
+		humans = new ArrayList<String>();
+		beasts = new ArrayList<String>();
+		
 		// Place all units on their tiles
 		for (String coord : generals) {
 			gridMap.get(coord).addUnit(new General());
@@ -99,13 +103,11 @@ public class Grid {
 	 * Move a unit to a specified position
 	 */
 	public boolean moveUnit(int x, int y, int x1, int y1) {		
-		Tile tileSelf = getTile(x,y);
+		Tile oldTile = getTile(x,y);
+		Tile newTile = getTile(x1,y1);
 		
 		// Move unit if the move is legal and the goal tile is not occupied
-		if (tileSelf.legalMoves().contains(toKey(x1,y1))) {
-			gridMap.get(toKey(x1,y1)).unit = gridMap.get(toKey(x,y)).unit;
-			gridMap.get(toKey(x,y)).unit = null;	
-			
+		if (oldTile.legalMoves().contains(toKey(x1,y1))) {			
 			// Update the lists containing all the units
 			if (team.equals("Humans")) {
 				humans.set(humans.indexOf(toKey(x,y)), toKey(x1,y1));
@@ -113,6 +115,12 @@ public class Grid {
 			else if (team.equals("Beasts")) {
 				beasts.set(beasts.indexOf(toKey(x,y)), toKey(x1,y1));
 			}
+			
+			// Move the unit
+			newTile.unit = oldTile.unit;
+			newTile.team = oldTile.team;
+			oldTile.unit = null;
+			oldTile.unit = null;
 			return true;
 		}
 		// If the move isn't legal, return false
@@ -146,7 +154,15 @@ public class Grid {
 			
 			// Remove the unit if he died
 			if (unitHostile.hitPoints == 0) {
-				tileSelf.removeUnit(this);
+				tileHostile.unit = null;
+				tileHostile.team = null;
+				// Remove the unit also from the lists of units
+				if (team.equals("Humans")) {
+					beasts.remove(toKey(x1,y1));
+				}
+				else if (team.equals("Beasts")) {
+					humans.remove(toKey(x1, y1));
+				}
 			}
 			return true;
 		}
@@ -182,7 +198,7 @@ public class Grid {
 		}
 		
 		// Check if the defender is friendly or hostile
-		if (unitHostile.team.equals(team)) {
+		if (unitHostile.team.equals(unitSelf.team)) {
 			System.out.println("Friendly fire!");
 			return false;
 		}

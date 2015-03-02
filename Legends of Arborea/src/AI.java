@@ -7,7 +7,7 @@ import java.util.Random;
 public class AI {
 	String positionSelf;
 	Tile tileSelf;
-	String positionHostiles;
+	String positionHostile;
 	String toPosition;
 	ArrayList<String> hostiles;
 	ArrayList<String> legalMoves;
@@ -31,34 +31,32 @@ public class AI {
 	 * Make a random move
 	 */
 	public void play() {
-		ArrayList<String> humansTemp = grid.humans;
-		ArrayList<String> beastsTemp = grid.beasts;
+//		ArrayList<String> humansTemp = grid.humans;
+//		ArrayList<String> beastsTemp = grid.beasts;
 		int index;
 		
 		// hier een forloop die elke unit een zet laat doen
 		
 		// Get a random friendly unit at a position
 		if (playerTeam.equals("Humans")) {
-			index = rand.nextInt(humansTemp.size());
-			positionSelf = humansTemp.get(index);
+			index = rand.nextInt(grid.humans.size());
+			positionSelf = grid.humans.get(index);
 			tileSelf = grid.gridMap.get(positionSelf);
-//			humansTemp.remove(index);
 		}
 		else if (playerTeam.equals("Beasts")) {
-			index = rand.nextInt(beastsTemp.size());
-			positionSelf = beastsTemp.get(index);
+			index = rand.nextInt(grid.beasts.size());
+			positionSelf = grid.beasts.get(index);
 			tileSelf = grid.gridMap.get(positionSelf);
-//			humansTemp.remove(index);
 		}
 		x = tileSelf.x;
 		y = tileSelf.y;
 		
-		// Attack a hostile unit if possible
-		hostiles = tileSelf.surroundingHostiles(x, y);
+		// Attack a hostile unit if possible		
+		hostiles = tileSelf.surroundingHostiles();
 		if (!hostiles.isEmpty()) {
-			positionHostiles = hostiles.get(rand.nextInt(hostiles.size()));
-			x1 = grid.gridMap.get(positionHostiles).x;
-			y1 = grid.gridMap.get(positionHostiles).y;
+			positionHostile = hostiles.get(rand.nextInt(hostiles.size()));
+			x1 = grid.gridMap.get(positionHostile).x;
+			y1 = grid.gridMap.get(positionHostile).y;
 			grid.attackUnit(x,y, x1, y1);
 		}
 		

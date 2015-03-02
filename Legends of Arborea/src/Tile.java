@@ -8,7 +8,7 @@ public class Tile {
 	Unit unit;
 	String team;
 	String key;
-	Tile[] adjacentTiles = new Tile[6];
+	ArrayList<Tile> adjacentTiles;
 	int buffer;
 	ArrayList<String> surroundingHostiles;
 	ArrayList<String> legalMoves;
@@ -37,12 +37,13 @@ public class Tile {
 	 * Initialize the tile by calculating the initial buffer and adjacent tiles
 	 */
 	public void adjacentTiles(HashMap<String, Tile> gridMap) {
+		adjacentTiles = new ArrayList<Tile>();
 		// Generate adjacent tiles
 		int[] xMoves = {x-1, x-1, x, x, x+1, x+1};
 		int[] yMoves = {y, y+1, y-1, y+1, y-1, y};
 		for (int i = 0; i < 6; i++) {
 			if(gridMap.get(toKey(xMoves[i], yMoves[i])) != null){
-				adjacentTiles[i] =  gridMap.get(toKey(xMoves[i], yMoves[i]));
+				adjacentTiles.add(gridMap.get(toKey(xMoves[i], yMoves[i])));
 			}
 		}
 	}
@@ -72,18 +73,19 @@ public class Tile {
 			}
 			
 			// Build up buffer based on hostile/friendly units nearby
-			for (int i = 0; i < 6; i++) {
-				if (adjacentTiles[i] != null & adjacentTiles[i].unit != null) {
-					if (adjacentTiles[i].unit.name.equals(friendlyGeneralUnit.name)){
+			int nrTiles = adjacentTiles.size();
+			for (int i = 0; i < nrTiles; i++) {
+				if (adjacentTiles.get(i) != null & adjacentTiles.get(i).unit != null) {
+					if (adjacentTiles.get(i).unit.name.equals(friendlyGeneralUnit.name)){
 						buffer += 2;
 					}
-					else if (adjacentTiles[i].unit.name.equals(friendlyInfantryUnit.name)){
+					else if (adjacentTiles.get(i).unit.name.equals(friendlyInfantryUnit.name)){
 						buffer += 1;
 					}
-					else if (adjacentTiles[i].unit.name.equals(hostileGeneralUnit.name)) {
+					else if (adjacentTiles.get(i).unit.name.equals(hostileGeneralUnit.name)) {
 						buffer -= 2;
 					}
-					else if (adjacentTiles[i].unit.name.equals(hostileInfantryUnit.name)) {
+					else if (adjacentTiles.get(i).unit.name.equals(hostileInfantryUnit.name)) {
 						buffer -= 1;
 					}
 				}
@@ -96,17 +98,19 @@ public class Tile {
 	/*
 	 * This method returns all hostile forces around a position
 	 */
-	public ArrayList<String> surroundingHostiles(int x, int y) {
+	public ArrayList<String> surroundingHostiles() {
 		surroundingHostiles = new ArrayList<String>();
 		Unit surroundingUnit;
 		
 		// Loop over adjacent tiles to find hostile units
-		for (int i = 0; i < 6; i++) {
-			surroundingUnit = adjacentTiles[i].unit; 
-			if (surroundingUnit != null) {
-				if (!surroundingUnit.team.equals(team)) {
-					surroundingHostiles.add(toKey(adjacentTiles[i].x, adjacentTiles[i].y));
-				}
+		int nrTiles = adjacentTiles.size();
+		for (int i = 0; i < nrTiles; i++) {
+			if (adjacentTiles.get(i) == null | adjacentTiles.get(i).unit == null) {
+				continue;
+			}
+			surroundingUnit = adjacentTiles.get(i).unit; 
+			if (!surroundingUnit.team.equals(unit.team)) {
+				surroundingHostiles.add(toKey(adjacentTiles.get(i).x, adjacentTiles.get(i).y));
 			}
 		}
 		return surroundingHostiles;
@@ -118,19 +122,20 @@ public class Tile {
 	public ArrayList<String> legalMoves() {			
 		// Generate all adjacent tiles and check which ones make a legal move
 		ArrayList<String> legalMoves = new ArrayList<String>();
-		for (int i = 0; i < 6; i++) {			
+		int nrTiles = adjacentTiles.size();
+		for (int i = 0; i < nrTiles; i++) {			
 			// Check if the tiles exist
-			if (adjacentTiles[i] == null) {
+			if (adjacentTiles.get(i) == null) {
 				continue;
 			}
 			
 			// Check if there is a unit at the start position and no unit on the goal position
-			if (unit == null || adjacentTiles[i].unit != null) {
+			if (unit == null || adjacentTiles.get(i).unit != null) {
 				continue;
 			}
 			
 			// The move is legal, so add it to the list
-			legalMoves.add(toKey(adjacentTiles[i].x, adjacentTiles[i].y));
+			legalMoves.add(toKey(adjacentTiles.get(i).x, adjacentTiles.get(i).y));
 			
 		}
 		return legalMoves;
@@ -146,18 +151,18 @@ public class Tile {
 	/*
 	 * Remove the unit currently on this tile
 	 */
-	public void removeUnit(Grid grid) {
-		unit = null;
-		// Remove the unit also from the lists of units
-				if (team.equals("Humans")) {
-					grid.beasts.remove(toKey(x,y));
-					return;
-				}
-				else if (team.equals("Beasts")) {
-					grid.humans.remove(toKey(x, y));
-					return;
-				}
-	}
+//	public void removeUnit(ArrayList<String> humans, ArrayList<String> beasts) {
+//		unit = null;
+//		// Remove the unit also from the lists of units
+//		if (team.equals("Humans")) {
+//			beasts.remove(toKey(x,y));
+//			return;
+//		}
+//		else if (team.equals("Beasts")) {
+//			humans.remove(toKey(x, y));
+//			return;
+//		}
+//	}
 	
 	/*
 	 * Convert the coordinate of a tile to a string, so it
