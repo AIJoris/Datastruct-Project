@@ -183,7 +183,13 @@ public class Grid {
 		// Check if the tiles exist
 		if (tileHostile == null || tileSelf == null) {
 			return false;
-		}		
+		}	
+		
+		// Check if the tile is adjacent
+		if (!tileSelf.adjacentTiles.contains(tileHostile)) {
+			System.out.println("Your tool of death is not long enough for this attack.");
+			return false;
+		}
 		
 		// Check if the attacker exists and is friendly
 		if (unitSelf == null || !unitSelf.team.equals(team)) {
@@ -196,6 +202,7 @@ public class Grid {
 			System.out.println("Stop attacking air");
 			return false;
 		}
+		
 		
 		// Check if the defender is friendly or hostile
 		if (unitHostile.team.equals(unitSelf.team)) {

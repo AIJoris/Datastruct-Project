@@ -5,23 +5,23 @@ import java.util.Random;
 public class HumanPlayer {
 	String positionSelf;
 	Tile tileSelf;
-	String positionGoal;
+	String goalPosition;
 	Tile goalTile;
-	String toPosition;
-	ArrayList<String> hostiles;
-	ArrayList<String> legalMoves;
 	Random rand = new Random();
-	int x;
-	int y;
-	int x1;
-	int y1;	
+	int x, y, x1, y1;	
 	Grid grid;
-	String playerTeam;
 	MouseHandler mouseHandler;
+	ArrayList<String> friendlies;
+	String team;
+	boolean endTurn = false;
 	
+	/*
+	 * Constructor
+	 */
 	public HumanPlayer(Grid newGrid, MouseHandler newMouseHandler) {
 		grid = newGrid;
 		mouseHandler = newMouseHandler;
+		team = grid.team;
 	}
 	
 	public String toKey(int x, int y) {
@@ -29,49 +29,106 @@ public class HumanPlayer {
 	}
 	
 	public void play() {
-//		ArrayList<String> humansTemp = new ArrayList<String>(grid.humans);
-//		ArrayList<String> beastsTemp = new ArrayList<String>(grid.beasts);
-		
-		for (int i = 0; i < 10; i++) {
-			// Wait for a mouse click
-			mouseHandler.currentUnit = null;
-			System.out.println("Select a unit");
-			while (mouseHandler.currentUnit == null) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+		// Define who your friendlies depending on the team
+		if (team.equals("Humans")) {
+			friendlies = new ArrayList<String>(grid.humans);
+		}
+		else {
+			friendlies = new ArrayList<String>(grid.beasts);
+		}
+		// Loop over the amount of units of the player's team
+		while (!friendlies.isEmpty() | endTurn == true) {
+			// Select the start and end tile
+			selectTiles();
+			while (!friendlies.contains(positionSelf)) {
+				System.out.println("You have already used this unit");
+				selectTiles();
 			}
-			// Select a unit
-			x = mouseHandler.currentTile.x;
-			y = mouseHandler.currentTile.y;
-			positionSelf = toKey(x,y);
-			tileSelf = grid.gridMap.get(positionSelf);
-			
-			// Wait for a second mouse click
-			System.out.println("Select goal tile");
-			mouseHandler.currentTile = null;
-			while (mouseHandler.currentTile == null) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			// Select a goal tile/unit
-			x1 = mouseHandler.currentTile.x;
-			y1 = mouseHandler.currentTile.y;
-			positionGoal = toKey(x1,y1);
-			goalTile = grid.gridMap.get(positionGoal);
 			
 			// If the goal tile contains a unit, attack that unit
 			if (goalTile.unit != null) {
-				grid.attackUnit(x, y, x1, y1);
+				if (grid.attackIsPossible(x, y, x1, y1) == true) {
+					grid.attackUnit(x, y, x1, y1);
+				}
+				else {
+					selectTiles();
+				}
+				
 			}
 			else {
 				grid.moveUnit(x, y, x1, y1);
 			}
-		}		
+			friendlies.remove(toKey(x,y));
+		}	
+	}
+	
+	
+	/*
+	 * This method allows the human player to select a friendly unit
+	 * and a goal tile
+	 */
+	private void selectTiles() {
+		System.out.println("Select one of your units!");
+		// Select a friendly unit
+		selectFriendlyUnit();
+		
+		// Select the goal tile
+		boolean goalTileSelected = selectGoalTile();
+		while (goalTileSelected == false) {
+			goalTileSelected = selectGoalTile();
+		}
+	}
+	/*
+	 * This method allows the human player to select a friendly unit
+	 */
+	private void selectFriendlyUnit() {
+		// Wait for a friendly unit to be selected
+		mouseHandler.currentUnit = null;
+		while (mouseHandler.currentUnit == null || !mouseHandler.currentUnit.team.equals(team)) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// Select friendly unit
+		x = mouseHandler.currentTile.x;
+		y = mouseHandler.currentTile.y;
+		positionSelf = toKey(x,y);
+		tileSelf = grid.gridMap.get(positionSelf);
+	}
+	
+	/*
+	 * This method allows the human player to select a goal tile,
+	 * and if he/she again selects a friendly unit, the original friendly 
+	 * gets replaced and another goal tile can be selected.
+	 */
+	private boolean selectGoalTile() {
+		System.out.println("Select goal tile");
+		mouseHandler.currentTile = null;
+		while (mouseHandler.currentTile == null) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		// Check if a friendly unit is again selected, and if so, change it to the new unit
+		if (mouseHandler.currentUnit != null) {
+			if (mouseHandler.currentUnit.team.equals(team)) {
+				x = mouseHandler.currentTile.x;
+				y = mouseHandler.currentTile.y;
+				positionSelf = toKey(x,y);
+				tileSelf = grid.gridMap.get(positionSelf);
+				return false;
+			}
+		}
+		// Select a goal tile/unit
+		x1 = mouseHandler.currentTile.x;
+		y1 = mouseHandler.currentTile.y;
+		goalPosition = toKey(x1,y1);
+		goalTile = grid.gridMap.get(goalPosition);
+		return true;
 	}
 }

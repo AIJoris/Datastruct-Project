@@ -30,7 +30,7 @@ public class AI {
 	/*
 	 * Make a random move
 	 */
-	public void play() {
+	public void playRandom() {
 		ArrayList<String> humansTemp = new ArrayList<String>(grid.humans);
 		ArrayList<String> beastsTemp = new ArrayList<String>(grid.beasts);
 		int index;
@@ -82,5 +82,14 @@ public class AI {
 				System.err.println(e);
 			}
 		}
+	}
+	
+	public void play() {
+		
+	}
+	
+	public int minimax() {
+		
+		return 0;
 	}
 }
