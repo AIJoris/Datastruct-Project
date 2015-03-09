@@ -31,45 +31,56 @@ public class AI {
 	 * Make a random move
 	 */
 	public void play() {
-//		ArrayList<String> humansTemp = grid.humans;
-//		ArrayList<String> beastsTemp = grid.beasts;
+		ArrayList<String> humansTemp = new ArrayList<String>(grid.humans);
+		ArrayList<String> beastsTemp = new ArrayList<String>(grid.beasts);
 		int index;
-		
-		// hier een forloop die elke unit een zet laat doen
-		
-		// Get a random friendly unit at a position
-		if (playerTeam.equals("Humans")) {
-			index = rand.nextInt(grid.humans.size());
-			positionSelf = grid.humans.get(index);
-			tileSelf = grid.gridMap.get(positionSelf);
-		}
-		else if (playerTeam.equals("Beasts")) {
-			index = rand.nextInt(grid.beasts.size());
-			positionSelf = grid.beasts.get(index);
-			tileSelf = grid.gridMap.get(positionSelf);
-		}
-		x = tileSelf.x;
-		y = tileSelf.y;
-		
-		// Attack a hostile unit if possible		
-		hostiles = tileSelf.surroundingHostiles();
-		if (!hostiles.isEmpty()) {
-			positionHostile = hostiles.get(rand.nextInt(hostiles.size()));
-			x1 = grid.gridMap.get(positionHostile).x;
-			y1 = grid.gridMap.get(positionHostile).y;
-			grid.attackUnit(x,y, x1, y1);
-		}
-		
-		// Make a random move if not possible to attack
-		else if (tileSelf.legalMoves().size() > 0){
-			// Randomly pick one of the legal moves to be made from (x,y)
-			legalMoves = tileSelf.legalMoves();
-			toPosition = legalMoves.get(rand.nextInt(legalMoves.size()));
-			x1 = grid.gridMap.get(toPosition).x;
-			y1 = grid.gridMap.get(toPosition).y;
+
+		// Do 1 action with every unit
+		while (!humansTemp.isEmpty() && !beastsTemp.isEmpty()) {
+			// Get a random friendly unit at a position
+			if (playerTeam.equals("Humans")) {
+				index = rand.nextInt(humansTemp.size());
+				positionSelf = humansTemp.get(index);
+				tileSelf = grid.gridMap.get(positionSelf);
+				// Remove the index so this unit will not be chosen again
+				humansTemp.remove(index);
+			}
+			else if (playerTeam.equals("Beasts")) {
+				index = rand.nextInt(beastsTemp.size());
+				positionSelf = beastsTemp.get(index);
+				tileSelf = grid.gridMap.get(positionSelf);
+				beastsTemp.remove(index);
+				// Remove the index so this unit will not be chosen again
+			}
+			x = tileSelf.x;
+			y = tileSelf.y;
 			
-			// Move to the position
-			grid.moveUnit(x, y, x1, y1);	
+			// Attack a hostile unit if possible		
+			hostiles = tileSelf.surroundingHostiles();
+			if (!hostiles.isEmpty()) {
+				positionHostile = hostiles.get(rand.nextInt(hostiles.size()));
+				x1 = grid.gridMap.get(positionHostile).x;
+				y1 = grid.gridMap.get(positionHostile).y;
+				grid.attackUnit(x,y, x1, y1);
+			}
+			
+			// Make a random move if not possible to attack
+			else if (tileSelf.legalMoves().size() > 0){
+				// Randomly pick one of the legal moves to be made from (x,y)
+				legalMoves = tileSelf.legalMoves();
+				toPosition = legalMoves.get(rand.nextInt(legalMoves.size()));
+				x1 = grid.gridMap.get(toPosition).x;
+				y1 = grid.gridMap.get(toPosition).y;
+				
+				// Move to the position
+				grid.moveUnit(x, y, x1, y1);	
+			}
+			try {
+				Thread.sleep(10);
+			}
+			catch (InterruptedException e) {
+				System.err.println(e);
+			}
 		}
 	}
 }

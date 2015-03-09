@@ -6,6 +6,9 @@
 // Het opslaan van de coordinaten in strings begint onhandig te worden omdat je niet makkelijk terug kunt converten naar ints
 // Iets nieuws geprobeerd: de method die alle legal moves returned die stopt er geen keys in maar gewoon x,y achter elkaar
 // een position class maken is misschien toch wel handig omdat je nu op een een string terugkrijgt en die niet kunt converten naar de ints (komt door mogelijke minnen)
+// Je kunt aanvallen van overal
+// q learning / value iteration
+
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -37,8 +40,8 @@ public class LegendsOfArborea{
 		new LegendsOfArborea(grid);
 		
 		// Play the game
-		grid.team = "Beasts";
-//		playGame(grid);
+		grid.team = "Humans";
+		playGame(grid);
 		
 	}
 	
@@ -69,18 +72,20 @@ public class LegendsOfArborea{
 		// Create the AI's
 		AI player1 = new AI(grid, "Humans");
 		AI player2 = new AI(grid, "Beasts");
-		HumanPlayer player3 = new HumanPlayer(grid, "Humans", mouseHandler);
+		HumanPlayer player3 = new HumanPlayer(grid, mouseHandler);
 		int turn = 0;
 		
 		// Main game loop
 		while (!grid.humans.isEmpty() & !grid.beasts.isEmpty()) {
 			// Player 1:
 			if (grid.team.equals("Humans")) {
+				System.out.println("Humans: ");
 				player1.play();
 			}
 			
 			// Player 2:
 			else if (grid.team.equals("Beasts")) {
+				System.out.println("Beasts");
 				player2.play();
 			}
 			
@@ -105,7 +110,7 @@ public class LegendsOfArborea{
 		
 		// Pause the game for a bit so you can see what's going on
 		try {
-			Thread.sleep(100);
+			Thread.sleep(500);
 		}
 		catch (InterruptedException e) {
 			System.err.println(e);
