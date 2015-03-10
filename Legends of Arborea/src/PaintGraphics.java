@@ -122,51 +122,30 @@ public class PaintGraphics extends JComponent{
 	}
 	
 	public void drawBoard(Graphics g){
-//		// OUTER
-		Color color = new Color(0, 100,0);
+		Color color = new Color(0, 180,0);
 		Point location = new Point(0,0);
-//		location.move(HEXSTART.x, HEXSTART.y);
-//		for(int j = 0; j < 5; j++){
-//			for(int i = 0; i < 5+j; i++){
-//				drawHexagon(g, location, HEXSIZE.x, HEXSIZE.y, color);
-//				int a = location.x;
-//				int b = location.y + (int)(Math.sqrt(3) / 2 *(HEXSIZE.y*2));
-//				location.move(a ,b);
-//			}
-//			int a = location.x + (int)(HEXSIZE.x*1.5);
-//			int b = HEXSTART.y - (int)(0.5 *((j+1)*(Math.sqrt(3) / 2 *(HEXSIZE.y*2))));
-//			location.move(a ,b);
-//		}
-//		
-//		int b1 = HEXSTART.y - (int)(((1.5)*(Math.sqrt(3) / 2 *(HEXSIZE.y*2))));
-//		location.move(location.x ,b1);
-//		
-//		for(int j = 4; j > 0; j--){
-//			for(int i = 5; i > 1-j; i--){
-//				drawHexagon(g, location, HEXSIZE.x, HEXSIZE.y, color);
-//				int a = location.x;
-//				int b = location.y + (int)(Math.sqrt(3) / 2 *(HEXSIZE.y*2));
-//				location.move(a ,b);
-//			}
-//			int a = location.x + (int)(HEXSIZE.x*1.5);
-//			int b = HEXSTART.y + (int)(0.5 *((2-j)*(Math.sqrt(3) / 2 *(HEXSIZE.y*2))));
-//			location.move(a ,b);
-//		}
-		
-		
-		// INNER *************
-		color = new Color(0, 180,0);
+		Point hexLocation = new Point(0,0);
 		location = new Point(0,0);
 		location.move(HEXSTART.x + 2, HEXSTART.y + 2);
 		for(int j = 0; j < 5; j++){
 			for(int i = 0; i < 5+j; i++){
-				if( mouseHandler.selectedTile != null && mouseHandler.pixelToHex(location.x, location.y).equals(mouseHandler.selectedTile.location)){
+				hexLocation = mouseHandler.pixelToHex(location.x, location.y);
+				
+				// Regular 
+				if( mouseHandler.selectedTile != null && hexLocation.equals(mouseHandler.selectedTile.location)){
 					color = new Color(0, 70,0);
 				}
+				
+				// Turns left
+				if(grid.getTile(hexLocation.x, hexLocation.y).turnsLeft){
+					color = new Color(0, 0,230);
+				}
+				
+				// Adjacent tiles (legal moves and surrounding hostiles)
 				if( mouseHandler.selectedTile != null){
 					for (int k = 0; k < 6; k++) {
 						try { 
-							if(mouseHandler.selectedTile.adjacentTiles.get(k).location.equals(mouseHandler.pixelToHex(location.x, location.y))){
+							if(mouseHandler.selectedTile.adjacentTiles.get(k).location.equals(hexLocation)){
 								if(mouseHandler.selectedTile.adjacentTiles.get(k)!= null){
 									if(mouseHandler.selectedTile.isLegal(mouseHandler.selectedTile.adjacentTiles.get(k))){
 										color = new Color(0, 130,0);
@@ -176,9 +155,12 @@ public class PaintGraphics extends JComponent{
 						} catch (IndexOutOfBoundsException e){}
 					} 
 				}
+				
+				//Hover
 				if (mouseHandler.pixelToHex(location.x, location.y).equals(mouseHandler.currenTileCoords)){
 					color = new Color(0, 230,0);
 				}
+				
 				drawHexagon(g, location, HEXSIZE.x-4, HEXSIZE.y-4, color);
 				color = new Color(0, 180,0);
 				int a = location.x;
@@ -195,14 +177,15 @@ public class PaintGraphics extends JComponent{
 		
 		for(int j = 4; j > 0; j--){
 			for(int i = 5; i > 1-j; i--){
-				if( mouseHandler.selectedTile != null && mouseHandler.pixelToHex(location.x, location.y).equals(mouseHandler.selectedTile.location)){
+				hexLocation = mouseHandler.pixelToHex(location.x, location.y);
+				if( mouseHandler.selectedTile != null && hexLocation.equals(mouseHandler.selectedTile.location)){
 					color = new Color(0, 70,0);
 				}
 				
 				if( mouseHandler.selectedTile != null){
 					for (int k = 0; k < 6; k++) {
 						try { 
-							if(mouseHandler.selectedTile.adjacentTiles.get(k).location.equals(mouseHandler.pixelToHex(location.x, location.y))){
+							if(mouseHandler.selectedTile.adjacentTiles.get(k).location.equals(hexLocation)){
 								if(mouseHandler.selectedTile.adjacentTiles.get(k)!= null){
 									if(mouseHandler.selectedTile.isLegal(mouseHandler.selectedTile.adjacentTiles.get(k))){
 										color = new Color(0, 130,0);
