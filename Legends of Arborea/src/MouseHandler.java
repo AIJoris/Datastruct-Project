@@ -12,6 +12,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 	MouseEvent event;
 	Grid grid;
 	Unit currentUnit;
+	String button;
 	
 	public MouseHandler(Grid grid1,Point HEXSIZE1, Point HEXSTART1){
 		grid = grid1;
@@ -60,6 +61,13 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 		int pixelX = e.getX();
 		int pixelY = e.getY();
 		currenTileCoords = pixelToHex(pixelX, pixelY);
+		
+//		// Check if mouse hovers over button
+//		if(e.on(button)){
+//			button = "endTurn";
+//		} else {
+//			button = "endTurnSel";
+//		}
 
 		// TODO Auto-generated method stub
 		
