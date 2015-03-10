@@ -52,7 +52,7 @@ public class PaintGraphics extends JComponent{
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		InputStream input = classLoader.getResourceAsStream("title.png");
 		Image title = ImageIO.read(input);
-		g.drawImage(title,(int)(WIDTH/4.79), HEIGHT/8, this);
+		g.drawImage(title,(int)(WIDTH/4.79), HEIGHT/18, this);
 		
 		/* Add score boards */
 		// Load images
@@ -66,6 +66,14 @@ public class PaintGraphics extends JComponent{
 		Image swordsman = ImageIO.read(input);
 		input = classLoader.getResourceAsStream("heart.png");
 		Image heart = ImageIO.read(input);
+//		input = classLoader.getResourceAsStream("heart.png");
+//		Image heart = ImageIO.read(input);
+//		input = classLoader.getResourceAsStream("heart.png");
+//		Image heart = ImageIO.read(input);
+//		input = classLoader.getResourceAsStream("heart.png");
+//		Image heart = ImageIO.read(input);
+//		input = classLoader.getResourceAsStream("heart.png");
+//		Image heart = ImageIO.read(input);
 		
 		Map<String, Image> characters = new HashMap<>();
 		characters.put("General", general);
@@ -75,24 +83,22 @@ public class PaintGraphics extends JComponent{
 		int imWidth = general.getWidth(this);
 		
 		// Left panel
-		if(mouseHandler.currentUnit != null){
-//			if(mouseHandler.currentUnit.name.equals("Orc") || mouseHandler.currentUnit.name.equals("Goblin")){
-				g.drawImage(characters.get(mouseHandler.currentUnit.name),(HEIGHT/2)-imWidth, HEXSTART.y, this);
+		try{
+			g.drawImage(characters.get(mouseHandler.currentUnit.name),(HEIGHT/2)-imWidth, HEXSTART.y, this);
 //				mouseHandler.currentUnit.hitPoints
-				int xOffset = (HEIGHT/2)-imWidth;
-				Point location = new Point(xOffset, HEXSTART.y + 70);
-				int hitPoints = mouseHandler.currentUnit.hitPoints;
-				for (int i = 0; i < hitPoints; i++) {
-					if(i< 5){
-						g.drawImage(heart,location.x+(i*35), location.y, this);
-					} else {
-						g.drawImage(heart,location.x+((i-5)*35), location.y+35, this);
-					}
-	
+			int xOffset = (HEIGHT/2)-imWidth;
+			Point location = new Point(xOffset, HEXSTART.y + 70);
+			int hitPoints = mouseHandler.currentUnit.hitPoints;
+			for (int i = 0; i < hitPoints; i++) {
+				if(i< 5){
+					g.drawImage(heart,location.x+(i*35), location.y, this);
+				} else {
+					g.drawImage(heart,location.x+((i-5)*35), location.y+35, this);
 				}
-//			}
+
+			}
 			
-		}
+		} catch (NullPointerException e){}
 		// Right panel
 		try {
 			g.drawImage(characters.get(grid.getTile(mouseHandler.currenTileCoords.x, mouseHandler.currenTileCoords.y).unit.name),(WIDTH/2)+ imWidth, HEXSTART.y, this);
@@ -110,6 +116,8 @@ public class PaintGraphics extends JComponent{
         } catch (NullPointerException e) {}
 		
 		// Update panel on the bottom
+		
+		
 		
 	}
 	
