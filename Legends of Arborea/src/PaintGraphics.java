@@ -182,6 +182,11 @@ public class PaintGraphics extends JComponent{
 					color = new Color(0, 70,0);
 				}
 				
+				// Turns left
+				if(grid.getTile(hexLocation.x, hexLocation.y).turnsLeft){
+					color = new Color(114, 229,114);
+				}
+				
 				if( mouseHandler.selectedTile != null){
 					for (int k = 0; k < 6; k++) {
 						try { 
