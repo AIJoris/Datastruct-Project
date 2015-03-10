@@ -50,7 +50,7 @@ public class HumanPlayer {
 			if (goalTile.unit != null) {
 				if (grid.attackIsPossible(x, y, x1, y1) == true) {
 					grid.attackUnit(x, y, x1, y1);
-					tileSelf.turnsLeft = false;					
+					tileSelf.turnsLeft = false;			
 				}
 				else {
 					selectTiles();
@@ -60,6 +60,7 @@ public class HumanPlayer {
 			else {
 				grid.moveUnit(x, y, x1, y1);
 				goalTile.turnsLeft = false;
+				tileSelf.turnsLeft = false;
 			}
 			friendlies.remove(toKey(x,y));
 		}	
