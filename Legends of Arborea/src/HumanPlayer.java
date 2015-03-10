@@ -29,46 +29,90 @@ public class HumanPlayer {
 	}
 	
 	public void play() {
+		// Check the team and decide who are friendlies
+		if (team.equals("Humans")) {
+			friendlies = new ArrayList<String>(grid.humans);
+		}
+		else {
+			friendlies = new ArrayList<String>(grid.beasts);
+		}
+		
+		// For each unit, set moveLeft and attackLeft to true
 		resetTurnsLeft();
+		
 		// Loop over the amount of units of the player's team
+		playLoop();	
+	}
+	
+	private void playLoop() {
 		while (!friendlies.isEmpty() | endTurn == true) {
 			// Select the start and end tile
 			selectTiles();
-			if (!tileSelf.attackLeft & !tileSelf.moveLeft) {
+			while (!tileSelf.attackLeft && !tileSelf.moveLeft) {
 				System.out.println("You have already used this unit");
 				grid.message = "used";
 				selectTiles();
 			}
 			
-			// If the goal tile contains a unit, attack that unit
-			if (goalTile.unit != null) {
-				if (grid.attackIsPossible(x, y, x1, y1) == true) {
-					if (tileSelf.attackLeft) {
-						grid.attackUnit(x, y, x1, y1);
-						tileSelf.attackLeft = false;
-					}
-					else {
-						grid.message = "attackLeft";
-					}
-								
+			// move
+			if (goalTile.unit == null) {
+				move();
+				// When a tile has no moves and attacks left, remove it from friendlies
+				if (tileSelf.attackLeft == false & tileSelf.moveLeft == false) {
+					friendlies.remove(toKey(x,y));
 				}
-				else {
-					selectTiles();
-				}
-				
+				playLoop();
+				break;
 			}
-			if (tileSelf.moveLeft) {
+			// attack
+			else {
+				attack();
+				// When a tile has no moves and attacks left, remove it from friendlies
+				if (tileSelf.attackLeft == false & tileSelf.moveLeft == false) {
+					friendlies.remove(toKey(x,y));
+				}
+				playLoop();
+			}
+		}
+	}
+	
+	/*
+	 * This method checks if the player wants to move, and acts accordingly
+	 */
+	private void move() {
+		// Check if the tile has a move left, and if so move
+		if (tileSelf.moveLeft) {
+			// The move has to be legal
+			if (tileSelf.isLegal(goalTile)) {
 				grid.moveUnit(x, y, x1, y1);
 				goalTile.moveLeft = false;
+				if (tileSelf.attackLeft) {
+					goalTile.attackLeft = true;
+				}
 				tileSelf.attackLeft = false;
 				tileSelf.moveLeft = false;
 			}
-			else {
-				grid.message = "moveLeft";
-			}
-			if (!tileSelf.attackLeft & !tileSelf.moveLeft) {
-				friendlies.remove(toKey(x,y));
-			}
+		}
+		// If the tile has no move left
+		else {
+			grid.message = "moveLeft";
+		}
+	}
+	
+	/*
+	 * This method checks if the player wants to attack, and acts accordingly
+	 */
+	private void attack() {
+		// If the goal tile contains a unit, is possible and still has attack left, then attack
+		if (grid.attackIsPossible(x, y, x1, y1)) {
+			if (tileSelf.attackLeft) {
+				grid.attackUnit(x, y, x1, y1);
+				tileSelf.attackLeft = false;
+			}								
+		}
+		// If the attack is not possible, the player can again select a unit
+		else {
+			playLoop();
 		}	
 	}
 	
@@ -76,16 +120,22 @@ public class HumanPlayer {
 	 * For all tiles with units, set turnsLeft to true
 	 */
 	private void resetTurnsLeft() {
+		// If you are playing with the humans, reset the humans
 		if (team.equals("Humans")) {
-			friendlies = new ArrayList<String>(grid.humans);
+			for (String unitPosition : grid.humans){
+				grid.gridMap.get(unitPosition).moveLeft = true;
+				grid.gridMap.get(unitPosition).attackLeft = true;
+			}
 		}
+		
+		// If you are playing with the beasts, reset the beasts
 		else {
-			friendlies = new ArrayList<String>(grid.beasts);
+			for (String unitPosition : grid.beasts){
+				grid.gridMap.get(unitPosition).moveLeft = true;
+				grid.gridMap.get(unitPosition).attackLeft = true;
+			}
 		}
-		for (String unitPosition : grid.humans){
-			grid.gridMap.get(unitPosition).moveLeft = true;
-			grid.gridMap.get(unitPosition).attackLeft = true;
-		}
+		
 	}
 	
 	/*
@@ -93,7 +143,7 @@ public class HumanPlayer {
 	 * and a goal tile
 	 */
 	private void selectTiles() {
-		System.out.println("Select one of your units!");
+//		System.out.println("Select one of your units!");
 		// Select a friendly unit
 		selectFriendlyUnit();
 		
@@ -135,9 +185,11 @@ public class HumanPlayer {
 	 * gets replaced and another goal tile can be selected.
 	 */
 	private boolean selectGoalTile() {
-		System.out.println("Select goal tile");
+//		System.out.println("Select goal tile");
 		mouseHandler.currentTile = null;
 		int counter = 0;
+		
+		// Wait for click
 		while (mouseHandler.currentTile == null) {
 			try {
 				Thread.sleep(100);

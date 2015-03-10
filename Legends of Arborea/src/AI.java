@@ -77,6 +77,9 @@ public class AI {
 				// Move to the position
 				grid.moveUnit(x, y, x1, y1);	
 				tileSelf.moveLeft = false;
+				if (tileSelf.attackLeft) {
+					grid.getTile(x1,y1).attackLeft = true;
+				}
 				tileSelf.attackLeft = false;
 				grid.getTile(x1, y1).moveLeft = false;
 			}

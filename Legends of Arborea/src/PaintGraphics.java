@@ -157,22 +157,24 @@ public class PaintGraphics extends JComponent{
 		Tile AdjacentTile;
 		Point location = new Point(0,0);
 		Point hexLocation = new Point(0,0);
+		Tile tileTemp;
 		location = new Point(0,0);
 		location.move(HEXSTART.x + 2, HEXSTART.y + 2);
 		// LEFT SIDE
 		for(int j = 0; j < 5; j++){
 			for(int i = 0; i < 5+j; i++){
 				hexLocation = mouseHandler.pixelToHex(location.x, location.y);
+				tileTemp = grid.getTile(hexLocation.x, hexLocation.y);
 				
 				// These define the colors of the tiles under the units of the player whos turn it is
 				// if the unit has a move and attack left color is purple
-				if(grid.getTile(hexLocation.x, hexLocation.y).attackLeft && grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
+				if(tileTemp.attackLeft && tileTemp.moveLeft){
 					color = new Color(206, 119,206);
 				// if the unit has only an attack left color the tile red
-				} else if(grid.getTile(hexLocation.x, hexLocation.y).attackLeft){
+				} else if(tileTemp.attackLeft){
 					color = new Color(201, 116,118);
 				// if the unit has only a move left color the tile blue
-				} else if(grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
+				} else if(tileTemp.moveLeft){
 					color = new Color(117, 116,190);
 				}
 				
@@ -226,16 +228,17 @@ public class PaintGraphics extends JComponent{
 		for(int j = 4; j > 0; j--){
 			for(int i = 5; i > 1-j; i--){
 				hexLocation = mouseHandler.pixelToHex(location.x, location.y);
+				tileTemp = grid.getTile(hexLocation.x, hexLocation.y);
 				
 				// These define the colors of the tiles under the units of the player whos turn it is
 				// if the unit has a move and attack left color is purple
-				if(grid.getTile(hexLocation.x, hexLocation.y).attackLeft && grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
+				if(tileTemp.attackLeft && tileTemp.moveLeft){
 					color = new Color(206, 119,206);
 				// if the unit has only an attack left color the tile red
-				} else if(grid.getTile(hexLocation.x, hexLocation.y).attackLeft){
+				} else if(tileTemp.attackLeft){
 					color = new Color(201, 116,118);
 				// if the unit has only a move left color the tile blue
-				} else if(grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
+				} else if(tileTemp.moveLeft){
 					color = new Color(117, 116,190);
 				}
 				
