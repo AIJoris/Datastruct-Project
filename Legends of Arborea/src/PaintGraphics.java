@@ -138,7 +138,7 @@ public class PaintGraphics extends JComponent{
 				
 				// Turns left
 				if(grid.getTile(hexLocation.x, hexLocation.y).turnsLeft){
-					color = new Color(0, 0,230);
+					color = new Color(0, 0,220);
 				}
 				
 				// Adjacent tiles (legal moves and surrounding hostiles)
