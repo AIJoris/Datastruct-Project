@@ -152,21 +152,31 @@ public class PaintGraphics extends JComponent{
 	}
 	
 	public void drawBoard(Graphics g){
-		Color color = new Color(0, 180,0);
+		// color to default
+		Color color = new Color(97, 168,104);
+		Tile AdjacentTile;
 		Point location = new Point(0,0);
 		Point hexLocation = new Point(0,0);
 		location = new Point(0,0);
 		location.move(HEXSTART.x + 2, HEXSTART.y + 2);
+		// LEFT SIDE
 		for(int j = 0; j < 5; j++){
 			for(int i = 0; i < 5+j; i++){
 				hexLocation = mouseHandler.pixelToHex(location.x, location.y);
 				
-				// Turns left
-				if(grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
-					color = new Color(114, 229,114);
+				// These define the colors of the tiles under the units of the player whos turn it is
+				// if the unit has a move and attack left color is purple
+				if(grid.getTile(hexLocation.x, hexLocation.y).attackLeft && grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
+					color = new Color(206, 119,206);
+				// if the unit has only an attack left color the tile red
+				} else if(grid.getTile(hexLocation.x, hexLocation.y).attackLeft){
+					color = new Color(201, 116,118);
+				// if the unit has only a move left color the tile blue
+				} else if(grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
+					color = new Color(117, 116,190);
 				}
 				
-				// selected tile 
+				// If the to be colored tile is the selected tile color it distinctively
 				if( mouseHandler.selectedTile != null && hexLocation.equals(mouseHandler.selectedTile.location)){
 					color = new Color(0, 70,0);
 				}
@@ -174,11 +184,17 @@ public class PaintGraphics extends JComponent{
 				// Adjacent tiles (legal moves and surrounding hostiles)
 				if( mouseHandler.selectedTile != null){
 					for (int k = 0; k < 6; k++) {
-						try { 
-							if(mouseHandler.selectedTile.adjacentTiles.get(k).location.equals(hexLocation)){
-								if(mouseHandler.selectedTile.adjacentTiles.get(k)!= null){
-									if(mouseHandler.selectedTile.isLegal(mouseHandler.selectedTile.adjacentTiles.get(k))){
+						try {
+							AdjacentTile = mouseHandler.selectedTile.adjacentTiles.get(k);
+							if(AdjacentTile.location.equals(hexLocation)){
+								if(AdjacentTile!= null){
+									// If adjacent tile is legal give color it dark green
+									if(mouseHandler.selectedTile.isLegal(AdjacentTile)){
 										color = new Color(0, 130,0);
+									}
+									// If adjacent tile contain an enemy color it red
+									if(mouseHandler.selectedTile.isHostile(AdjacentTile)){
+										color = new Color(80, 0,0);
 									}
 								}
 							}
@@ -186,13 +202,14 @@ public class PaintGraphics extends JComponent{
 					} 
 				}
 				
-				//Hover
+				// If the mouse is on the to be colored tile color is light green
 				if (mouseHandler.pixelToHex(location.x, location.y).equals(mouseHandler.currenTileCoords)){
 					color = new Color(0, 230,0);
 				}
 				
 				drawHexagon(g, location, HEXSIZE.x-4, HEXSIZE.y-4, color);
-				color = new Color(0, 180,0);
+				// Reset color to default
+				color = new Color(97, 168,104);
 				int a = location.x;
 				int b = location.y + (int)(Math.sqrt(3) / 2 *(HEXSIZE.y*2));
 				location.move(a ,b);
@@ -202,6 +219,7 @@ public class PaintGraphics extends JComponent{
 			location.move(a ,b);
 		}
 		
+		// RIGHT SIDE
 		int b1 = HEXSTART.y - (int)(((1.5)*(Math.sqrt(3f) / 2f *(HEXSIZE.y*2f))));
 		location.move(location.x ,b1);
 		
@@ -209,26 +227,36 @@ public class PaintGraphics extends JComponent{
 			for(int i = 5; i > 1-j; i--){
 				hexLocation = mouseHandler.pixelToHex(location.x, location.y);
 				
-				// Turns left
-				if(grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
-					color = new Color(114, 229,114);
+				// These define the colors of the tiles under the units of the player whos turn it is
+				// if the unit has a move and attack left color is purple
+				if(grid.getTile(hexLocation.x, hexLocation.y).attackLeft && grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
+					color = new Color(206, 119,206);
+				// if the unit has only an attack left color the tile red
+				} else if(grid.getTile(hexLocation.x, hexLocation.y).attackLeft){
+					color = new Color(201, 116,118);
+				// if the unit has only a move left color the tile blue
+				} else if(grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
+					color = new Color(117, 116,190);
 				}
 				
-				// selected tile
+				// If the to be colored tile is the selected tile color it distinctively
 				if( mouseHandler.selectedTile != null && hexLocation.equals(mouseHandler.selectedTile.location)){
 					color = new Color(0, 70,0);
 				}
 				
-				
+				// Adjacent tiles (legal moves and surrounding hostiles)
 				if( mouseHandler.selectedTile != null){
 					for (int k = 0; k < 6; k++) {
-						try { 
-							if(mouseHandler.selectedTile.adjacentTiles.get(k).location.equals(hexLocation)){
-								if(mouseHandler.selectedTile.adjacentTiles.get(k)!= null){
-									if(mouseHandler.selectedTile.isLegal(mouseHandler.selectedTile.adjacentTiles.get(k))){
+						try {
+							AdjacentTile = mouseHandler.selectedTile.adjacentTiles.get(k);
+							if(AdjacentTile.location.equals(hexLocation)){
+								if(AdjacentTile!= null){
+									// If adjacent tile is legal give color it dark green
+									if(mouseHandler.selectedTile.isLegal(AdjacentTile)){
 										color = new Color(0, 130,0);
 									}
-									if(mouseHandler.selectedTile.isHostile(mouseHandler.selectedTile.adjacentTiles.get(k))){
+									// If adjacent tile contain an enemy color it red
+									if(mouseHandler.selectedTile.isHostile(AdjacentTile)){
 										color = new Color(80, 0,0);
 									}
 								}
@@ -237,12 +265,13 @@ public class PaintGraphics extends JComponent{
 					} 
 				}
 				
+				// If the mouse is on the to be colored tile color is light green
 				if (mouseHandler.pixelToHex(location.x, location.y).equals(mouseHandler.currenTileCoords)){
 					color = new Color(0, 230,0);
 				}
 				
 				drawHexagon(g, location, HEXSIZE.x-4, HEXSIZE.y-4, color);
-				color = new Color(0, 180,0);
+				color = new Color(97, 168,104);
 				int a = location.x;
 				int b = location.y + (int)(Math.sqrt(3f) / 2f *(HEXSIZE.y*2f));
 				location.move(a ,b);
