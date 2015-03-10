@@ -17,14 +17,14 @@ public class AI {
 	int x1;
 	int y1;
 	Grid grid;
-	String playerTeam;
+	String team;
 	
 	/*
 	 * Constructor
 	 */
 	public AI(Grid newGrid, String newPlayerTeam) {
 		grid = newGrid;
-		playerTeam = newPlayerTeam;
+		team = newPlayerTeam;
 	}
 	
 	/*
@@ -36,16 +36,17 @@ public class AI {
 		int index;
 
 		// Do 1 action with every unit
+		resetTurnsLeft();
 		while (!humansTemp.isEmpty() && !beastsTemp.isEmpty()) {
 			// Get a random friendly unit at a position
-			if (playerTeam.equals("Humans")) {
+			if (team.equals("Humans")) {
 				index = rand.nextInt(humansTemp.size());
 				positionSelf = humansTemp.get(index);
 				tileSelf = grid.gridMap.get(positionSelf);
 				// Remove the index so this unit will not be chosen again
 				humansTemp.remove(index);
 			}
-			else if (playerTeam.equals("Beasts")) {
+			else if (team.equals("Beasts")) {
 				index = rand.nextInt(beastsTemp.size());
 				positionSelf = beastsTemp.get(index);
 				tileSelf = grid.gridMap.get(positionSelf);
@@ -62,6 +63,7 @@ public class AI {
 				x1 = grid.gridMap.get(positionHostile).x;
 				y1 = grid.gridMap.get(positionHostile).y;
 				grid.attackUnit(x,y, x1, y1);
+				tileSelf.turnsLeft = false;
 			}
 			
 			// Make a random move if not possible to attack
@@ -74,6 +76,8 @@ public class AI {
 				
 				// Move to the position
 				grid.moveUnit(x, y, x1, y1);	
+				tileSelf.turnsLeft = false;
+				grid.getTile(x1, y1).turnsLeft = false;
 			}
 			try {
 				Thread.sleep(10);
@@ -84,12 +88,28 @@ public class AI {
 		}
 	}
 	
+	/*
+	 * For all tiles with units, set turnsLeft to true
+	 */
+	private void resetTurnsLeft() {
+		if (team.equals("Humans")) {
+			for (String unitPosition : grid.humans){
+				grid.gridMap.get(unitPosition).turnsLeft = true;
+			}
+		}
+		else {
+			for (String unitPosition : grid.beasts){
+				grid.gridMap.get(unitPosition).turnsLeft = true;
+			}
+		}
+		
+	}
+	
 	public void play() {
 		
 	}
 	
 	public int minimax() {
-		
 		return 0;
 	}
 }
