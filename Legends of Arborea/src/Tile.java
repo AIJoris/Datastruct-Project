@@ -14,6 +14,7 @@ public class Tile {
 	ArrayList<String> surroundingHostiles;
 	ArrayList<String> legalMoves;
 	Point location;
+	boolean turnsLeft;
 	/*
 	 * Constructor with only coordinates
 	 */
@@ -30,9 +31,9 @@ public class Tile {
 		unit = newUnit;	
 		if (unit != null) {
 			team = unit.team;
+			turnsLeft = true;
 		}
 		location = new Point(x,y);
-		
 	}
 	
 	/*

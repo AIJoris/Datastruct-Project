@@ -29,6 +29,7 @@ public class HumanPlayer {
 	}
 	
 	public void play() {
+		resetTurnsLeft();
 		// Define who your friendlies depending on the team
 		if (team.equals("Humans")) {
 			friendlies = new ArrayList<String>(grid.humans);
@@ -49,6 +50,7 @@ public class HumanPlayer {
 			if (goalTile.unit != null) {
 				if (grid.attackIsPossible(x, y, x1, y1) == true) {
 					grid.attackUnit(x, y, x1, y1);
+					tileSelf.turnsLeft = false;					
 				}
 				else {
 					selectTiles();
@@ -57,11 +59,20 @@ public class HumanPlayer {
 			}
 			else {
 				grid.moveUnit(x, y, x1, y1);
+				goalTile.turnsLeft = false;
 			}
 			friendlies.remove(toKey(x,y));
 		}	
 	}
 	
+	/*
+	 * For all tiles with units, set turnsLeft to true
+	 */
+	private void resetTurnsLeft() {
+		for (String unitPosition : grid.humans){
+			grid.gridMap.get(unitPosition).turnsLeft = true;
+		}
+	}
 	
 	/*
 	 * This method allows the human player to select a friendly unit
@@ -131,4 +142,5 @@ public class HumanPlayer {
 		goalTile = grid.gridMap.get(goalPosition);
 		return true;
 	}
+	
 }
