@@ -31,9 +31,9 @@ public class Tile {
 		unit = newUnit;	
 		if (unit != null) {
 			team = unit.team;
-			turnsLeft = true;
 		}
 		location = new Point(x,y);
+		turnsLeft = false;
 	}
 	
 	/*
