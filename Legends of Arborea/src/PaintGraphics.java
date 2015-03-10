@@ -137,7 +137,7 @@ public class PaintGraphics extends JComponent{
 				}
 				
 				// Turns left
-				if(grid.getTile(hexLocation.x, hexLocation.y).turnsLeft){
+				if(grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
 					color = new Color(0, 0,220);
 				}
 				
@@ -183,7 +183,7 @@ public class PaintGraphics extends JComponent{
 				}
 				
 				// Turns left
-				if(grid.getTile(hexLocation.x, hexLocation.y).turnsLeft){
+				if(grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
 					color = new Color(114, 229,114);
 				}
 				

@@ -14,7 +14,8 @@ public class Tile {
 	ArrayList<String> surroundingHostiles;
 	ArrayList<String> legalMoves;
 	Point location;
-	boolean turnsLeft;
+	boolean moveLeft;
+	boolean attackLeft;
 	/*
 	 * Constructor with only coordinates
 	 */
@@ -34,7 +35,8 @@ public class Tile {
 		}
 		
 		location = new Point(x,y);
-		turnsLeft = false;
+		moveLeft = false;
+		attackLeft = false;
 	}
 	
 	/*

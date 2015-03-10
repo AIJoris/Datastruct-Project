@@ -63,7 +63,7 @@ public class AI {
 				x1 = grid.gridMap.get(positionHostile).x;
 				y1 = grid.gridMap.get(positionHostile).y;
 				grid.attackUnit(x,y, x1, y1);
-				tileSelf.turnsLeft = false;
+				tileSelf.attackLeft = false;
 			}
 			
 			// Make a random move if not possible to attack
@@ -76,8 +76,9 @@ public class AI {
 				
 				// Move to the position
 				grid.moveUnit(x, y, x1, y1);	
-				tileSelf.turnsLeft = false;
-				grid.getTile(x1, y1).turnsLeft = false;
+				tileSelf.moveLeft = false;
+				tileSelf.attackLeft = false;
+				grid.getTile(x1, y1).moveLeft = false;
 			}
 			try {
 				Thread.sleep(10);
@@ -95,12 +96,14 @@ public class AI {
 	private void resetTurnsLeft() {
 		if (team.equals("Humans")) {
 			for (String unitPosition : grid.humans){
-				grid.gridMap.get(unitPosition).turnsLeft = true;
+				grid.gridMap.get(unitPosition).moveLeft = true;
+				grid.gridMap.get(unitPosition).attackLeft = true;
 			}
 		}
 		else {
 			for (String unitPosition : grid.beasts){
-				grid.gridMap.get(unitPosition).turnsLeft = true;
+				grid.gridMap.get(unitPosition).moveLeft = true;
+				grid.gridMap.get(unitPosition).attackLeft = true;
 			}
 		}
 		

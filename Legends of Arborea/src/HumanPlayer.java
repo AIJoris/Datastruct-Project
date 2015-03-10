@@ -30,18 +30,11 @@ public class HumanPlayer {
 	
 	public void play() {
 		resetTurnsLeft();
-		// Define who your friendlies depending on the team
-		if (team.equals("Humans")) {
-			friendlies = new ArrayList<String>(grid.humans);
-		}
-		else {
-			friendlies = new ArrayList<String>(grid.beasts);
-		}
 		// Loop over the amount of units of the player's team
 		while (!friendlies.isEmpty() | endTurn == true) {
 			// Select the start and end tile
 			selectTiles();
-			while (!friendlies.contains(positionSelf)) {
+			if (!tileSelf.attackLeft & !tileSelf.moveLeft) {
 				System.out.println("You have already used this unit");
 				grid.message = "used";
 				selectTiles();
@@ -50,20 +43,32 @@ public class HumanPlayer {
 			// If the goal tile contains a unit, attack that unit
 			if (goalTile.unit != null) {
 				if (grid.attackIsPossible(x, y, x1, y1) == true) {
-					grid.attackUnit(x, y, x1, y1);
-					tileSelf.turnsLeft = false;			
+					if (tileSelf.attackLeft) {
+						grid.attackUnit(x, y, x1, y1);
+						tileSelf.attackLeft = false;
+					}
+					else {
+						grid.message = "attackLeft";
+					}
+								
 				}
 				else {
 					selectTiles();
 				}
 				
 			}
-			else {
+			if (tileSelf.moveLeft) {
 				grid.moveUnit(x, y, x1, y1);
-				goalTile.turnsLeft = false;
-				tileSelf.turnsLeft = false;
+				goalTile.moveLeft = false;
+				tileSelf.attackLeft = false;
+				tileSelf.moveLeft = false;
 			}
-			friendlies.remove(toKey(x,y));
+			else {
+				grid.message = "moveLeft";
+			}
+			if (!tileSelf.attackLeft & !tileSelf.moveLeft) {
+				friendlies.remove(toKey(x,y));
+			}
 		}	
 	}
 	
@@ -71,8 +76,15 @@ public class HumanPlayer {
 	 * For all tiles with units, set turnsLeft to true
 	 */
 	private void resetTurnsLeft() {
+		if (team.equals("Humans")) {
+			friendlies = new ArrayList<String>(grid.humans);
+		}
+		else {
+			friendlies = new ArrayList<String>(grid.beasts);
+		}
 		for (String unitPosition : grid.humans){
-			grid.gridMap.get(unitPosition).turnsLeft = true;
+			grid.gridMap.get(unitPosition).moveLeft = true;
+			grid.gridMap.get(unitPosition).attackLeft = true;
 		}
 	}
 	
