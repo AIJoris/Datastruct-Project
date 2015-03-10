@@ -84,13 +84,13 @@ public class LegendsOfArborea{
 			// Player 1:
 			if (grid.team.equals("Humans")) {
 				System.out.println("Humans: ");
-				player1.play();
+				player3.play();
 			}
 			
 			// Player 2:
 			else if (grid.team.equals("Beasts")) {
 				System.out.println("Beasts");
-				player3.play();
+				player2.playRandom();
 			}
 			
 			endOfTurn(grid);

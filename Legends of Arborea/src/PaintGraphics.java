@@ -76,7 +76,7 @@ public class PaintGraphics extends JComponent{
 		
 		// Left panel
 		if(mouseHandler.currentUnit != null){
-			if(mouseHandler.currentUnit.name.equals("Orc") || mouseHandler.currentUnit.name.equals("Goblin")){
+//			if(mouseHandler.currentUnit.name.equals("Orc") || mouseHandler.currentUnit.name.equals("Goblin")){
 				g.drawImage(characters.get(mouseHandler.currentUnit.name),(HEIGHT/2)-imWidth, HEXSTART.y, this);
 //				mouseHandler.currentUnit.hitPoints
 				int xOffset = (HEIGHT/2)-imWidth;
@@ -90,7 +90,7 @@ public class PaintGraphics extends JComponent{
 					}
 	
 				}
-			}
+//			}
 			
 		}
 		// Right panel
