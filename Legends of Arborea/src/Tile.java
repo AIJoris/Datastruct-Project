@@ -153,22 +153,6 @@ public class Tile {
 	}
 	
 	/*
-	 * Remove the unit currently on this tile
-	 */
-//	public void removeUnit(ArrayList<String> humans, ArrayList<String> beasts) {
-//		unit = null;
-//		// Remove the unit also from the lists of units
-//		if (team.equals("Humans")) {
-//			beasts.remove(toKey(x,y));
-//			return;
-//		}
-//		else if (team.equals("Beasts")) {
-//			humans.remove(toKey(x, y));
-//			return;
-//		}
-//	}
-	
-	/*
 	 * Convert the coordinate of a tile to a string, so it
 	 * can be used as key to access a tile in the hashmap
 	 */

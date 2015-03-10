@@ -85,6 +85,7 @@ public class AI {
 			catch (InterruptedException e) {
 				System.err.println(e);
 			}
+			grid.message = null;
 		}
 	}
 	

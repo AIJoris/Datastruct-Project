@@ -43,6 +43,7 @@ public class HumanPlayer {
 			selectTiles();
 			while (!friendlies.contains(positionSelf)) {
 				System.out.println("You have already used this unit");
+				grid.message = "used";
 				selectTiles();
 			}
 			
@@ -96,11 +97,16 @@ public class HumanPlayer {
 	private void selectFriendlyUnit() {
 		// Wait for a friendly unit to be selected
 		mouseHandler.currentUnit = null;
+		int counter = 0;
 		while (mouseHandler.currentUnit == null || !mouseHandler.currentUnit.team.equals(team)) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			}
+			counter++;
+			if (counter > 10) {
+				grid.message = null;
 			}
 		}
 		
@@ -119,11 +125,16 @@ public class HumanPlayer {
 	private boolean selectGoalTile() {
 		System.out.println("Select goal tile");
 		mouseHandler.currentTile = null;
+		int counter = 0;
 		while (mouseHandler.currentTile == null) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			}
+			counter++;
+			if (counter > 10) {
+				grid.message = null;
 			}
 		}
 		// Check if a friendly unit is again selected, and if so, change it to the new unit

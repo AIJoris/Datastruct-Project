@@ -15,6 +15,7 @@ public class Grid {
 	double hitChance;
 	ArrayList<String> beasts;
 	ArrayList<String> humans;
+	String message = null;
 	
 	
 	/*
@@ -151,6 +152,7 @@ public class Grid {
 		if (Math.random() <= hitChance ) {
 			unitHostile.hitPoints -= 1;
 			System.out.println("BOOM in the balls!");
+			message = "boom";
 			
 			// Remove the unit if he died
 			if (unitHostile.hitPoints == 0) {
@@ -167,6 +169,7 @@ public class Grid {
 			return true;
 		}
 		System.out.println("Ha, you missed!");
+		message = "missed";
 		return false;
 	}
 	
@@ -188,6 +191,7 @@ public class Grid {
 		// Check if the tile is adjacent
 		if (!tileSelf.adjacentTiles.contains(tileHostile)) {
 			System.out.println("Your tool of death is not long enough for this attack.");
+			message = "reach";
 			return false;
 		}
 		
@@ -207,6 +211,7 @@ public class Grid {
 		// Check if the defender is friendly or hostile
 		if (unitHostile.team.equals(unitSelf.team)) {
 			System.out.println("Friendly fire!");
+			message = "friendly";
 			return false;
 		}
 		return true;
