@@ -66,14 +66,6 @@ public class PaintGraphics extends JComponent{
 		Image swordsman = ImageIO.read(input);
 		input = classLoader.getResourceAsStream("heart.png");
 		Image heart = ImageIO.read(input);
-//		input = classLoader.getResourceAsStream("heart.png");
-//		Image heart = ImageIO.read(input);
-//		input = classLoader.getResourceAsStream("heart.png");
-//		Image heart = ImageIO.read(input);
-//		input = classLoader.getResourceAsStream("heart.png");
-//		Image heart = ImageIO.read(input);
-//		input = classLoader.getResourceAsStream("heart.png");
-//		Image heart = ImageIO.read(input);
 		
 		Map<String, Image> characters = new HashMap<>();
 		characters.put("General", general);
@@ -81,6 +73,35 @@ public class PaintGraphics extends JComponent{
 		characters.put("Orc", orc);
 		characters.put("Swordsman", swordsman);
 		int imWidth = general.getWidth(this);
+		
+		// Messages
+		input = classLoader.getResourceAsStream("enemyOutofReach.png");
+		Image reach = ImageIO.read(input);
+		input = classLoader.getResourceAsStream("unitUsed.png");
+		Image used = ImageIO.read(input);
+		input = classLoader.getResourceAsStream("missed.png");
+		Image missed = ImageIO.read(input);
+		input = classLoader.getResourceAsStream("boom.png");
+		Image boom = ImageIO.read(input);
+		input = classLoader.getResourceAsStream("friendly.png");
+		Image friendly = ImageIO.read(input);
+		
+		Map<String, Image> messages = new HashMap<>();
+		messages.put("reach", reach);
+		messages.put("used", used);
+		messages.put("missed", missed);
+		messages.put("boom", boom);
+		messages.put("friendly", friendly);
+		
+		// load button
+		input = classLoader.getResourceAsStream("endturn.png");
+		Image endTurn = ImageIO.read(input);
+		input = classLoader.getResourceAsStream("endturnSel.png");
+		Image endTurnSel = ImageIO.read(input);
+		
+		Map<String, Image> turnButtons = new HashMap<>();
+		turnButtons.put("endTurn", endTurn);
+		turnButtons.put("endTurnSel", endTurnSel);
 		
 		// Left panel
 		try{
@@ -116,9 +137,18 @@ public class PaintGraphics extends JComponent{
         } catch (NullPointerException e) {}
 		
 		// Update panel on the bottom
+		Point messageLocation = new Point((WIDTH/2)-244, HEIGHT/7);
+		String foundMessage = grid.message;
+		if(foundMessage != null){
+			g.drawImage(messages.get(foundMessage),messageLocation.x, messageLocation.y, this);
+		}
 		
+//		// end turn button
+//		Point buttonLocation = new Point((WIDTH/2)-180, HEIGHT/4-10);
+//		g.drawImage(turnButtons.get(mouseHandler.button),buttonLocation.x, buttonLocation.y, this);
+//		turnButtons.get(mouseHandler.button).setToolTipText("This shows up on mouse hover");
 		
-		
+
 	}
 	
 	public void drawBoard(Graphics g){
@@ -131,14 +161,14 @@ public class PaintGraphics extends JComponent{
 			for(int i = 0; i < 5+j; i++){
 				hexLocation = mouseHandler.pixelToHex(location.x, location.y);
 				
-				// Regular 
-				if( mouseHandler.selectedTile != null && hexLocation.equals(mouseHandler.selectedTile.location)){
-					color = new Color(0, 70,0);
-				}
-				
 				// Turns left
 				if(grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
-					color = new Color(0, 0,220);
+					color = new Color(114, 229,114);
+				}
+				
+				// selected tile 
+				if( mouseHandler.selectedTile != null && hexLocation.equals(mouseHandler.selectedTile.location)){
+					color = new Color(0, 70,0);
 				}
 				
 				// Adjacent tiles (legal moves and surrounding hostiles)
@@ -178,14 +208,17 @@ public class PaintGraphics extends JComponent{
 		for(int j = 4; j > 0; j--){
 			for(int i = 5; i > 1-j; i--){
 				hexLocation = mouseHandler.pixelToHex(location.x, location.y);
-				if( mouseHandler.selectedTile != null && hexLocation.equals(mouseHandler.selectedTile.location)){
-					color = new Color(0, 70,0);
-				}
 				
 				// Turns left
 				if(grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
 					color = new Color(114, 229,114);
 				}
+				
+				// selected tile
+				if( mouseHandler.selectedTile != null && hexLocation.equals(mouseHandler.selectedTile.location)){
+					color = new Color(0, 70,0);
+				}
+				
 				
 				if( mouseHandler.selectedTile != null){
 					for (int k = 0; k < 6; k++) {
