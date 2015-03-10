@@ -155,26 +155,22 @@ public class PaintGraphics extends JComponent{
 		// color to default
 		Color color = new Color(97, 168,104);
 		Tile AdjacentTile;
-		Point location = new Point(0,0);
+		Point location = new Point(HEXSTART.x, HEXSTART.y);
 		Point hexLocation = new Point(0,0);
-		Tile tileTemp;
-		location = new Point(0,0);
-		location.move(HEXSTART.x + 2, HEXSTART.y + 2);
 		// LEFT SIDE
 		for(int j = 0; j < 5; j++){
 			for(int i = 0; i < 5+j; i++){
 				hexLocation = mouseHandler.pixelToHex(location.x, location.y);
-				tileTemp = grid.getTile(hexLocation.x, hexLocation.y);
 				
 				// These define the colors of the tiles under the units of the player whos turn it is
 				// if the unit has a move and attack left color is purple
-				if(tileTemp.attackLeft && tileTemp.moveLeft){
+				if(grid.getTile(hexLocation.x, hexLocation.y).attackLeft && grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
 					color = new Color(206, 119,206);
 				// if the unit has only an attack left color the tile red
-				} else if(tileTemp.attackLeft){
+				} else if(grid.getTile(hexLocation.x, hexLocation.y).attackLeft){
 					color = new Color(201, 116,118);
 				// if the unit has only a move left color the tile blue
-				} else if(tileTemp.moveLeft){
+				} else if(grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
 					color = new Color(117, 116,190);
 				}
 				
@@ -206,7 +202,7 @@ public class PaintGraphics extends JComponent{
 				
 				// If the mouse is on the to be colored tile color is light green
 				if (mouseHandler.pixelToHex(location.x, location.y).equals(mouseHandler.currenTileCoords)){
-					color = new Color(0, 230,0);
+					color = new Color(154, 224,158);
 				}
 				
 				drawHexagon(g, location, HEXSIZE.x-4, HEXSIZE.y-4, color);
@@ -228,17 +224,16 @@ public class PaintGraphics extends JComponent{
 		for(int j = 4; j > 0; j--){
 			for(int i = 5; i > 1-j; i--){
 				hexLocation = mouseHandler.pixelToHex(location.x, location.y);
-				tileTemp = grid.getTile(hexLocation.x, hexLocation.y);
 				
 				// These define the colors of the tiles under the units of the player whos turn it is
 				// if the unit has a move and attack left color is purple
-				if(tileTemp.attackLeft && tileTemp.moveLeft){
+				if(grid.getTile(hexLocation.x, hexLocation.y).attackLeft && grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
 					color = new Color(206, 119,206);
 				// if the unit has only an attack left color the tile red
-				} else if(tileTemp.attackLeft){
+				} else if(grid.getTile(hexLocation.x, hexLocation.y).attackLeft){
 					color = new Color(201, 116,118);
 				// if the unit has only a move left color the tile blue
-				} else if(tileTemp.moveLeft){
+				} else if(grid.getTile(hexLocation.x, hexLocation.y).moveLeft){
 					color = new Color(117, 116,190);
 				}
 				
@@ -270,7 +265,7 @@ public class PaintGraphics extends JComponent{
 				
 				// If the mouse is on the to be colored tile color is light green
 				if (mouseHandler.pixelToHex(location.x, location.y).equals(mouseHandler.currenTileCoords)){
-					color = new Color(0, 230,0);
+					color = new Color(154, 224,158);
 				}
 				
 				drawHexagon(g, location, HEXSIZE.x-4, HEXSIZE.y-4, color);
