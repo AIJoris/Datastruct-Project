@@ -27,7 +27,7 @@ public class LegendsOfArborea{
 	// kan niet width meer an length want dan gaat ie spacen met de select
 	public static final Point HEXSIZE  = new Point(44,44);
 	/* Place to start drawing the board */
-	private static final Point HEXSTART =  new Point(WIDTH/2 - (7*HEXSIZE.x), HEIGHT/2-(int)((Math.sqrt(3f)*HEXSIZE.y)));
+	private static final Point HEXSTART =  new Point(WIDTH/2 - (7*HEXSIZE.x), HEIGHT/2-(int)((Math.sqrt(3f)*HEXSIZE.y-60)));
 	Polygon points;
 	PaintGraphics graphics;
 	public static MouseHandler mouseHandler;
