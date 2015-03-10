@@ -5,17 +5,18 @@ import java.awt.event.MouseMotionListener;
 
 public class MouseHandler implements MouseListener, MouseMotionListener {
 	Tile currentTile;
+	Tile selectedTile;
 	Point currenTileCoords;
-	int WIDTH = 1000;
-	int HEIGHT = 700;
-	Point HEXSTART = new Point((int)(WIDTH*0.1), (int)(HEIGHT*0.28));
-	Point HEXSIZE = new Point(44,44);
+	Point HEXSTART;// = new Point((int)(WIDTH*0.1), (int)(HEIGHT*0.28));
+	Point HEXSIZE;// = new Point(44,44);
 	MouseEvent event;
 	Grid grid;
 	Unit currentUnit;
 	
-	public MouseHandler(Grid grid1){
+	public MouseHandler(Grid grid1,Point HEXSIZE1, Point HEXSTART1){
 		grid = grid1;
+		HEXSTART = HEXSTART1;
+		HEXSIZE = HEXSIZE1;
 	}
 	
 	@Override
@@ -23,7 +24,10 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 		int pixelX = e.getX();
 		int pixelY = e.getY();
 		currentTile = grid.getTile(pixelToHex(pixelX, pixelY).x, pixelToHex(pixelX, pixelY).y);
-		currentUnit = currentTile.unit;
+		selectedTile = currentTile; 
+		if(currentTile!=null){
+			currentUnit = currentTile.unit;
+		}
 	}
 	@Override
 	public void mouseEntered(MouseEvent e) {
@@ -70,7 +74,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 		float[] cubeCoords = new float[3];
 		cubeCoords[0] = q;
 		cubeCoords[1] = r;
-		cubeCoords[2] = -cubeCoords[0]-cubeCoords[1];
+		cubeCoords[2] = -q-r;
 		return cubeCoords;
 	}
     
@@ -83,7 +87,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 		float diffX = Math.abs(rx - x);
 		float diffY = Math.abs(ry - y);
 		float diffZ = Math.abs(rz - z);
-
+		
 		if(diffX > diffY && diffX > diffZ){
 			rx = -ry-rz;
 		} else if(diffY > diffZ){
@@ -92,21 +96,21 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 			rz = -rx-ry;
 		}
 		roundedCube[0] = rx;
-		roundedCube[1] = ry;
-		roundedCube[2] = rz;
+		roundedCube[1] = rz;
+		roundedCube[2] = ry;
 
 		return roundedCube;
 	}
 	    		
 	public Point pixelToHex(int x, int y){
-		y = y +(HEXSIZE.y/2);
-		x = x -(HEXSIZE.x/2);
-		float hexQ = (x * 2f/3f / HEXSIZE.x);
-		float hexR = (-x / 3f + (float)Math.sqrt(3f)/3f * y) / (HEXSIZE.y);
+		y = (y-HEXSTART.y)+5;// -(HEXSIZE.y/3);
+		x = (x-HEXSTART.x)+5; //-(HEXSIZE.x/2);
+		float hexQ = (x * (2f/3f) / HEXSIZE.x);
+		float hexR = ((-x / 3f) + ((float)Math.sqrt(3f)/3f) * y) / HEXSIZE.y;
 		float[] cubeCoords = hexToCube(hexQ, hexR);
-		int[] roundedCoords = cubeRound(cubeCoords[0],cubeCoords[2],cubeCoords[1]);
+		int[] roundedCoords = cubeRound(cubeCoords[0],cubeCoords[1],cubeCoords[2]);
 		
-		return new Point(roundedCoords[0]-5,roundedCoords[1]-2);
+		return new Point(roundedCoords[0]-4,roundedCoords[1]);
 	}
 	
 	/*

@@ -16,20 +16,22 @@ import javax.swing.*;
 
 
 public class LegendsOfArborea{
+	/* Get screen information*/
+	static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	/* Width and height of application window in pixels */
-	public static final int WIDTH = 1000;
-	public static final int HEIGHT = 700;
+	static int WIDTH = (int)screenSize.getWidth();
+	static int HEIGHT = (int)screenSize.getHeight();
 	
-	/* Place to start drawing the board */
-	private static final Point HEXSTART = new Point((int)(WIDTH*0.1), (int)(HEIGHT*0.28));
 	
 	/* Size of the sides of the hexagon */
 	// kan niet width meer an length want dan gaat ie spacen met de select
 	public static final Point HEXSIZE  = new Point(44,44);
+	/* Place to start drawing the board */
+	private static final Point HEXSTART =  new Point(WIDTH/2 - (7*HEXSIZE.x), HEIGHT/2-(int)((Math.sqrt(3f)*HEXSIZE.y)));
 	Polygon points;
 	PaintGraphics graphics;
-	public static Point selectedTileNr = new Point(0,0);
 	public static MouseHandler mouseHandler;
+	
 	
 	/* 
 	 * Main method
@@ -50,12 +52,14 @@ public class LegendsOfArborea{
 	 */
 	public LegendsOfArborea(Grid grid) {
 		JFrame frame = new JFrame("Legends of Arborea");
-		mouseHandler = new MouseHandler(grid);
+		Container con = frame.getContentPane();
+		con.setBackground(new Color(0,0,0));
+		mouseHandler = new MouseHandler(grid, HEXSIZE, HEXSTART);
 		frame.addMouseListener(mouseHandler);
 		frame.addMouseMotionListener(mouseHandler);
-		graphics = new PaintGraphics(HEXSTART, HEXSIZE, grid, selectedTileNr, mouseHandler);
+		graphics = new PaintGraphics(HEXSTART, HEXSIZE, grid, mouseHandler);
 		frame.add(graphics);
-		frame.setSize( WIDTH, HEIGHT );
+		frame.setExtendedState(Frame.MAXIMIZED_BOTH);;
 		frame.setLocationRelativeTo( null );
 		frame.setVisible(true);
 		frame.addWindowListener( new WindowAdapter() {
@@ -86,7 +90,7 @@ public class LegendsOfArborea{
 			// Player 2:
 			else if (grid.team.equals("Beasts")) {
 				System.out.println("Beasts");
-				player2.play();
+				player3.play();
 			}
 			
 			endOfTurn(grid);

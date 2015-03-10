@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,7 +13,7 @@ public class Tile {
 	int buffer;
 	ArrayList<String> surroundingHostiles;
 	ArrayList<String> legalMoves;
-	
+	Point location;
 	/*
 	 * Constructor with only coordinates
 	 */
@@ -30,6 +31,7 @@ public class Tile {
 		if (unit != null) {
 			team = unit.team;
 		}
+		location = new Point(x,y);
 		
 	}
 	
@@ -171,5 +173,23 @@ public class Tile {
 	public String toKey(int x, int y) {
 		return new Integer(x).toString() + new Integer(y).toString();
 	}
+
+	public boolean isLegal(Tile move){
+		try{
+			return legalMoves().contains(toKey(move.x, move.y));
+		} catch (NullPointerException e){
+			return false;
+		}
+	}
+	
+	public boolean isHostile(Tile move){
+		try{
+			return surroundingHostiles().contains(toKey(move.x, move.y));
+		} catch (NullPointerException e){
+			return false;
+		}
+	}
+	
+	
 	
 }
