@@ -58,7 +58,7 @@ public class HumanPlayer {
 			if (goalTile.unit == null) {
 				move();
 				// When a tile has no moves and attacks left, remove it from friendlies
-				if (tileSelf.attackLeft == false & tileSelf.moveLeft == false) {
+				if (tileSelf.attackLeft == false && tileSelf.moveLeft == false) {
 					friendlies.remove(toKey(x,y));
 				}
 				playLoop();
@@ -68,7 +68,7 @@ public class HumanPlayer {
 			else {
 				attack();
 				// When a tile has no moves and attacks left, remove it from friendlies
-				if (tileSelf.attackLeft == false & tileSelf.moveLeft == false) {
+				if (tileSelf.attackLeft == false && tileSelf.moveLeft == false) {
 					friendlies.remove(toKey(x,y));
 				}
 				playLoop();
@@ -95,8 +95,9 @@ public class HumanPlayer {
 		}
 		// If the tile has no move left
 		else {
-			grid.message = "moveLeft";
+			grid.message = "used";
 		}
+		mouseHandler.selectedTile = null;
 	}
 	
 	/*
@@ -108,12 +109,15 @@ public class HumanPlayer {
 			if (tileSelf.attackLeft) {
 				grid.attackUnit(x, y, x1, y1);
 				tileSelf.attackLeft = false;
+				mouseHandler.selectedTile = null;
 			}								
 		}
 		// If the attack is not possible, the player can again select a unit
 		else {
+			mouseHandler.selectedTile = null;
 			playLoop();
 		}	
+		
 	}
 	
 	/*
