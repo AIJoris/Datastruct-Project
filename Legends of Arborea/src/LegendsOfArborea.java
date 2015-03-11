@@ -25,6 +25,7 @@ public class LegendsOfArborea implements ActionListener{
 	static int HEIGHT = (int)screenSize.getHeight();
 	
 	static HumanPlayer player3;
+	static HumanPlayer player4;
 	/* Size of the sides of the hexagon */
 	// kan niet width meer an length want dan gaat ie spacen met de select
 	public static final Point HEXSIZE  = new Point(44,44);
@@ -44,7 +45,7 @@ public class LegendsOfArborea implements ActionListener{
 		new LegendsOfArborea(grid);
 		
 		// Play the game
-		grid.team = "Humans";
+		grid.team = "Beasts";
 		playGame(grid);
 		
 	}
@@ -86,7 +87,8 @@ public class LegendsOfArborea implements ActionListener{
 	//static class Action1 implements ActionListener {   
 	//	@Override
 		public void actionPerformed(ActionEvent e) {
-			player3.endTurn = true;			
+			player3.endTurn = true;	
+			player4.endTurn = true;
 		}
 	//}   
 	
@@ -98,6 +100,7 @@ public class LegendsOfArborea implements ActionListener{
 		AI player1 = new AI(grid, "Humans");
 		AI player2 = new AI(grid, "Beasts");
 		player3 = new HumanPlayer(grid, mouseHandler);
+		player4 = new HumanPlayer(grid, mouseHandler);
 		int turn = 0;
 		
 		// Main game loop
@@ -111,10 +114,10 @@ public class LegendsOfArborea implements ActionListener{
 			// Player 2:
 			else if (grid.team.equals("Beasts")) {
 				System.out.println("Beasts");
-				player2.playRandom();
+				player4.play();
 			}
 			
-			endOfTurn(grid);
+			changeTeam(grid);
 			turn++;
 		}
 		System.out.println(turn);
@@ -124,7 +127,7 @@ public class LegendsOfArborea implements ActionListener{
 	/*
 	 * This method updates the turn and switches teams
 	 */
-	private static void endOfTurn(Grid grid) {
+	private static void changeTeam(Grid grid) {
 		// Change team
 		if (grid.team.equals("Humans")) {
 			grid.team = "Beasts";
