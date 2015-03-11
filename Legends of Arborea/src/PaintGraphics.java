@@ -137,8 +137,10 @@ public class PaintGraphics extends JComponent{
 			for (int i = 0; i < weaponSkill; i++) {
 				if(i< 5){
 					g.drawImage(icons.get(weapon),location.x+(i*35), location.y, this);
-				} else {
+				} else if (i< 10){
 					g.drawImage(icons.get(weapon),location.x+((i-5)*35), location.y+35, this);
+				} else {
+					g.drawImage(icons.get(weapon),location.x+((i-10)*35), location.y+70, this);
 				}
 
 			}
@@ -168,8 +170,10 @@ public class PaintGraphics extends JComponent{
 			for (int i = 0; i < weaponSkill; i++) {
 				if(i< 5){
 					g.drawImage(icons.get(weapon),location.x+(i*35), location.y, this);
-				} else {
+				} else if (i< 10){
 					g.drawImage(icons.get(weapon),location.x+((i-5)*35), location.y+35, this);
+				} else {
+					g.drawImage(icons.get(weapon),location.x+((i-10)*35), location.y+70, this);
 				}
 
 			}
