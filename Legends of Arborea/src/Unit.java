@@ -1,5 +1,3 @@
-import java.awt.Point;
-
 /* 
  * This abstract class describes what every unit should have
  */

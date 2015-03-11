@@ -119,6 +119,7 @@ public class AI {
 	 * This method makes intelligent moves
 	 */
 	public void playIntelligent() {
+//		resetTurnsLeft(true);
 		// Create a list of all friendlies and enemies
 		ArrayList<Tile> friendlies = new ArrayList<Tile>(grid.beasts);
 		ArrayList<Tile> hostiles = new ArrayList<Tile>(grid.humans);
@@ -127,14 +128,45 @@ public class AI {
 			hostiles = new ArrayList<Tile>(grid.beasts);
 		}
 		
-		String closestHostile;
 		// Loop over all friendly units
+		Tile closestHostile;
+		Tile bestMove;
 		for (Tile ownTile : friendlies) {
-			// Loop over all legal moves for every friendly unit
-			for (Tile newTile : ownTile.legalMoves()) {
-//				closestHostile = ownTile.calcClosestHostiles(hostiles).get(1);
-				
+			
+			String tactic = "move";
+			if(!ownTile.surroundingHostiles().isEmpty()){
+				tactic = "attack";
 			}
+			switch (tactic) {
+			case "move":
+				// Loop over all legal moves for every friendly unit
+//				System.out.println("tile nu " + ownTile.location);
+				if(!ownTile.legalMoves().isEmpty()){
+					bestMove = ownTile.legalMoves().get(0);
+					for (Tile newTile : ownTile.legalMoves()) {
+						closestHostile = newTile.getClosestHostiles(hostiles).get(0);
+						if(ownTile.distanceTo(closestHostile) < ownTile.distanceTo(bestMove)){
+							bestMove = closestHostile;
+						}
+//						System.out.println("mogelijke tile " + newTile.location);
+//						System.out.println("Dichtsbijzijnde hostile " + closestHostile.location);
+					}
+//					System.out.println("bestmove " + bestMove.location);
+//					System.out.println("\n");
+					grid.moveUnit(ownTile.x, ownTile.y, bestMove.x, bestMove.y);
+				}
+				break;
+			case "attack":
+				hostiles = ownTile.surroundingHostiles();
+				if (!hostiles.isEmpty()) {
+					tileHostile = hostiles.get(rand.nextInt(hostiles.size()));
+					grid.attackUnit(ownTile.x,ownTile.y, tileHostile.x, tileHostile.y);
+				}
+
+			}
+			
+			
+			
 			
 		}
 	}

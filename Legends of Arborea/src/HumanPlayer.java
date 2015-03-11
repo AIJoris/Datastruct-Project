@@ -59,7 +59,6 @@ public class HumanPlayer {
 				grid.message = "used";
 				selectTiles();
 			}
-			
 			// move
 			if (goalTile.unit == null) {
 				move();

@@ -108,7 +108,7 @@ public class LegendsOfArborea implements ActionListener{
 			// Player 1:
 			if (grid.team.equals("Humans")) {
 				System.out.println("Humans: ");
-				player3.play();
+				player1.playIntelligent();
 			}
 			
 			// Player 2:
