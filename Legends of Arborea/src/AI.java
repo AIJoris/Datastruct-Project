@@ -124,19 +124,23 @@ public class AI {
 		ArrayList<Tile> friendlies = new ArrayList<Tile>(grid.beasts);
 		ArrayList<Tile> hostiles = new ArrayList<Tile>(grid.humans);
 		if (team.equals("Humans")) {
+			System.out.println("humanstrun");
 			friendlies = new ArrayList<Tile>(grid.humans);
 			hostiles = new ArrayList<Tile>(grid.beasts);
-		}
+		}else{System.out.println("beaststurn");}
 		
 		// Loop over all friendly units
 		Tile closestHostile;
 		Tile bestMove;
 		for (Tile ownTile : friendlies) {
-			
-			String tactic = "move";
-			if(!ownTile.surroundingHostiles().isEmpty()){
-				tactic = "attack";
+			try {
+				Thread.sleep(100);
 			}
+			catch (InterruptedException e) {
+				System.err.println(e);
+			}
+			String tactic = chooseTactic(ownTile);
+			
 			switch (tactic) {
 			case "move":
 				// Loop over all legal moves for every friendly unit
@@ -144,10 +148,12 @@ public class AI {
 				if(!ownTile.legalMoves().isEmpty()){
 					bestMove = ownTile.legalMoves().get(0);
 					for (Tile newTile : ownTile.legalMoves()) {
-						closestHostile = newTile.getClosestHostiles(hostiles).get(0);
+						
+						closestHostile = newTile.getClosestHostiles(hostiles).get(rand.nextInt(newTile.getClosestHostiles(hostiles).size()));
 						if(ownTile.distanceTo(closestHostile) < ownTile.distanceTo(bestMove)){
 							bestMove = closestHostile;
 						}
+						// TODO check of de weg niet geblokkeerd wordt, oftewel kijk wat de kortste weg is zonder de bezette tiles als possible paths mee te tellen
 //						System.out.println("mogelijke tile " + newTile.location);
 //						System.out.println("Dichtsbijzijnde hostile " + closestHostile.location);
 					}
@@ -156,19 +162,29 @@ public class AI {
 					grid.moveUnit(ownTile.x, ownTile.y, bestMove.x, bestMove.y);
 				}
 				break;
+				
 			case "attack":
 				hostiles = ownTile.surroundingHostiles();
 				if (!hostiles.isEmpty()) {
 					tileHostile = hostiles.get(rand.nextInt(hostiles.size()));
 					grid.attackUnit(ownTile.x,ownTile.y, tileHostile.x, tileHostile.y);
 				}
+				break;
+			
+			case "reinforce":
+				
 
 			}
-			
-			
-			
-			
 		}
+	}
+	
+	/** Picks out the most fruitful tactic for a give tile/unit combination (here comes the real AI)*/
+	public String chooseTactic(Tile ownTile){
+		String tactic = "move";
+		if(!ownTile.surroundingHostiles().isEmpty()){
+			tactic = "attack";
+		}
+		return tactic;
 	}
 	
 	

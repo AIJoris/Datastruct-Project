@@ -114,7 +114,7 @@ public class LegendsOfArborea implements ActionListener{
 			// Player 2:
 			else if (grid.team.equals("Beasts")) {
 				System.out.println("Beasts");
-				player4.play();
+				player2.playIntelligent();
 			}
 			
 			changeTeam(grid);
