@@ -194,12 +194,23 @@ public class Tile {
 		
 	}
 	
-	public ArrayList<String> getClosestHostiles(ArrayList<String> hostilePositions){
-		for (String hostilePosition : hostilePositions) {
-			
-		}
-		return hostilePositions;
-		
-	}
+//	public ArrayList<Tile> getClosestHostiles(ArrayList<Tile> hostilePositions){
+//		ArgMax<Int, Tile> argmax = new Argmax
+//		for (Tile hostilePosition : hostilePositions) {
+//			
+//		}
+//		return hostilePositions;
+//		
+//	}
+//	ArgMax<Double, String> argmax = new Argmax<Double, String>(
+//            Double.NEGATIVE_INFINITY, "");
+//
+//for (String str : stringList) // stringList is probably an array of Strings
+//{
+//    argmax.update(str, getScore(str));
+//}
+//
+//double maxValue = argmax.getMaxValue();
+//String argmaxString = argmax.getArgMax();
 	
 }
