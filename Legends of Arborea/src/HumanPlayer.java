@@ -175,6 +175,9 @@ public class HumanPlayer {
 			if (counter > 10) {
 				grid.message = null;
 			}
+			if (endTurn) {
+				break;
+			}
 		}
 		
 		// Select friendly unit
@@ -204,6 +207,9 @@ public class HumanPlayer {
 			counter++;
 			if (counter > 10) {
 				grid.message = null;
+			}
+			if (endTurn) {
+				break;
 			}
 		}
 		// Check if a friendly unit is again selected, and if so, change it to the new unit
