@@ -176,7 +176,7 @@ public class HumanPlayer {
 				grid.message = null;
 			}
 			if (endTurn) {
-				break;
+				return;
 			}
 		}
 		
@@ -209,7 +209,7 @@ public class HumanPlayer {
 				grid.message = null;
 			}
 			if (endTurn) {
-				break;
+				return true;
 			}
 		}
 		// Check if a friendly unit is again selected, and if so, change it to the new unit
