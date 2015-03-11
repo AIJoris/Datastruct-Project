@@ -194,13 +194,14 @@ public class Tile {
 		
 	}
 	
-//	public ArrayList<Tile> getClosestHostiles(ArrayList<Tile> hostilePositions){
-//		ArgMax<Int, Tile> argmax = new Argmax
-//		for (Tile hostilePosition : hostilePositions) {
-//			
+//	public ArrayList<Tile> getClosestHostiles(ArrayList<Tile> hostiles){
+//		Tile bestHostile;
+//		int bestDistance = 999;
+//		for (Tile hostile : hostiles) {
+//			if this.distanceTo(hostilePosition)
 //		}
 //		return hostilePositions;
-//		
+		
 //	}
 //	ArgMax<Double, String> argmax = new Argmax<Double, String>(
 //            Double.NEGATIVE_INFINITY, "");
