@@ -42,6 +42,7 @@ public class HumanPlayer {
 		
 		// Loop over the amount of units of the player's team
 		playLoop();	
+		endTurn = false;
 	}
 	
 	private void playLoop() {
