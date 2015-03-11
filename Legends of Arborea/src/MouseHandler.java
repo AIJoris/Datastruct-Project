@@ -26,7 +26,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 		int pixelY = e.getY();
 		currentTile = grid.getTile(pixelToHex(pixelX, pixelY).x, pixelToHex(pixelX, pixelY).y);
 		selectedTile = currentTile; 
-		if(currentTile!=null){
+		if (currentTile!=null) {
 			currentUnit = currentTile.unit;
 		}
 	}
@@ -96,7 +96,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 		float diffY = Math.abs(ry - y);
 		float diffZ = Math.abs(rz - z);
 		
-		if(diffX > diffY && diffX > diffZ){
+		if (diffX > diffY && diffX > diffZ) {
 			rx = -ry-rz;
 		} else if(diffY > diffZ){
 			ry = -rx-rz;
@@ -120,11 +120,5 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 		
 		return new Point(roundedCoords[0]-4,roundedCoords[1]);
 	}
-	
-	
-	/*
-	 * Convert the coordinate of a tile to a string, so it
-	 * can be used as key to access a tile in the hashmap
-	 */
 
 }

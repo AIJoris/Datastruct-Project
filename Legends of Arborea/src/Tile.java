@@ -161,24 +161,31 @@ public class Tile {
 		return new Integer(x).toString() + new Integer(y).toString();
 	}
 
-	public boolean isLegal(Tile move){
-		try{
-			return legalMoves().contains(move);
-		} catch (NullPointerException e){
+	/*
+	 * 
+	 */
+	public boolean isLegal(Tile tile) {
+		try {
+			return legalMoves().contains(tile);
+		} 
+		catch (NullPointerException e){
 			return false;
 		}
 	}
 	
-	public boolean isHostile(Tile move){
-		try{
-			return surroundingHostiles().contains(move);
-		} catch (NullPointerException e){
+	public boolean isHostile(Tile tile) {
+		try {
+			return surroundingHostiles().contains(tile);
+		} 
+		catch (NullPointerException e){
 			return false;
 		}
 	}
 	
-	/** Converts axial coordinates to cube coordinates */
-	public int[] hexToCube(int q, int r){
+	/*
+	 * Converts axial coordinates to cube coordinates
+	 */
+	public int[] hexToCube(int q, int r) {
 		int[] cubeCoords = new int[3];
 		cubeCoords[0] = q;
 		cubeCoords[1] = r;
@@ -186,16 +193,20 @@ public class Tile {
 		return cubeCoords;
 	}
 	
-	/** Returns the distance to a given tile */
-	public int distanceTo(Tile endTile){
+	/*
+	 * Returns the distance to a given tile
+	 */
+	public int distanceTo(Tile endTile) {
 		int[] startCoords = hexToCube(this.x, this.y);
 		int[] endCoords = hexToCube(endTile.x, endTile.y);
 		return (Math.abs(startCoords[0] - endCoords[0]) + Math.abs(startCoords[1] - endCoords[1]) + Math.abs(startCoords[2] - endCoords[2]))/2;
 		
 	}
 	
-	/** Returns the closest hostiles */
-	public ArrayList<Tile> getClosestHostiles(ArrayList<Tile> hostiles){
+	/*
+	 * Returns the closest hostiles
+	 */
+	public ArrayList<Tile> getClosestHostiles(ArrayList<Tile> hostiles) {
 		ArrayList<Tile> closestHostiles = new ArrayList<Tile>();
 		int bestDistance = 999;
 		for (Tile hostile : hostiles) {

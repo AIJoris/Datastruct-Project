@@ -27,7 +27,9 @@ public class PaintGraphics extends JComponent{
 	static int WIDTH = (int)screenSize.getWidth();
 	static int HEIGHT = (int)screenSize.getHeight();
 	
-	// CONSTRUCTER
+	/*
+	 * Constructor
+	 */
 	public PaintGraphics(Point HEXSTART1, Point HEXSIZE1, Grid grid1, MouseHandler handler){
 		this.HEXSTART = HEXSTART1;
 		this.HEXSIZE = HEXSIZE1;
@@ -40,7 +42,7 @@ public class PaintGraphics extends JComponent{
 		drawBoard(g);
 		try {
 			drawDecor(g);
-			addCharacters(g);
+			drawUnits(g);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -201,8 +203,8 @@ public class PaintGraphics extends JComponent{
 		Point location = new Point(HEXSTART.x, HEXSTART.y);
 		Point hexLocation = new Point(0,0);
 		// LEFT SIDE
-		for(int j = 0; j < 5; j++){
-			for(int i = 0; i < 5+j; i++){
+		for (int j = 0; j < 5; j++) {
+			for (int i = 0; i < 5+j; i++) {
 				hexLocation = mouseHandler.pixelToHex(location.x, location.y);
 				
 				// These define the colors of the tiles under the units of the player whos turn it is
@@ -218,25 +220,25 @@ public class PaintGraphics extends JComponent{
 				}
 				
 				// If the to be colored tile is the selected tile color it distinctively
-				if( mouseHandler.selectedTile != null && hexLocation.equals(mouseHandler.selectedTile.location)){
+				if (mouseHandler.selectedTile != null && hexLocation.equals(mouseHandler.selectedTile.location)) {
 					color = new Color(0, 70,0);
 				}
 				
 				// Adjacent tiles (legal moves and surrounding hostiles)
-				if( mouseHandler.selectedTile != null){
+				if (mouseHandler.selectedTile != null) {
 					for (int k = 0; k < 6; k++) {
 						try {
 							AdjacentTile = mouseHandler.selectedTile.adjacentTiles.get(k);
-							if(AdjacentTile.location.equals(hexLocation)){
+							if (AdjacentTile.location.equals(hexLocation))  {
 								if(AdjacentTile!= null){
 									System.out.println(AdjacentTile.location);
 									
 									// If adjacent tile is legal give color it dark green
-									if(mouseHandler.selectedTile.isLegal(AdjacentTile)){
+									if (mouseHandler.selectedTile.isLegal(AdjacentTile)) {
 										color = new Color(0, 130,0);
 									}
 									// If adjacent tile contain an enemy color it red
-									if(mouseHandler.selectedTile.isHostile(AdjacentTile)){
+									if (mouseHandler.selectedTile.isHostile(AdjacentTile)) {
 										color = new Color(80, 0,0);
 									}
 								}
@@ -288,7 +290,7 @@ public class PaintGraphics extends JComponent{
 				}
 				
 				// Adjacent tiles (legal moves and surrounding hostiles)
-				if( mouseHandler.selectedTile != null){
+				if (mouseHandler.selectedTile != null) {
 					for (int k = 0; k < 6; k++) {
 						try {
 							AdjacentTile = mouseHandler.selectedTile.adjacentTiles.get(k);
@@ -309,7 +311,7 @@ public class PaintGraphics extends JComponent{
 				}
 				
 				// If the mouse is on the to be colored tile color is light green
-				if (mouseHandler.pixelToHex(location.x, location.y).equals(mouseHandler.currenTileCoords)){
+				if (mouseHandler.pixelToHex(location.x, location.y).equals(mouseHandler.currenTileCoords)) {
 					color = new Color(154, 224,158);
 				}
 				
@@ -325,7 +327,7 @@ public class PaintGraphics extends JComponent{
 		}		
 	}
 	
-	public void addCharacters(Graphics g) throws IOException{
+	public void drawUnits(Graphics g) throws IOException{
 		// Load images
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		InputStream input = classLoader.getResourceAsStream("General.png");
@@ -344,16 +346,14 @@ public class PaintGraphics extends JComponent{
 		characters.put("Swordsman", swordsman);
 		
 		HashMap<String,Tile> tiles = grid.gridMap;
-		for(Tile tile: tiles.values()){
-			if(tile.unit != null){
+		for (Tile tile: tiles.values()) {
+			if (tile.unit != null) {
 				String foundCharacter = tile.unit.name;
-				if(foundCharacter != null){
+				if (foundCharacter != null) {
 					Point location = mouseHandler.hexToPixel(tile.x, tile.y);
 					int newLocX = location.x+HEXSTART.x+HEXSIZE.x*5 +2;
 					int newLocY = location.y+HEXSTART.y+HEXSIZE.y*2+6;
 					g.drawImage(characters.get(foundCharacter), newLocX, newLocY, this);
-				    
-					
 				}
 			}
 		}
@@ -361,7 +361,7 @@ public class PaintGraphics extends JComponent{
 	
 	public void drawHexagon(Graphics g, Point center,  int sizeX, int sizeY, Color color){
 		Polygon points = new Polygon();
-		for(int i = 1; i < 7; i++){
+		for (int i = 1; i < 7; i++) {
 			double angle = i * 2 * Math.PI / 6;
 			points.addPoint((int)(center.x + sizeX * Math.cos(angle)) , (int)(center.y + sizeY * Math.sin(angle)));
 		}
