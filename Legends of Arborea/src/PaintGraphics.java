@@ -131,7 +131,7 @@ public class PaintGraphics extends JComponent{
 
 			}
 			int weaponSkill = mouseHandler.currentUnit.weaponSkill;
-			weaponSkill += mouseHandler.currentTile.getBuffer();
+			weaponSkill += mouseHandler.selectedTile.getBuffer();
 			String weapon = mouseHandler.currentUnit.weapon;
 			location = new Point(xOffset, HEXSTART.y + 140);
 			for (int i = 0; i < weaponSkill; i++) {
@@ -239,7 +239,7 @@ public class PaintGraphics extends JComponent{
 									}
 								}
 							}
-						} catch (IndexOutOfBoundsException e){}
+						} catch (IndexOutOfBoundsException | NullPointerException e){}
 					} 
 				}
 				

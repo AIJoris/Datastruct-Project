@@ -58,7 +58,7 @@ public class LegendsOfArborea implements ActionListener{
 		JButton endTurnButton = new JButton("End turn");
 		Container con = frame.getContentPane();
 		
-		endTurnButton.setBounds(0, 0, 100, 200);
+		endTurnButton.setBounds(HEXSTART.x - 350, HEXSTART.y+250, 100, 35);
 
 		con.setBackground(new Color(0,0,0));
 		mouseHandler = new MouseHandler(grid, HEXSIZE, HEXSTART);
