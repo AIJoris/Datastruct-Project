@@ -121,6 +121,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 		return new Point(roundedCoords[0]-4,roundedCoords[1]);
 	}
 	
+	
 	/*
 	 * Convert the coordinate of a tile to a string, so it
 	 * can be used as key to access a tile in the hashmap

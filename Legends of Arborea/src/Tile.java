@@ -179,6 +179,27 @@ public class Tile {
 		}
 	}
 	
+	public int[] hexToCube(int q, int r){
+		int[] cubeCoords = new int[3];
+		cubeCoords[0] = q;
+		cubeCoords[1] = r;
+		cubeCoords[2] = -q-r;
+		return cubeCoords;
+	}
 	
+	public int distanceTo(Tile endTile){
+		int[] startCoords = hexToCube(this.x, this.y);
+		int[] endCoords = hexToCube(endTile.x, endTile.y);
+		return (Math.abs(startCoords[0] - endCoords[0]) + Math.abs(startCoords[1] - endCoords[1]) + Math.abs(startCoords[2] - endCoords[2]))/2;
+		
+	}
+	
+	public ArrayList<String> getClosestHostiles(ArrayList<String> hostilePositions){
+		for (String hostilePosition : hostilePositions) {
+			
+		}
+		return hostilePositions;
+		
+	}
 	
 }
