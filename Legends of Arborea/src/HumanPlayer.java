@@ -11,7 +11,7 @@ public class HumanPlayer {
 	int x, y, x1, y1;	
 	Grid grid;
 	MouseHandler mouseHandler;
-	ArrayList<String> friendlies;
+	ArrayList<Tile> friendlies;
 	String team;
 	boolean endTurn;
 	
@@ -31,10 +31,10 @@ public class HumanPlayer {
 		team = grid.team;
 		// Check the team and decide who are friendlies
 		if (team.equals("Humans")) {
-			friendlies = new ArrayList<String>(grid.humans);
+			friendlies = new ArrayList<Tile>(grid.humans);
 		}
 		else {
-			friendlies = new ArrayList<String>(grid.beasts);
+			friendlies = new ArrayList<Tile>(grid.beasts);
 		}
 		
 		// For each unit, set moveLeft and attackLeft to true
@@ -132,17 +132,17 @@ public class HumanPlayer {
 	private void resetTurnsLeft(Boolean toBoolean) {
 		// If you are playing with the humans, reset the humans
 		if (team.equals("Humans")) {
-			for (String unitPosition : grid.humans){
-				grid.gridMap.get(unitPosition).moveLeft = toBoolean;
-				grid.gridMap.get(unitPosition).attackLeft = toBoolean;
+			for (Tile unitTile : grid.humans){
+				unitTile.moveLeft = toBoolean;
+				unitTile.attackLeft = toBoolean;
 			}
 		}
 		
 		// If you are playing with the beasts, reset the beasts
 		else {
-			for (String unitPosition : grid.beasts){
-				grid.gridMap.get(unitPosition).moveLeft = toBoolean;
-				grid.gridMap.get(unitPosition).attackLeft = toBoolean;
+			for (Tile unitTile : grid.beasts){
+				unitTile.moveLeft = toBoolean;
+				unitTile.attackLeft = toBoolean;
 			}
 		}
 		

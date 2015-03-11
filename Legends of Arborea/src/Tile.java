@@ -11,8 +11,8 @@ public class Tile {
 	String key;
 	ArrayList<Tile> adjacentTiles;
 	int buffer;
-	ArrayList<String> surroundingHostiles;
-	ArrayList<String> legalMoves;
+	ArrayList<Tile> surroundingHostiles;
+	ArrayList<Tile> legalMoves;
 	Point location;
 	boolean moveLeft;
 	boolean attackLeft;
@@ -48,7 +48,7 @@ public class Tile {
 		int[] xMoves = {x-1, x-1, x, x, x+1, x+1};
 		int[] yMoves = {y, y+1, y-1, y+1, y-1, y};
 		for (int i = 0; i < 6; i++) {
-			if(gridMap.get(toKey(xMoves[i], yMoves[i])) != null){
+			if (gridMap.get(toKey(xMoves[i], yMoves[i])) != null) {
 				adjacentTiles.add(gridMap.get(toKey(xMoves[i], yMoves[i])));
 			}
 		}
@@ -105,19 +105,18 @@ public class Tile {
 	/*
 	 * This method returns all hostile forces around a position
 	 */
-	public ArrayList<String> surroundingHostiles() {
-		surroundingHostiles = new ArrayList<String>();
+	public ArrayList<Tile> surroundingHostiles() {
+		surroundingHostiles = new ArrayList<Tile>();
 		Unit surroundingUnit;
 		
 		// Loop over adjacent tiles to find hostile units
-		int nrTiles = adjacentTiles.size();
-		for (int i = 0; i < nrTiles; i++) {
-			if (adjacentTiles.get(i) == null | adjacentTiles.get(i).unit == null) {
+		for (Tile adjacentTile : adjacentTiles) {
+			if (adjacentTile == null | adjacentTile.unit == null) {
 				continue;
 			}
-			surroundingUnit = adjacentTiles.get(i).unit; 
+			surroundingUnit = adjacentTile.unit; 
 			if (!surroundingUnit.team.equals(unit.team)) {
-				surroundingHostiles.add(toKey(adjacentTiles.get(i).x, adjacentTiles.get(i).y));
+				surroundingHostiles.add(adjacentTile);
 			}
 		}
 		return surroundingHostiles;
@@ -126,23 +125,22 @@ public class Tile {
 	/*
 	 * This method calculates all possible legal moves from a position (x,y)
 	 */
-	public ArrayList<String> legalMoves() {			
+	public ArrayList<Tile> legalMoves() {			
 		// Generate all adjacent tiles and check which ones make a legal move
-		ArrayList<String> legalMoves = new ArrayList<String>();
-		int nrTiles = adjacentTiles.size();
-		for (int i = 0; i < nrTiles; i++) {			
+		ArrayList<Tile> legalMoves = new ArrayList<Tile>();
+		for (Tile adjacentTile : adjacentTiles) {			
 			// Check if the tiles exist
-			if (adjacentTiles.get(i) == null) {
+			if (adjacentTile == null) {
 				continue;
 			}
 			
 			// Check if there is a unit at the start position and no unit on the goal position
-			if (unit == null || adjacentTiles.get(i).unit != null) {
+			if (unit == null || adjacentTile.unit != null) {
 				continue;
 			}
 			
 			// The move is legal, so add it to the list
-			legalMoves.add(toKey(adjacentTiles.get(i).x, adjacentTiles.get(i).y));
+			legalMoves.add(adjacentTile);
 			
 		}
 		return legalMoves;
@@ -165,7 +163,7 @@ public class Tile {
 
 	public boolean isLegal(Tile move){
 		try{
-			return legalMoves().contains(toKey(move.x, move.y));
+			return legalMoves().contains(move);
 		} catch (NullPointerException e){
 			return false;
 		}
@@ -173,7 +171,7 @@ public class Tile {
 	
 	public boolean isHostile(Tile move){
 		try{
-			return surroundingHostiles().contains(toKey(move.x, move.y));
+			return surroundingHostiles().contains(move);
 		} catch (NullPointerException e){
 			return false;
 		}

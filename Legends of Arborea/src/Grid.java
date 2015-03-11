@@ -13,8 +13,8 @@ public class Grid {
 	int skillAttacker;
 	int skillDefender;
 	double hitChance;
-	ArrayList<String> beasts;
-	ArrayList<String> humans;
+	ArrayList<Tile> beasts;
+	ArrayList<Tile> humans;
 	String message = null;
 	
 	
@@ -64,31 +64,37 @@ public class Grid {
 		String[] goblins = {toKey(-4,1), toKey(-3,0), toKey(-3,1), toKey(-3,2), toKey(-3,3), toKey(-3,4), toKey(-2,4), toKey(-2,-1)};
 		
 		// Keep a list of humans and beasts
-		humans = new ArrayList<String>();
-		beasts = new ArrayList<String>();
+		humans = new ArrayList<Tile>();
+		beasts = new ArrayList<Tile>();
 		
+		Tile tempTile;
 		// Place all units on their tiles
 		for (String coord : generals) {
-			gridMap.get(coord).addUnit(new General());
-			humans.add(coord);
+			tempTile = gridMap.get(coord);
+			tempTile.addUnit(new General());
+			humans.add(tempTile);
 		}
 		for (String coord : swordsmen) {
-			gridMap.get(coord).addUnit(new Swordsman());
-			humans.add(coord);
+			tempTile = gridMap.get(coord);
+			tempTile.addUnit(new Swordsman());
+			humans.add(tempTile);
 		}
 		for (String coord : orcs) {
-			gridMap.get(coord).addUnit(new Orc());
-			beasts.add(coord);
+			tempTile = gridMap.get(coord);
+			tempTile.addUnit(new Orc());
+			beasts.add(tempTile);
 		}
 		for (String coord : goblins) {
-			gridMap.get(coord).addUnit(new Goblin());
-			beasts.add(coord);
+			tempTile = gridMap.get(coord);
+			tempTile.addUnit(new Goblin());
+			beasts.add(tempTile);
 		}
 		
 		// Initialize the tiles by calculating adjacent tiles and buffers for every tile
-		for (Map.Entry<String, Tile> tile : gridMap.entrySet())
+		for (Map.Entry<String, Tile> entry : gridMap.entrySet())
 		{
-			tile.getValue().adjacentTiles(gridMap);
+			entry.getValue().adjacentTiles(gridMap);
+			
 		}
 	}
 	
@@ -108,13 +114,13 @@ public class Grid {
 		Tile newTile = getTile(x1,y1);
 		
 		// Move unit if the move is legal and the goal tile is not occupied
-		if (oldTile.legalMoves().contains(toKey(x1,y1))) {			
+		if (oldTile.legalMoves().contains(newTile)) {			
 			// Update the lists containing all the units
 			if (team.equals("Humans")) {
-				humans.set(humans.indexOf(toKey(x,y)), toKey(x1,y1));
+				humans.set(humans.indexOf(oldTile), newTile);
 			}
 			else if (team.equals("Beasts")) {
-				beasts.set(beasts.indexOf(toKey(x,y)), toKey(x1,y1));
+				beasts.set(beasts.indexOf(oldTile), newTile);
 			}
 			
 			// Move the unit
@@ -162,10 +168,10 @@ public class Grid {
 				tileHostile.attackLeft = false;
 				// Remove the unit also from the lists of units
 				if (team.equals("Humans")) {
-					beasts.remove(toKey(x1,y1));
+					beasts.remove(tileHostile);
 				}
 				else if (team.equals("Beasts")) {
-					humans.remove(toKey(x1, y1));
+					humans.remove(tileHostile);
 				}
 			}
 			return true;
