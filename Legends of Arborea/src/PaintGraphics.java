@@ -131,8 +131,7 @@ public class PaintGraphics extends JComponent{
 
 			}
 			int weaponSkill = mouseHandler.currentUnit.weaponSkill;
-			weaponSkill += mouseHandler.currentTile.getBuffer();
-			System.out.println(mouseHandler.currentTile.getBuffer());
+//			weaponSkill += mouseHandler.currentTile.getBuffer();
 			String weapon = mouseHandler.currentUnit.weapon;
 			location = new Point(xOffset, HEXSTART.y + 140);
 			for (int i = 0; i < weaponSkill; i++) {
@@ -161,8 +160,7 @@ public class PaintGraphics extends JComponent{
 				
 			}
 			int weaponSkill = grid.getTile(mouseHandler.currenTileCoords.x, mouseHandler.currenTileCoords.y).unit.weaponSkill;
-			weaponSkill += grid.getTile(mouseHandler.currenTileCoords.x, mouseHandler.currenTileCoords.y).getBuffer();
-			System.out.println(grid.getTile(mouseHandler.currenTileCoords.x, mouseHandler.currenTileCoords.y).getBuffer());
+//			weaponSkill += grid.getTile(mouseHandler.currenTileCoords.x, mouseHandler.currenTileCoords.y).getBuffer();
 			String weapon = grid.getTile(mouseHandler.currenTileCoords.x, mouseHandler.currenTileCoords.y).unit.weapon;
 			location = new Point(xOffset, HEXSTART.y + 140);
 			for (int i = 0; i < weaponSkill; i++) {
