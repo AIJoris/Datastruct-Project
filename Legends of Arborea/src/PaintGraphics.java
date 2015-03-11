@@ -54,6 +54,20 @@ public class PaintGraphics extends JComponent{
 		Image title = ImageIO.read(input);
 		g.drawImage(title,(int)(WIDTH/4.79), HEIGHT/18, this);
 		
+		/* add hearts, swords and axes (for hitpoints and life representation) */
+		input = classLoader.getResourceAsStream("heart.png");
+		Image heart = ImageIO.read(input);
+		input = classLoader.getResourceAsStream("axe.png");
+		Image axe = ImageIO.read(input);
+		input = classLoader.getResourceAsStream("sword.png");
+		Image sword = ImageIO.read(input);
+		
+		Map<String, Image> icons = new HashMap<>();
+		icons.put("heart", heart);
+		icons.put("axe", axe);
+		icons.put("sword", sword);
+		
+		
 		/* Add score boards */
 		// Load images
 		input = classLoader.getResourceAsStream("genOverview.png");
@@ -64,8 +78,6 @@ public class PaintGraphics extends JComponent{
 		Image orc = ImageIO.read(input);
 		input = classLoader.getResourceAsStream("smOverview.png");
 		Image swordsman = ImageIO.read(input);
-		input = classLoader.getResourceAsStream("heart.png");
-		Image heart = ImageIO.read(input);
 		
 		Map<String, Image> characters = new HashMap<>();
 		characters.put("General", general);
@@ -93,15 +105,15 @@ public class PaintGraphics extends JComponent{
 		messages.put("boom", boom);
 		messages.put("friendly", friendly);
 		
-		// load button
-		input = classLoader.getResourceAsStream("endturn.png");
-		Image endTurn = ImageIO.read(input);
-		input = classLoader.getResourceAsStream("endturnSel.png");
-		Image endTurnSel = ImageIO.read(input);
-		
-		Map<String, Image> turnButtons = new HashMap<>();
-		turnButtons.put("endTurn", endTurn);
-		turnButtons.put("endTurnSel", endTurnSel);
+//		// load button
+//		input = classLoader.getResourceAsStream("endturn.png");
+//		Image endTurn = ImageIO.read(input);
+//		input = classLoader.getResourceAsStream("endturnSel.png");
+//		Image endTurnSel = ImageIO.read(input);
+//		
+//		Map<String, Image> turnButtons = new HashMap<>();
+//		turnButtons.put("endTurn", endTurn);
+//		turnButtons.put("endTurnSel", endTurnSel);
 		
 		// Left panel
 		try{
@@ -112,12 +124,26 @@ public class PaintGraphics extends JComponent{
 			int hitPoints = mouseHandler.currentUnit.hitPoints;
 			for (int i = 0; i < hitPoints; i++) {
 				if(i< 5){
-					g.drawImage(heart,location.x+(i*35), location.y, this);
+					g.drawImage(icons.get("heart"),location.x+(i*35), location.y, this);
 				} else {
-					g.drawImage(heart,location.x+((i-5)*35), location.y+35, this);
+					g.drawImage(icons.get("heart"),location.x+((i-5)*35), location.y+35, this);
 				}
 
 			}
+			int weaponSkill = mouseHandler.currentUnit.weaponSkill;
+			weaponSkill += mouseHandler.currentTile.getBuffer();
+			System.out.println(mouseHandler.currentTile.getBuffer());
+			String weapon = mouseHandler.currentUnit.weapon;
+			location = new Point(xOffset, HEXSTART.y + 140);
+			for (int i = 0; i < weaponSkill; i++) {
+				if(i< 5){
+					g.drawImage(icons.get(weapon),location.x+(i*35), location.y, this);
+				} else {
+					g.drawImage(icons.get(weapon),location.x+((i-5)*35), location.y+35, this);
+				}
+
+			}
+			
 			
 		} catch (NullPointerException e){}
 		// Right panel
@@ -133,6 +159,19 @@ public class PaintGraphics extends JComponent{
 					g.drawImage(heart,location.x+((i-5)*35), location.y+35, this);
 				}
 				
+			}
+			int weaponSkill = grid.getTile(mouseHandler.currenTileCoords.x, mouseHandler.currenTileCoords.y).unit.weaponSkill;
+			weaponSkill += grid.getTile(mouseHandler.currenTileCoords.x, mouseHandler.currenTileCoords.y).getBuffer();
+			System.out.println(grid.getTile(mouseHandler.currenTileCoords.x, mouseHandler.currenTileCoords.y).getBuffer());
+			String weapon = grid.getTile(mouseHandler.currenTileCoords.x, mouseHandler.currenTileCoords.y).unit.weapon;
+			location = new Point(xOffset, HEXSTART.y + 140);
+			for (int i = 0; i < weaponSkill; i++) {
+				if(i< 5){
+					g.drawImage(icons.get(weapon),location.x+(i*35), location.y, this);
+				} else {
+					g.drawImage(icons.get(weapon),location.x+((i-5)*35), location.y+35, this);
+				}
+
 			}
         } catch (NullPointerException e) {}
 		

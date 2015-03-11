@@ -8,5 +8,6 @@ public class General extends Unit {
 		weaponSkill = 8;
 		name = "General";
 		team = "Humans";
+		weapon = "sword";
 	}
 }

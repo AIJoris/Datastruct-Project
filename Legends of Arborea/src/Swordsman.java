@@ -8,6 +8,7 @@ public class Swordsman extends Unit {
 		weaponSkill = 6;
 		name = "Swordsman";
 		team = "Humans";
+		weapon = "sword";
 	}
 
 }

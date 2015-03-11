@@ -8,6 +8,7 @@ public class Goblin extends Unit {
 		weaponSkill = 4;
 		name = "Goblin";
 		team = "Beasts";
+		weapon = "axe";
 	}
 
 }

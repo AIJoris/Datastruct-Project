@@ -8,6 +8,7 @@ public class Orc extends Unit {
 		weaponSkill = 8;
 		name = "Orc";
 		team = "Beasts";
+		weapon = "axe";
 	}
 
 }

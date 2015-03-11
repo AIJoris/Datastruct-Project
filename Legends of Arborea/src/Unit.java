@@ -9,6 +9,7 @@ public class Unit {
 	String name;
 	String team;
 	boolean selected;
+	String weapon;
 	
 	public Unit() {
 		
