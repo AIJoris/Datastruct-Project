@@ -86,9 +86,7 @@ public class LegendsOfArborea implements ActionListener{
 	//static class Action1 implements ActionListener {   
 	//	@Override
 		public void actionPerformed(ActionEvent e) {
-			player3.endTurn = true;
-			System.out.println("end it");
-			
+			player3.endTurn = true;			
 		}
 	//}   
 	

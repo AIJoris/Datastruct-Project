@@ -60,6 +60,7 @@ public class Tile {
 	 */
 	public int getBuffer() {
 		if (unit != null) {
+			buffer = 0;
 			// Specify who are friendly and who are hostile
 			Unit friendlyGeneralUnit;
 			Unit friendlyInfantryUnit;

@@ -119,7 +119,6 @@ public class PaintGraphics extends JComponent{
 		// Left panel
 		try{
 			g.drawImage(characters.get(mouseHandler.currentUnit.name),(HEIGHT/2)-imWidth, HEXSTART.y, this);
-//				mouseHandler.currentUnit.hitPoints
 			int xOffset = (HEIGHT/2)-imWidth;
 			Point location = new Point(xOffset, HEXSTART.y + 70);
 			int hitPoints = mouseHandler.currentUnit.hitPoints;
@@ -132,7 +131,7 @@ public class PaintGraphics extends JComponent{
 
 			}
 			int weaponSkill = mouseHandler.currentUnit.weaponSkill;
-//			weaponSkill += mouseHandler.currentTile.getBuffer();
+			weaponSkill += mouseHandler.currentTile.getBuffer();
 			String weapon = mouseHandler.currentUnit.weapon;
 			location = new Point(xOffset, HEXSTART.y + 140);
 			for (int i = 0; i < weaponSkill; i++) {
@@ -148,10 +147,11 @@ public class PaintGraphics extends JComponent{
 		} catch (NullPointerException e){}
 		// Right panel
 		try {
-			g.drawImage(characters.get(grid.getTile(mouseHandler.currenTileCoords.x, mouseHandler.currenTileCoords.y).unit.name),(WIDTH/2)+ imWidth, HEXSTART.y, this);
+			Tile tempTile = grid.getTile(mouseHandler.currenTileCoords.x, mouseHandler.currenTileCoords.y);
+			g.drawImage(characters.get(tempTile.unit.name),(WIDTH/2)+ imWidth, HEXSTART.y, this);
 			int xOffset = (WIDTH/2)+ imWidth;
 			Point location = new Point(xOffset, HEXSTART.y + 70);
-			int hitPoints = grid.getTile(mouseHandler.currenTileCoords.x, mouseHandler.currenTileCoords.y).unit.hitPoints;
+			int hitPoints = tempTile.unit.hitPoints;
 			for (int i = 0; i < hitPoints; i++) {
 				if(i< 5){
 					g.drawImage(heart,location.x+(i*35), location.y, this);
@@ -160,9 +160,10 @@ public class PaintGraphics extends JComponent{
 				}
 				
 			}
-			int weaponSkill = grid.getTile(mouseHandler.currenTileCoords.x, mouseHandler.currenTileCoords.y).unit.weaponSkill;
-//			weaponSkill += grid.getTile(mouseHandler.currenTileCoords.x, mouseHandler.currenTileCoords.y).getBuffer();
-			String weapon = grid.getTile(mouseHandler.currenTileCoords.x, mouseHandler.currenTileCoords.y).unit.weapon;
+			int weaponSkill = tempTile.unit.weaponSkill;
+			weaponSkill += tempTile.getBuffer();
+
+			String weapon = tempTile.unit.weapon;
 			location = new Point(xOffset, HEXSTART.y + 140);
 			for (int i = 0; i < weaponSkill; i++) {
 				if(i< 5){
