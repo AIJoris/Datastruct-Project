@@ -10,6 +10,8 @@
 // q learning / value iteration
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
@@ -22,7 +24,7 @@ public class LegendsOfArborea{
 	static int WIDTH = (int)screenSize.getWidth();
 	static int HEIGHT = (int)screenSize.getHeight();
 	
-	
+	static HumanPlayer player3;
 	/* Size of the sides of the hexagon */
 	// kan niet width meer an length want dan gaat ie spacen met de select
 	public static final Point HEXSIZE  = new Point(44,44);
@@ -52,13 +54,18 @@ public class LegendsOfArborea{
 	 */
 	public LegendsOfArborea(Grid grid) {
 		JFrame frame = new JFrame("Legends of Arborea");
+		JButton endTurnButton = new JButton("End turn");
 		Container con = frame.getContentPane();
 		con.setBackground(new Color(0,0,0));
 		mouseHandler = new MouseHandler(grid, HEXSIZE, HEXSTART);
 		frame.addMouseListener(mouseHandler);
 		frame.addMouseMotionListener(mouseHandler);
 		graphics = new PaintGraphics(HEXSTART, HEXSIZE, grid, mouseHandler);
+		endTurnButton.setVisible(true);
 		frame.add(graphics);
+		graphics.add(endTurnButton);
+
+		endTurnButton.addActionListener (new Action1());
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);;
 		frame.setLocationRelativeTo( null );
 		frame.setVisible(true);
@@ -68,6 +75,13 @@ public class LegendsOfArborea{
 	    	 }
 	    });
 	}
+	static class Action1 implements ActionListener {   
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			player3.endTurn = true;
+			
+		}
+	}   
 	
 	/*
 	 * This method plays the game
@@ -76,7 +90,7 @@ public class LegendsOfArborea{
 		// Create the AI's
 		AI player1 = new AI(grid, "Humans");
 		AI player2 = new AI(grid, "Beasts");
-		HumanPlayer player3 = new HumanPlayer(grid, mouseHandler);
+		player3 = new HumanPlayer(grid, mouseHandler);
 		int turn = 0;
 		
 		// Main game loop
