@@ -45,7 +45,7 @@ public class HumanPlayer {
 	}
 	
 	private void playLoop() {
-		while (!friendlies.isEmpty() | endTurn == true) {
+		while (!friendlies.isEmpty() || endTurn == true) {
 			// Select the start and end tile
 			selectTiles();
 			while (!tileSelf.attackLeft && !tileSelf.moveLeft) {

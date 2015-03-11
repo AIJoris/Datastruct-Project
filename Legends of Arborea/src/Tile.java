@@ -59,13 +59,13 @@ public class Tile {
 	 * are present at tiles nearby, and calculates the buffer 
 	 */
 	public int getBuffer() {
-		if (unit == null) {
+		if (unit != null) {
 			// Specify who are friendly and who are hostile
 			Unit friendlyGeneralUnit;
 			Unit friendlyInfantryUnit;
 			Unit hostileGeneralUnit;
 			Unit hostileInfantryUnit;
-			if (team.equals("Humans")) {
+			if (unit.team.equals("Humans")) {
 				friendlyGeneralUnit = new General();
 				friendlyInfantryUnit = new Swordsman();
 				hostileGeneralUnit = new Orc();
