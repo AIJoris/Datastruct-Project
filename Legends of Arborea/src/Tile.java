@@ -177,6 +177,7 @@ public class Tile {
 		}
 	}
 	
+	/** Converts axial coordinates to cube coordinates */
 	public int[] hexToCube(int q, int r){
 		int[] cubeCoords = new int[3];
 		cubeCoords[0] = q;
@@ -185,6 +186,7 @@ public class Tile {
 		return cubeCoords;
 	}
 	
+	/** Returns the distance to a given tile */
 	public int distanceTo(Tile endTile){
 		int[] startCoords = hexToCube(this.x, this.y);
 		int[] endCoords = hexToCube(endTile.x, endTile.y);
@@ -192,15 +194,23 @@ public class Tile {
 		
 	}
 	
-//	public ArrayList<Tile> getClosestHostiles(ArrayList<Tile> hostiles){
-//		Tile bestHostile;
-//		int bestDistance = 999;
-//		for (Tile hostile : hostiles) {
-//			if this.distanceTo(hostilePosition)
-//		}
-//		return hostilePositions;
-		
-//	}
+	/** Returns the closest hostiles */
+	public ArrayList<Tile> getClosestHostiles(ArrayList<Tile> hostiles){
+		ArrayList<Tile> closestHostiles = new ArrayList<Tile>();
+		int bestDistance = 999;
+		for (Tile hostile : hostiles) {
+			if(this.distanceTo(hostile) < bestDistance){
+				bestDistance = this.distanceTo(hostile);
+			}
+		}
+		for (Tile hostile : hostiles) {
+			if(this.distanceTo(hostile) == bestDistance){
+				closestHostiles.add(hostile);
+			}
+		}
+		return closestHostiles;	
+	}
+	
 //	ArgMax<Double, String> argmax = new Argmax<Double, String>(
 //            Double.NEGATIVE_INFINITY, "");
 //
