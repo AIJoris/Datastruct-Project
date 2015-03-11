@@ -49,6 +49,9 @@ public class HumanPlayer {
 		while (!friendlies.isEmpty() && endTurn == false) {
 			// Select the start and end tile
 			selectTiles();
+			if(endTurn){
+				break;
+			}
 			while (!tileSelf.attackLeft && !tileSelf.moveLeft) {
 				System.out.println("You have already used this unit");
 				grid.message = "used";

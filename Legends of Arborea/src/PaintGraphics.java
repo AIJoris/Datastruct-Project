@@ -36,6 +36,7 @@ public class PaintGraphics extends JComponent{
 	}
 	
 	public void paint(Graphics g){
+		super.paint(g);
 		drawBoard(g);
 		try {
 			drawDecor(g);
@@ -296,7 +297,7 @@ public class PaintGraphics extends JComponent{
 									}
 								}
 							}
-						} catch (IndexOutOfBoundsException e){}
+						} catch (IndexOutOfBoundsException | NullPointerException e){}
 					} 
 				}
 				

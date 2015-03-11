@@ -17,7 +17,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 
-public class LegendsOfArborea{
+public class LegendsOfArborea implements ActionListener{
 	/* Get screen information*/
 	static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	/* Width and height of application window in pixels */
@@ -56,16 +56,24 @@ public class LegendsOfArborea{
 		JFrame frame = new JFrame("Legends of Arborea");
 		JButton endTurnButton = new JButton("End turn");
 		Container con = frame.getContentPane();
+		
+		endTurnButton.setBounds(0, 0, 100, 200);
+
 		con.setBackground(new Color(0,0,0));
 		mouseHandler = new MouseHandler(grid, HEXSIZE, HEXSTART);
 		frame.addMouseListener(mouseHandler);
 		frame.addMouseMotionListener(mouseHandler);
+		
 		graphics = new PaintGraphics(HEXSTART, HEXSIZE, grid, mouseHandler);
+		frame.setPreferredSize(new Dimension(300,400));
+		frame.setMinimumSize(new Dimension(300,400));
 		endTurnButton.setVisible(true);
-		frame.add(graphics);
 		graphics.add(endTurnButton);
+		//graphics.add(new JPanel());
 
-		endTurnButton.addActionListener (new Action1());
+		frame.add(graphics);
+
+		endTurnButton.addActionListener(this);
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);;
 		frame.setLocationRelativeTo( null );
 		frame.setVisible(true);
@@ -75,13 +83,14 @@ public class LegendsOfArborea{
 	    	 }
 	    });
 	}
-	static class Action1 implements ActionListener {   
-		@Override
+	//static class Action1 implements ActionListener {   
+	//	@Override
 		public void actionPerformed(ActionEvent e) {
 			player3.endTurn = true;
+			System.out.println("end it");
 			
 		}
-	}   
+	//}   
 	
 	/*
 	 * This method plays the game
