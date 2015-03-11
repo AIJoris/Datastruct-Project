@@ -158,6 +158,8 @@ public class Grid {
 			if (unitHostile.hitPoints == 0) {
 				tileHostile.unit = null;
 				tileHostile.team = null;
+				tileHostile.moveLeft = false;
+				tileHostile.attackLeft = false;
 				// Remove the unit also from the lists of units
 				if (team.equals("Humans")) {
 					beasts.remove(toKey(x1,y1));
