@@ -64,7 +64,7 @@ public class HumanPlayer {
 				move();
 				// When a tile has no moves and attacks left, remove it from friendlies
 				if (tileSelf.attackLeft == false && tileSelf.moveLeft == false) {
-					friendlies.remove(toKey(x,y));
+					friendlies.remove(tileSelf);
 				}
 				playLoop();
 				break;
@@ -74,7 +74,7 @@ public class HumanPlayer {
 				attack();
 				// When a tile has no moves and attacks left, remove it from friendlies
 				if (tileSelf.attackLeft == false && tileSelf.moveLeft == false) {
-					friendlies.remove(toKey(x,y));
+					friendlies.remove(tileSelf);
 				}
 				playLoop();
 			}
@@ -89,7 +89,7 @@ public class HumanPlayer {
 		if (tileSelf.moveLeft) {
 			// The move has to be legal
 			if (tileSelf.isLegal(goalTile)) {
-				grid.moveUnit(x, y, x1, y1);
+				grid.moveUnit(tileSelf, goalTile);
 				goalTile.moveLeft = false;
 				if (tileSelf.attackLeft) {
 					goalTile.attackLeft = true;
@@ -110,9 +110,9 @@ public class HumanPlayer {
 	 */
 	private void attack() {
 		// If the goal tile contains a unit, is possible and still has attack left, then attack
-		if (grid.attackIsPossible(x, y, x1, y1)) {
+		if (grid.attackIsPossible(tileSelf, goalTile)) {
 			if (tileSelf.attackLeft) {
-				grid.attackUnit(x, y, x1, y1);
+				grid.attackUnit(tileSelf, goalTile);
 				tileSelf.attackLeft = false;
 				mouseHandler.selectedTile = null;
 			}								
@@ -122,7 +122,6 @@ public class HumanPlayer {
 			mouseHandler.selectedTile = null;
 			playLoop();
 		}	
-		
 	}
 	
 	/*
@@ -144,7 +143,6 @@ public class HumanPlayer {
 				unitTile.attackLeft = toBoolean;
 			}
 		}
-		
 	}
 	
 	/*
@@ -152,7 +150,6 @@ public class HumanPlayer {
 	 * and a goal tile
 	 */
 	private void selectTiles() {
-//		System.out.println("Select one of your units!");
 		// Select a friendly unit
 		selectFriendlyUnit();
 		
@@ -197,7 +194,6 @@ public class HumanPlayer {
 	 * gets replaced and another goal tile can be selected.
 	 */
 	private boolean selectGoalTile() {
-//		System.out.println("Select goal tile");
 		mouseHandler.currentTile = null;
 		int counter = 0;
 		

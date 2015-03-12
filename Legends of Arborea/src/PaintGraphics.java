@@ -231,7 +231,6 @@ public class PaintGraphics extends JComponent{
 							AdjacentTile = mouseHandler.selectedTile.adjacentTiles.get(k);
 							if (AdjacentTile.location.equals(hexLocation))  {
 								if(AdjacentTile!= null){
-									System.out.println(AdjacentTile.location);
 									
 									// If adjacent tile is legal give color it dark green
 									if (mouseHandler.selectedTile.isLegal(AdjacentTile)) {

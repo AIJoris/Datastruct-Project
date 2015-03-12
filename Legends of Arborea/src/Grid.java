@@ -109,10 +109,7 @@ public class Grid {
 	/*
 	 * Move a unit to a specified position
 	 */
-	public boolean moveUnit(int x, int y, int x1, int y1) {		
-		Tile oldTile = getTile(x,y);
-		Tile newTile = getTile(x1,y1);
-		
+	public boolean moveUnit(Tile oldTile, Tile newTile) {			
 		// Move unit if the move is legal and the goal tile is not occupied
 		if (oldTile.legalMoves().contains(newTile)) {			
 			// Update the lists containing all the units
@@ -138,14 +135,12 @@ public class Grid {
 	/*
 	 * Attack a unit with another unit
 	 */
-	public boolean attackUnit(int x, int y , int x1, int y1) {
-		Tile tileSelf = getTile(x,y);
-		Tile tileHostile = getTile(x1,y1);
+	public boolean attackUnit(Tile tileSelf , Tile tileHostile) {
 		Unit unitSelf = tileSelf.unit;
 		Unit unitHostile = tileHostile.unit;
 		
 		// Check if it is possible to attack
-		if (attackIsPossible(x,y,x1,y1) == false) {
+		if (!attackIsPossible(tileSelf, tileHostile)) {
 			return false;
 		}
 		
@@ -185,9 +180,7 @@ public class Grid {
 	 * This method implements a couple of checks explained above each check
 	 * to make sure it is possible to attack the unit at (x1,y1) with unit (x,y)
 	 */
-	public boolean attackIsPossible(int x, int y, int x1, int y1) {
-		Tile tileSelf = getTile(x,y);
-		Tile tileHostile = getTile(x1,y1);
+	public boolean attackIsPossible(Tile tileSelf, Tile tileHostile) {
 		Unit unitSelf = tileSelf.unit;
 		Unit unitHostile = tileHostile.unit;
 		
