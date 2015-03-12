@@ -112,6 +112,8 @@ public class AI {
 	
 	/*
 	 * This method makes intelligent moves
+	 * DINGEN DIE MISSCHIEN BETER KUNNEN:
+	 * 	- In plaats van per unit en zet doen, eerst voor alle units alle zetten evalueren, dan de beste zet doen en na elke zet opnieuw alle zetten evalueren en de beste zet doen.
 	 */
 	public void playIntelligent() {
 		// Create a list of all friendlies and enemies
@@ -119,8 +121,8 @@ public class AI {
 		ArrayList<Tile> allHostiles = new ArrayList<Tile>(grid.humans);
 		ArrayList<Tile> surroundingHostiles;
 		ArrayList<Tile> legalMoves;
+		ArrayList<Tile> closestHostiles;
 		if (team.equals("Humans")) {
-			System.out.println("humanstrun");
 			allFriendlies = new ArrayList<Tile>(grid.humans);
 			allHostiles = new ArrayList<Tile>(grid.beasts);
 		}
@@ -128,19 +130,18 @@ public class AI {
 			System.out.println("beaststurn");
 		}
 		
-		Tile closestHostile;
-		Tile possibleBestMove;
+		Tile targetHostile;
 		Tile bestMove;
 		// Loop over all friendly units
 		for (Tile unitTile : allFriendlies) {
-			// Pause for 0.1 seconds
+			// Pause for 0.1 seconds and give the unit about to move a color
+			unitTile.attackLeft = true;
 			try {
-				Thread.sleep(100);
+				Thread.sleep(2000);
 			}
 			catch (InterruptedException e) {
 				System.err.println(e);
 			}
-			
 			// Choose tactics
 			surroundingHostiles = unitTile.surroundingHostiles();
 			String tactic = chooseTactic(unitTile, surroundingHostiles);
@@ -153,22 +154,66 @@ public class AI {
 					bestMove = legalMoves.get(0);
 					
 					// Loop over all legal moves for the current unit
+					boolean move = false;
 					for (Tile legalMove : legalMoves) {
-						// Get the list of closest hostiles, and pick one of them randomly
-						closestHostile = legalMove.getClosestHostiles(allHostiles).get(rand.nextInt(legalMove.getClosestHostiles(allHostiles).size()));
-						//TODO DE CLOSEST HOSTILE KIEZEN OP BASIS VAN HEALTH OF BUFFER 
+						// Get the list of closest hostiles
+						closestHostiles = legalMove.getClosestHostiles(allHostiles);
+						targetHostile = closestHostiles.get(0);
 						
-						// The distance to the hostile has to be the smallest after the move
-						if (legalMove.distanceTo(closestHostile) < unitTile.distanceTo(closestHostile) && 
-								legalMove.distanceTo(closestHostile) < bestMove.distanceTo(closestHostile)) {
-							bestMove = legalMove;
+						// Pick the target based on which one has the lowest buffer and health
+						for (Tile closeHostile : closestHostiles) {
+							if (closeHostile.buffer < targetHostile.buffer) {
+								targetHostile = closeHostile;
+							}
+							else if (closeHostile.buffer == targetHostile.buffer) {
+								if (closeHostile.unit.hitPoints < targetHostile.unit.hitPoints) {
+									targetHostile = closeHostile;
+								}
+							}
 						}
-						// TODO check of de weg niet geblokkeerd wordt, oftewel kijk wat de kortste weg is zonder de bezette tiles als possible paths mee te tellen
-						// TODO Als de afstand tot een hostile niet kleiner wordt door een move, dan niet moven of zorgen dat je buffer vergroot
-						// TODO Als je kunt kiezen tussen een x aantal moves waarbij de afstand gelijk afneemt, neem dan degene die je buffer maximaliseerd
+						
+						// TODO ergens gaat het mis en soms gaan ze achteruit, terwijl je wil dat ze of vooruit gaan, of afstand hetzelfde houden en buffer vergroten
+						//TODO even kijken welke hostile er nou getarget wordt
+						
+						int distanceBeforeMove = unitTile.distanceTo(targetHostile);
+						int distanceAfterMove = legalMove.distanceTo(targetHostile);
+						int distanceBestMove = bestMove.distanceTo(targetHostile);
+						System.out.println("This is a move for unit at " + unitTile.key);
+						// If a move brings you closer then without moving, and remains the same or brings you 
+						// closer then the current best move, set move to true
+						if (distanceAfterMove < distanceBeforeMove && distanceAfterMove <= distanceBestMove) {
+							System.out.println("Distance(after, before) smaller, distance(after,best) smaller/equal");
+							int bufferAfterMove = legalMove.buffer;
+							int bufferBestMove = bestMove.buffer;
+							
+							// If the buffer increases or stays the same with a move, make it the best current move
+							if (bufferAfterMove >= bufferBestMove) {
+								System.out.println("Buffer increases or stays the same");
+								bestMove = legalMove;
+							}
+							move = true;
+						}
+						
+						// If a move does not bring you closer then you were, but does gain you more buffer
+						else if (distanceAfterMove == distanceBeforeMove) {
+							int bufferBeforeMove = unitTile.buffer;
+							int bufferAfterMove = legalMove.buffer;
+							int bufferBestMove = bestMove.buffer;
+							if (bufferAfterMove > bufferBestMove && bufferAfterMove > bufferBeforeMove) {
+								System.out.println("Distance(after,before) stays the same, buffer increases");
+								bestMove = legalMove;
+								move = true;
+							}
+						}
 					}
+					// TODO check of de weg niet geblokkeerd wordt, oftewel kijk wat de kortste weg is zonder de bezette tiles als possible paths mee te tellen
+					// TODO Als de afstand tot een hostile niet kleiner wordt door een move, dan niet moven of zorgen dat je buffer vergroot GEDAAN
+					// TODO Als je kunt kiezen tussen een x aantal moves waarbij de afstand gelijk afneemt, neem dan degene die je buffer maximaliseerd GEDAAN
+					
 					// Do the best move
-					grid.moveUnit(unitTile, bestMove);
+					if (move == true) {
+						grid.moveUnit(unitTile, bestMove);
+					}
 				}
 				
 				// If there are no legal moves to be done, break.
@@ -186,6 +231,8 @@ public class AI {
 				
 
 			}
+			
+			unitTile.attackLeft = false;
 		}
 	}
 	

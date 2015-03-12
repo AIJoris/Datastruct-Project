@@ -30,6 +30,7 @@ public class Tile {
 		x = newX;
 		y = newY;
 		unit = newUnit;	
+		key = toKey(x,y);
 		if (unit != null) {
 			team = unit.team;
 		}
