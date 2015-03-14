@@ -147,7 +147,7 @@ public class Grid {
 		// Get weapon skills
 		skillAttacker = unitSelf.weaponSkill + tileSelf.getBuffer();
 		skillDefender = unitHostile.weaponSkill + tileHostile.getBuffer();
-		hitChance = 1 / (1 + Math.exp(0.4 * (skillAttacker - skillDefender)));
+		hitChance = 1 / (1 + Math.exp(-0.4 * (skillAttacker - skillDefender)));
 		
 		// Attack the hostile
 		if (Math.random() <= hitChance ) {
