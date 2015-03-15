@@ -324,126 +324,116 @@ public class AI {
 		Tile bestMove;
 		// Loop over all friendly units
 		for (Tile unitTile : allFriendlies) {
-			// Choose tactics
-			surroundingHostiles = unitTile.surroundingHostiles();
-			String tactic = "move";
-			if (!surroundingHostiles.isEmpty()) {
-				tactic = "attack";
-			}
-			
-			switch (tactic) {
-			case "move":
-				// Check if there are any legal moves for the current unit
-				legalMoves = unitTile.legalMoves();
-				if (!legalMoves.isEmpty()) {
-					bestMove = legalMoves.get(0);
-					
-					// Get the list of closest hostiles
-					closestHostiles = unitTile.getClosestHostiles(allHostiles);
-					targetHostile = closestHostiles.get(0);
-					System.out.println(closestHostiles);
-					System.out.println(targetHostile.unit);
-					
-					// Pick the target based on which one has the lowest buffer and health
-					for (Tile closeHostile : closestHostiles) {
-						if (closeHostile.buffer < targetHostile.buffer) {
+			// Check if there are any legal moves for the current unit
+			boolean move = false;
+			legalMoves = unitTile.legalMoves();
+			if (!legalMoves.isEmpty()) {
+				bestMove = legalMoves.get(0);
+				
+				// Get the list of closest hostiles
+				closestHostiles = unitTile.getClosestHostiles(allHostiles);
+				targetHostile = closestHostiles.get(0);
+				System.out.println(closestHostiles);
+				System.out.println(targetHostile.unit);
+				
+				// Pick the target based on which one has the lowest buffer and health
+				for (Tile closeHostile : closestHostiles) {
+					if (closeHostile.buffer < targetHostile.buffer) {
+						targetHostile = closeHostile;
+					}
+					else if (closeHostile.buffer == targetHostile.buffer) {
+						if (closeHostile.unit.hitPoints < targetHostile.unit.hitPoints) {
 							targetHostile = closeHostile;
 						}
-						else if (closeHostile.buffer == targetHostile.buffer) {
-							if (closeHostile.unit.hitPoints < targetHostile.unit.hitPoints) {
-								targetHostile = closeHostile;
-							}
-						}
-					}
-					
-					// Loop over all legal moves for the current unit
-					boolean move = false;
-					int distanceBeforeMove = unitTile.distanceTo(targetHostile);
-					int bufferBeforeMove = unitTile.buffer;
-					for (Tile legalMove : legalMoves) {
-						// Pause for 0.1 seconds and give the unit about to move a color
-						unitTile.attackLeft = true;
-						legalMove.moveLeft = true;
-						targetHostile.attackLeft = true;
-						
-						// TODO Units moeten om hun eigen manschappen lopen als ze niet door kunnen lopen naar hun targer en geen bonus buffer geven aan een unit die wel kan aanvallen
-						int distanceAfterMove = legalMove.distanceTo(targetHostile);
-						int distanceBestMove = bestMove.distanceTo(targetHostile);
-						System.out.println("This is a move for unit at " + unitTile.key);
-						// If a move brings you closer then without moving, and remains the same or brings you 
-						// closer then the current best move, set move to true
-						if (distanceAfterMove < distanceBeforeMove) {
-							if (distanceAfterMove <= distanceBestMove) {
-								System.out.println("Distance(after, before) smaller, distance(after,best) smaller/equal");
-								int bufferAfterMove = legalMove.buffer;
-								int bufferBestMove = bestMove.buffer;
-								
-								// If the buffer increases or stays the same with a move, make it the best current move
-//								if (bufferAfterMove < bufferBestMove) {
-//									break;
-//								}
-								
-								bestMove = legalMove;
-								move = true;
-								
-							}
-						}
-						
-						// If a move does not bring you closer then you were, but does gain you more buffer
-						else if (distanceAfterMove == distanceBeforeMove) {
-							
-							int bufferAfterMove = legalMove.buffer;
-							int bufferBestMove = bestMove.buffer;
-							if (bufferAfterMove > bufferBestMove && bufferAfterMove > bufferBeforeMove) {
-								System.out.println("Distance(after,before) stays the same, buffer increases");
-								bestMove = legalMove;
-								move = true;
-							}
-						}
-						try {
-							Thread.sleep(100);
-						}
-						catch (InterruptedException e) {
-							System.err.println(e);
-						}
-						legalMove.moveLeft = false;
-						targetHostile.attackLeft = false;
-					}
-					// TODO check of de weg niet geblokkeerd wordt, oftewel kijk wat de kortste weg is zonder de bezette tiles als possible paths mee te tellen
-					
-					// Do the best move
-					if (move == true) {
-						grid.moveUnit(unitTile, bestMove);
 					}
 				}
 				
-				// If there are no legal moves to be done, break.
-				break;
-			
-			// Attack the hostile with the lowest health
-			case "attack":
-				if (!surroundingHostiles.isEmpty()) {
-					targetHostile = surroundingHostiles.get(rand.nextInt(surroundingHostiles.size()));
-					for (Tile surroundingHostile : surroundingHostiles) {
-						if (surroundingHostile.buffer < targetHostile.buffer) {
-							targetHostile = surroundingHostile;
-						}
-						else if (surroundingHostile.buffer == targetHostile.buffer) {
-							if (surroundingHostile.unit.hitPoints < targetHostile.unit.hitPoints) {
-								targetHostile = surroundingHostile;
-							}
+				// Loop over all legal moves for the current unit
+				int distanceBeforeMove = unitTile.distanceTo(targetHostile);
+				int bufferBeforeMove = unitTile.buffer;
+				for (Tile legalMove : legalMoves) {
+					// Pause for 0.1 seconds and give the unit about to move a color
+					unitTile.attackLeft = true;
+					legalMove.moveLeft = true;
+					targetHostile.attackLeft = true;
+					
+					// TODO Units moeten om hun eigen manschappen lopen als ze niet door kunnen lopen naar hun targer en geen bonus buffer geven aan een unit die wel kan aanvallen
+					int distanceAfterMove = legalMove.distanceTo(targetHostile);
+					int distanceBestMove = bestMove.distanceTo(targetHostile);
+					System.out.println("This is a move for unit at " + unitTile.key);
+					
+					// If you can't move closer to a hostile, but he is more then 2 tiles away, move anyway
+					if (distanceBeforeMove >= 1) {
+						if (distanceAfterMove < distanceBestMove) {
+							bestMove = legalMove;
+							move = true;
+							System.out.println("Omsingel");
 						}
 					}
-					grid.attackUnit(unitTile, targetHostile);
+					
+					// If a move brings you closer then without moving, and remains the same or brings you 
+					// closer then the current best move, set move to true
+					if (distanceAfterMove < distanceBeforeMove) {
+						if (distanceAfterMove <= distanceBestMove) {					
+							bestMove = legalMove;
+							move = true;
+						}
+					}
+					
+					// If a move does not bring you closer then you were, but does gain you more buffer
+					else if (distanceAfterMove == distanceBeforeMove) {
+						
+						int bufferAfterMove = legalMove.buffer;
+						int bufferBestMove = bestMove.buffer;
+						if (bufferAfterMove > bufferBestMove && bufferAfterMove > bufferBeforeMove) {
+							System.out.println("Distance(after,before) stays the same, buffer increases");
+							bestMove = legalMove;
+							move = true;
+						}
+					}
+					
+					try {
+						Thread.sleep(100);
+					}
+					catch (InterruptedException e) {
+						System.err.println(e);
+					}
+					legalMove.moveLeft = false;
+					targetHostile.attackLeft = false;
 				}
-				break;
+				// TODO check of de weg niet geblokkeerd wordt, oftewel kijk wat de kortste weg is zonder de bezette tiles als possible paths mee te tellen
+				
+				// Do the best move
+				unitTile.attackLeft = false;
+				if (move == true) {
+					grid.moveUnit(unitTile, bestMove);
+					unitTile = bestMove;
+				}
+				
+			}
 			
-			case "reinforce":
+			surroundingHostiles = unitTile.surroundingHostiles();
+			// Attack the hostile with the lowest health
+			if (!surroundingHostiles.isEmpty()) {
+				targetHostile = surroundingHostiles.get(rand.nextInt(surroundingHostiles.size()));
+				for (Tile surroundingHostile : surroundingHostiles) {
+					if (surroundingHostile.buffer < targetHostile.buffer) {
+						targetHostile = surroundingHostile;
+					}
+					else if (surroundingHostile.buffer == targetHostile.buffer) {
+						if (surroundingHostile.unit.hitPoints < targetHostile.unit.hitPoints) {
+							targetHostile = surroundingHostile;
+						}
+					}
+				}
+				grid.attackUnit(unitTile, targetHostile);
+			
 				
 
 			}
 			
-			unitTile.attackLeft = false;
 		}
 	}
+	
+	
 }

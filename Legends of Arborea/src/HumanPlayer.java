@@ -58,6 +58,9 @@ public class HumanPlayer {
 				System.out.println("You have already used this unit");
 				grid.message = "used";
 				selectTiles();
+				if(endTurn){
+					break;
+				}
 			}
 			// move
 			if (goalTile.unit == null) {
@@ -89,6 +92,7 @@ public class HumanPlayer {
 		if (tileSelf.moveLeft) {
 			// The move has to be legal
 			if (tileSelf.isLegal(goalTile)) {
+				System.out.println("Unit on tile " + tileSelf.key + "to tile " + goalTile.key);
 				grid.moveUnit(tileSelf, goalTile);
 				goalTile.moveLeft = false;
 				if (tileSelf.attackLeft) {
