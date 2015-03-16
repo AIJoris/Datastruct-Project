@@ -22,6 +22,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 
@@ -72,8 +75,17 @@ public class LegendsOfArborea implements ActionListener{
 		JFrame frame = new JFrame("Legends of Arborea");
 		JButton endTurnButton = new JButton("End turn");
 		Container con = frame.getContentPane();
-		
-		endTurnButton.setBounds(HEXSTART.x - 350, HEXSTART.y+250, 100, 35);
+		Image img;
+		try {
+			img = ImageIO.read(getClass().getResource("endturn.png"));
+			endTurnButton.setIcon(new ImageIcon(img));
+			System.out.println("dsssssss");
+		} catch (IOException e1) {
+			endTurnButton.setBounds(HEXSTART.x - 350, HEXSTART.y+350, 200, 35);
+		}
+		endTurnButton.setBounds(HEXSTART.x - 520, HEXSTART.y+320, 220, 35);
+		endTurnButton.setBackground(new Color(0,0,0));
+		endTurnButton.setBorder(BorderFactory.createEmptyBorder());
 
 		con.setBackground(new Color(0,0,0));
 		mouseHandler = new MouseHandler(grid, HEXSIZE, HEXSTART);
