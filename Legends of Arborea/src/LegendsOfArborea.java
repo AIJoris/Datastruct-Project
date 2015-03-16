@@ -83,7 +83,7 @@ public class LegendsOfArborea implements ActionListener{
 		} catch (IOException e1) {
 			endTurnButton.setBounds(HEXSTART.x - 350, HEXSTART.y+350, 200, 35);
 		}
-		endTurnButton.setBounds(HEXSTART.x - 520, HEXSTART.y+320, 220, 35);
+		endTurnButton.setBounds(HEXSTART.x - 400, HEXSTART.y+320, 220, 35);
 		endTurnButton.setBackground(new Color(0,0,0));
 		endTurnButton.setBorder(BorderFactory.createEmptyBorder());
 
