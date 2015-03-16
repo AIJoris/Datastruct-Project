@@ -3,10 +3,12 @@
  */
 public class RankedMove {
 	double rank;
-	Tile move;
+	Tile startTile;
+	Tile goalTile;
 	
-	public RankedMove(Tile move1, double rank1){
-		move = move1;
+	public RankedMove(Tile startTile1, Tile goalTile1, double rank1){
+		startTile = startTile1;
+		goalTile = goalTile1;
 		rank = rank1;
 	}
 }

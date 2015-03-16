@@ -9,6 +9,14 @@
 // Je kunt aanvallen van overal
 // q learning / value iteration
 
+
+// Unit moet niet moven als zijn buffer verkleint (doen ze nu wel, dus die threshold is niet voldoende) (parhfinding)
+// Als de buffer van een unit heel laag is (bv 0-3), dan moet hij zijn buffer zsm vergoten, zo voorkom je isolatie
+
+
+
+
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,17 +48,21 @@ public class LegendsOfArborea implements ActionListener{
 	 * Main method
 	 */	
 	public static void main(String[] args) {
-		// Set up the game environment
-		Grid grid = new Grid();
-		new LegendsOfArborea(grid);
-		
-		// Define the starting team
-		String startingTeam = "Beasts";
-		grid.team = startingTeam;
-		
 		// Play the game
-		playGame(grid);
-		
+		int win = 0;
+		for (int i = 0; i < 1; i++) {
+			// Set up the game environment
+			Grid grid = new Grid();
+			new LegendsOfArborea(grid);
+			
+			// Define the starting team
+			String startingTeam = "Beasts";
+			grid.team = startingTeam;
+			if (playGame(grid).equals("Humans")) {
+				win++;
+			}
+		}
+		System.out.println("Intelligent win " + win + "times out of 10000 games");
 	}
 	
 	/*
@@ -73,7 +85,7 @@ public class LegendsOfArborea implements ActionListener{
 		frame.setMinimumSize(new Dimension(300,400));
 		endTurnButton.setVisible(true);
 		graphics.add(endTurnButton);
-		//graphics.add(new JPanel());
+		graphics.add(new JPanel());
 
 		frame.add(graphics);
 
@@ -98,7 +110,7 @@ public class LegendsOfArborea implements ActionListener{
 	/*
 	 * This method plays the game
 	 */
-	private static void playGame(Grid grid) {
+	private static String playGame(Grid grid) {
 		// Create the AI's
 		AI player1 = new AI(grid, "Humans");
 		AI player2 = new AI(grid, "Beasts");
@@ -111,13 +123,13 @@ public class LegendsOfArborea implements ActionListener{
 			// Player 1:
 			if (grid.team.equals("Humans")) {
 				System.out.println("Humans: ");
-				player1.playMultiAgent();
+				player1.playIntelligent();
 			}
 			
 			// Player 2:
 			else if (grid.team.equals("Beasts")) {
 				System.out.println("Beasts");
-				player2.playMultiAgent();
+				player3.play();
 			}
 			
 			changeTeam(grid);
@@ -125,6 +137,7 @@ public class LegendsOfArborea implements ActionListener{
 		}
 		System.out.println(turn);
 		System.out.println("The " + grid.team + " lose!");
+		return grid.team;
 	}
 	
 	/*
