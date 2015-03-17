@@ -192,7 +192,7 @@ public class AI {
 			
 			//pause
 			try {
-				Thread.sleep(0);
+				Thread.sleep(100);
 			}
 			catch (InterruptedException e) {
 				System.err.println(e);

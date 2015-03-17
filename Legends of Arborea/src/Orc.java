@@ -4,7 +4,7 @@
 public class Orc extends Unit {
 	
 	public Orc() {
-		hitPoints = 10;
+		hitPoints = 5;//10;
 		weaponSkill = 8;
 		name = "Orc";
 		team = "Beasts";
