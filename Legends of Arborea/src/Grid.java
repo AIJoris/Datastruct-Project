@@ -63,11 +63,6 @@ public class Grid {
 		String[] orcs = {toKey(-4,4), toKey(-3,-1)};
 		String[] goblins = {toKey(-4,1), toKey(-3,0), toKey(-3,1), toKey(-3,2), toKey(-3,3), toKey(-3,4), toKey(-2,4), toKey(-2,-1)};
 		
-//		String[] generals = {toKey(4,-4), toKey(4,-1), toKey(3,1)};
-//		String[] swordsmen = {toKey(3,-4), toKey(3,-3), toKey(3,-2), toKey(3,-1), toKey(3,0), toKey(4,-3)};
-//		String[] orcs = {toKey(-4,0), toKey(-4,3), toKey(-3, 4)};
-//		String[] goblins = {toKey(-4,1), toKey(-3,0), toKey(-3,-1), toKey(-3,2), toKey(-3,3), toKey(-3,1)};
-		
 		// Keep a list of humans and beasts
 		humans = new ArrayList<Unit>();
 		beasts = new ArrayList<Unit>();

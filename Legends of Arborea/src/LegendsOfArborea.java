@@ -1,22 +1,3 @@
-// Bijhouden wie waar staat (onderscheid infantry/generals??), heb ik nu in arraylist gedaan (slim)?
-// Moet er nog een if in voor een negatieve hitchance?
-// Functie allHostiles die kijkt of er hostiles in de buurt zijn, kan in/samen met buffer/legalmoves? en returned arraylist (slim?)
-// isPossible en legalmove samenvoegen?
-// Je kunt ipv hostiles zoeken om een positie ook kijken naar de lijst met units van het andere team en kijken of er units van jou in de buurt zijn, die returnen en dan attacken (AI probleem)
-// Het opslaan van de coordinaten in strings begint onhandig te worden omdat je niet makkelijk terug kunt converten naar ints
-// Iets nieuws geprobeerd: de method die alle legal moves returned die stopt er geen keys in maar gewoon x,y achter elkaar
-// een position class maken is misschien toch wel handig omdat je nu op een een string terugkrijgt en die niet kunt converten naar de ints (komt door mogelijke minnen)
-// Je kunt aanvallen van overal
-// q learning / value iteration
-
-
-// Unit moet niet moven als zijn buffer verkleint (doen ze nu wel, dus die threshold is niet voldoende) (parhfinding)
-// Als de buffer van een unit heel laag is (bv 0-3), dan moet hij zijn buffer zsm vergoten, zo voorkom je isolatie
-
-
-
-
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

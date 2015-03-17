@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 /* 
- * This abstract class describes what every unit should have
+ * This class describes what every unit should have and be able to do
  */
 public class Unit {
 	int hitPoints;

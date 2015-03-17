@@ -37,8 +37,9 @@ public class PaintGraphics extends JComponent{
 	/* Call the drawing methods */
 	public void paint(Graphics g) {
 		super.paint(g);
-		drawBoard(g);
+		
 		try {
+			drawBoard(g);
 			drawDecor(g);
 			drawUnits(g);
 		} catch (IOException e1) {
