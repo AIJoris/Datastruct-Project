@@ -111,9 +111,9 @@ public class HumanPlayer {
 		mouseHandler.currentUnit = null;
 		int counter = 0;
 		while (mouseHandler.currentUnit == null || !mouseHandler.currentUnit.team.equals(team)) {
-			pause(500);
+			pause(10);
 			counter++;
-			if (counter > 10) {
+			if (counter > 50) {
 				grid.message = null;
 			}
 			if (endTurn) {
@@ -139,9 +139,9 @@ public class HumanPlayer {
 		
 		// Wait for click
 		while (mouseHandler.currentTile == null) {
-			pause(500);
+			pause(10);
 			counter++;
-			if (counter > 10) {
+			if (counter > 50) {
 				grid.message = null;
 			}
 			if (endTurn) {

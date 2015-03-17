@@ -268,13 +268,19 @@ public class PaintGraphics extends JComponent{
 				if (unit != null) {
 					// The following statements define the color of the to be painted tile. The color indicates the state of the tile 
 					// if the unit has a move and attack left color is purple 
-					if (unit.attackLeft && unit.moveLeft) {
+					if ((unit.attackLeft && unit.moveLeft) || unit.tile.searching) {
 						color = new Color(206, 119,206);
 					// if the unit has only an attack left color the tile red
-					} else if (unit.attackLeft) {
+					} 
+					else if (unit.attackLeft || unit.tile.target) {
 						color = new Color(201, 116,118);
 					// if the unit has only a move left color the tile blue
-					} else if (unit.moveLeft) {
+					} 
+					else if (unit.moveLeft) {
+						color = new Color(117, 116,190);
+					}
+					
+					if (unit.tile.option) {
 						color = new Color(117, 116,190);
 					}
 					// If the to be colored tile is the selected tile color it dark green

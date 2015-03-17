@@ -26,34 +26,41 @@ public class LegendsOfArborea implements ActionListener{
 	Polygon points;
 	PaintGraphics graphics;
 	public static MouseHandler mouseHandler;
+	static JFrame frame;
 	
 	
 	/* 
-	 * Main method
+	 * Main method. This method creates a grid object, therefore initializing the game.
+	 *  Then it starts the main game loop. The starting team can be changed here
 	 */	
 	public static void main(String[] args) {
+		// Set up the game environment
+		Grid grid = new Grid();
+		new LegendsOfArborea(grid);
+		
+		// Define the starting team
+		String startingTeam = "Humans";
+		grid.team = startingTeam;
+		
 		// Play the game
-		int win = 0;
-		for (int i = 0; i < 1; i++) {
-			// Set up the game environment
-			Grid grid = new Grid();
-			new LegendsOfArborea(grid);
-			
-			// Define the starting team
-			String startingTeam = "Beasts";
-			grid.team = startingTeam;
-			if (playGame(grid).equals("Humans")) {
-				win++;
-			}
+		String loser = playGame(grid);
+		System.out.println(loser + "loses!");
+		try {
+			Thread.sleep(2000);
 		}
-		System.out.println("Intelligent win " + win + "times out of 10000 games");
+		catch (InterruptedException e) {
+			
+		}
+		frame.dispose();
 	}
 	
 	/*
-	 * Legends of Arborea contructor
+	 * Legends of Arborea contructor. Here, the graphical environment is set up.
+	 * A PaintGraphics object is added to the frame, which will contain all the game content.
+	 * Also a button to end a turn is added to the frame.
 	 */
 	public LegendsOfArborea(Grid grid) {
-		JFrame frame = new JFrame("Legends of Arborea");
+		frame = new JFrame("Legends of Arborea");
 		JButton endTurnButton = new JButton("End turn");
 		Container con = frame.getContentPane();
 		Image img;
@@ -95,16 +102,19 @@ public class LegendsOfArborea implements ActionListener{
 	    	 }
 	    });
 	}
-	//static class Action1 implements ActionListener {   
-	//	@Override
-		public void actionPerformed(ActionEvent e) {
-			player3.endTurn = true;	
-			player4.endTurn = true;
-		}
-	//}   
 	
 	/*
-	 * This method plays the game
+	 * This method ends the turn when the end turn button is pressed.
+	 */
+	public void actionPerformed(ActionEvent e) {
+		player3.endTurn = true;	
+		player4.endTurn = true;
+	}  
+	
+	/*
+	 * This method plays the game. Here you can choose wether you want to play yourself, with multi agent AI
+	 * or with advanced multi agent AI. You do this by choosing choosing either player.playIntelligent()
+	 * or player.playMultiAgent. If you play with a HumanPlayer (yourself), just enter player.play().
 	 */
 	private static String playGame(Grid grid) {
 		// Create the AI's

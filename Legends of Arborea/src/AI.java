@@ -122,7 +122,7 @@ public class AI {
 							move = true;
 						}
 					}
-					pause(0);
+					pause(300);
 					legalMove.option = false;
 					targetHostile.tile.target = false;
 				}
@@ -135,7 +135,7 @@ public class AI {
 				
 			}
 			surroundingHostiles = unit.surroundingHostiles();
-			//TODO attack in aparte functie zetten
+
 			// Attack the hostile with the lowest health
 			if (!surroundingHostiles.isEmpty()) {
 				targetHostile = surroundingHostiles.get(rand.nextInt(surroundingHostiles.size()));
@@ -182,12 +182,19 @@ public class AI {
 			if (startFormation == true) {
 				pause(500);
 				grid.moveUnit(grid.getTile(-3,-1), grid.getTile(-2, -2));
+				pause(300);
 				grid.moveUnit(grid.getTile(-3,0), grid.getTile(-2, 0));
+				pause(300);
 				grid.moveUnit(grid.getTile(-3,1), grid.getTile(-2, 1));
+				pause(300);
 				grid.moveUnit(grid.getTile(-3,2), grid.getTile(-2, 2));
+				pause(300);
 				grid.moveUnit(grid.getTile(-3,3), grid.getTile(-2, 3));
+				pause(300);
 				grid.moveUnit(grid.getTile(-4,4), grid.getTile(-3, 3));	
+				pause(300);
 				grid.moveUnit(grid.getTile(-4,1), grid.getTile(-3, 0));	
+				pause(300);
 				
 				startFormation = false;
 				return;

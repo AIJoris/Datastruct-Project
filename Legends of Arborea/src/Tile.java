@@ -135,7 +135,7 @@ public class Tile {
 	}
 
 	/*
-	 * 
+	 * This method checks if a tile is a legal move
 	 */
 	public boolean isLegal(Tile tile) {
 		try {
