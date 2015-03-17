@@ -298,15 +298,15 @@ public class AI {
 					}
 					
 					// If a move does not bring you closer then you were, but does gain you more buffer
-					else if (distanceAfterMove == distanceBeforeMove) {
-						//Add placeholders to calculate the buffer
+					else if (distanceAfterMove == distanceBeforeMove && distanceAfterMove <= distanceBestMove) {
 						int bufferAfterMove = legalMove.getBuffer(team);
 						int bufferBestMove = bestMove.getBuffer(team);
 						
-						if (bufferAfterMove > bufferBestMove && bufferAfterMove > bufferBeforeMove) {
+						if (bufferAfterMove >= bufferBestMove && bufferAfterMove >= bufferBeforeMove) {
 							bestMove = legalMove;
 						}
 					}
+					
 				}
 				
 				// rank the best move
@@ -469,8 +469,8 @@ public class AI {
 					// If a move does not bring you closer then you were, but does gain you more buffer
 					else if (distanceAfterMove == distanceBeforeMove && distanceAfterMove <= distanceBestMove) {
 						// Add placeholders to calculate the buffer
-						int bufferAfterMove = legalMove.unit.getBuffer();
-						int bufferBestMove = bestMove.unit.getBuffer();
+						int bufferAfterMove = legalMove.getBuffer(team);
+						int bufferBestMove = bestMove.getBuffer(team);
 						
 						if (bufferAfterMove >= bufferBestMove && bufferAfterMove >= bufferBeforeMove) {
 							bestMove = legalMove;
