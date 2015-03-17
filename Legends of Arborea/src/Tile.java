@@ -2,7 +2,9 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
+/*
+ * The Tile class represents a hexagon. It takes a location and unit.
+ */
 public class Tile {
 	int x,y;
 	Unit unit;
@@ -114,7 +116,6 @@ public class Tile {
 			
 			// The move is legal, so add it to the list
 			legalMoves.add(adjacentTile);
-			
 		}
 		return legalMoves;
 	}

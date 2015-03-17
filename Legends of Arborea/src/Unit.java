@@ -16,8 +16,10 @@ public class Unit {
 	boolean moveLeft;
 	ArrayList<Unit> surroundingHostiles;
 	
+	/*
+	 * Constructor is left empty since the child classes extend it
+	 */
 	public Unit() {
-		
 	}
 	
 	/*

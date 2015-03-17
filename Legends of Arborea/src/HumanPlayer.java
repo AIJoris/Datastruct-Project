@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-
 public class HumanPlayer {
 	String positionSelf;
 	Tile tileSelf;
@@ -16,13 +15,16 @@ public class HumanPlayer {
 	boolean endTurn;
 	
 	/*
-	 * Constructor
+	 * Constructor initializes grid and mouseHandler
 	 */
 	public HumanPlayer(Grid newGrid, MouseHandler newMouseHandler) {
 		grid = newGrid;
 		mouseHandler = newMouseHandler;
 	}
-	
+
+	/*
+	 * Converts coordinates to string
+	 */
 	public String toKey(int x, int y) {
 		return new Integer(x).toString() + new Integer(y).toString();
 	}
@@ -48,10 +50,10 @@ public class HumanPlayer {
 	}
 	
 	private void playLoop() {
-		while (endTurn == false) {
+		while (!endTurn) {
 			// Select the start and end tile
 			selectTiles();
-			if (endTurn == true){
+			if (endTurn){
 				break;
 			}
 			
@@ -66,7 +68,7 @@ public class HumanPlayer {
 				}
 			}
 			
-			// move
+			// move unit
 			if (goalTile.unit == null) {
 				move();
 				// When a tile has no moves and attacks left, remove it from friendlies
@@ -98,7 +100,7 @@ public class HumanPlayer {
 		
 		// Select the goal tile
 		boolean goalTileSelected = selectGoalTile();
-		while (goalTileSelected == false) {
+		while (!goalTileSelected) {
 			goalTileSelected = selectGoalTile();
 		}
 	}

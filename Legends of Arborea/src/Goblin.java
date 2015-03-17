@@ -4,7 +4,7 @@
 public class Goblin extends Unit {
 	
 	/*
-	 * Constructor
+	 * Constructor sets default values
 	 */
 	public Goblin(Tile ownTile) {
 		tile = ownTile;

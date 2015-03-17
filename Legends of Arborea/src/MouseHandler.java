@@ -20,7 +20,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 	String button;
 	
 	/*
-	 * The constructor determines some needed dimensions
+	 * The constructor determines some needed dimensions and the grid
 	 */
 	public MouseHandler(Grid grid1,Point HEXSIZE1, Point HEXSTART1){
 		grid = grid1;
@@ -29,7 +29,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 	}
 	
 	/*
-	 * If the mouse clicked select a tile
+	 * If the mouse is clicked select a tile
 	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -102,10 +102,12 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 		int ry = (int)y;
 		int rz = (int)z;
 		
+		// get to be rounded differences
 		float diffX = Math.abs(rx - x);
 		float diffY = Math.abs(ry - y);
 		float diffZ = Math.abs(rz - z);
 		
+		//round the coordinates
 		if (diffX > diffY && diffX > diffZ) {
 			rx = -ry-rz;
 		} else if(diffY > diffZ){
@@ -113,10 +115,10 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 		} else{
 			rz = -rx-ry;
 		}
+		
 		roundedCube[0] = rx;
 		roundedCube[1] = rz;
 		roundedCube[2] = ry;
-
 		return roundedCube;
 	}
 	    		
@@ -127,10 +129,10 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 		// Add offset
 		y = (y-HEXSTART.y)+5;
 		x = (x-HEXSTART.x)+5; 
-		// Calculate unrounder coordinates
+		// Calculate unrounded coordinates
 		float hexQ = (x * (2f/3f) / HEXSIZE.x);
 		float hexR = ((-x / 3f) + ((float)Math.sqrt(3f)/3f) * y) / HEXSIZE.y;
-		// Round and return cooridnates
+		// Round and return coordinates
 		float[] cubeCoords = hexToCube(hexQ, hexR);
 		int[] roundedCoords = cubeRound(cubeCoords[0],cubeCoords[1],cubeCoords[2]);
 		return new Point(roundedCoords[0]-4,roundedCoords[1]);

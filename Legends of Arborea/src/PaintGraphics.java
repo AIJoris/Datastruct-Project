@@ -12,7 +12,9 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 
-/* sets up graphics */
+/* 
+ * This class sets up the graphical interface and adds its content 
+ */
 public class PaintGraphics extends JComponent{
 	private static final long serialVersionUID = 1L;
 	Point HEXSTART;
@@ -26,7 +28,9 @@ public class PaintGraphics extends JComponent{
 	static int WIDTH = (int)screenSize.getWidth();
 	static int HEIGHT = (int)screenSize.getHeight();
 	
-	/* Constructor: initialize variables */
+	/* 
+	 * Constructor: initialize variables 
+	 */
 	public PaintGraphics(Point HEXSTART1, Point HEXSIZE1, Grid grid1, MouseHandler handler) {
 		this.HEXSTART = HEXSTART1;
 		this.HEXSIZE = HEXSIZE1;
@@ -34,10 +38,12 @@ public class PaintGraphics extends JComponent{
 		this.mouseHandler = handler;
 	}
 	
-	/* Call the drawing methods */
+	/*
+	 *  Call the drawing methods 
+	 */
 	public void paint(Graphics g) {
 		super.paint(g);
-		
+		// Draw content
 		try {
 			drawBoard(g);
 			drawDecor(g);
@@ -48,7 +54,9 @@ public class PaintGraphics extends JComponent{
 		repaint();
     }
 	
-	/* This method draws the title, background and character information screens*/
+	/* 
+	 * This method draws the title, background and character information screens
+	 */
 	public void drawDecor(Graphics g) throws IOException{
 		// Add Title
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -70,7 +78,7 @@ public class PaintGraphics extends JComponent{
 		icons.put("sword", sword);
 		
 		// Add score boards 
-		// Load images of the characters
+		// Load images of the characters overviews
 		input = classLoader.getResourceAsStream("genOverview.png");
 		Image general = ImageIO.read(input);
 		input = classLoader.getResourceAsStream("gobOverview.png");
@@ -180,7 +188,9 @@ public class PaintGraphics extends JComponent{
 		}
 	}
 	
-	// This method draws the hexagonal board
+	/*
+	 *  This method draws the hexagonal board
+	 */
 	public void drawBoard(Graphics g) {
 		// The default tile color 
 		Color color = new Color(97, 168,104);
@@ -364,7 +374,9 @@ public class PaintGraphics extends JComponent{
 		}
 	}
 	
-	// This method takes a size and location (among other specifications) and draws a hexagon
+	/*
+	 *  This method takes a size and location (among other specifications) and draws a hexagon
+	 */
 	public void drawHexagon(Graphics g, Point center,  int sizeX, int sizeY, Color color) {
 		Polygon points = new Polygon();
 		for (int i = 1; i < 7; i++) {

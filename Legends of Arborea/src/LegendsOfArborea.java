@@ -19,7 +19,6 @@ public class LegendsOfArborea implements ActionListener{
 	static HumanPlayer player3;
 	static HumanPlayer player4;
 	/* Size of the sides of the hexagon */
-	// kan niet width meer an length want dan gaat ie spacen met de select
 	public static final Point HEXSIZE  = new Point(44,44);
 	/* Place to start drawing the board */
 	private static final Point HEXSTART =  new Point(WIDTH/2 - (7*HEXSIZE.x), HEIGHT/2-(int)((Math.sqrt(3f)*HEXSIZE.y-60)));
@@ -31,7 +30,7 @@ public class LegendsOfArborea implements ActionListener{
 	
 	/* 
 	 * Main method. This method creates a grid object, therefore initializing the game.
-	 *  Then it starts the main game loop. The starting team can be changed here
+	 * Then it starts the main game loop. The starting team can be changed here
 	 */	
 	public static void main(String[] args) {
 		// Set up the game environment
@@ -48,9 +47,7 @@ public class LegendsOfArborea implements ActionListener{
 		try {
 			Thread.sleep(2000);
 		}
-		catch (InterruptedException e) {
-			
-		}
+		catch (InterruptedException e) {}
 		frame.dispose();
 	}
 	
@@ -61,8 +58,10 @@ public class LegendsOfArborea implements ActionListener{
 	 */
 	public LegendsOfArborea(Grid grid) {
 		frame = new JFrame("Legends of Arborea");
-		JButton endTurnButton = new JButton("End turn");
 		Container con = frame.getContentPane();
+		
+		// Create end turn button
+		JButton endTurnButton = new JButton("End turn");
 		Image img;
 		try {
 			img = ImageIO.read(getClass().getResource("endturn.png"));
@@ -78,29 +77,31 @@ public class LegendsOfArborea implements ActionListener{
 		endTurnButton.setBackground(new Color(0,0,0));
 		endTurnButton.setBorder(BorderFactory.createEmptyBorder());
 		
+		// Add mousehandler and set background color
 		con.setBackground(new Color(0,0,0));
 		mouseHandler = new MouseHandler(grid, HEXSIZE, HEXSTART);
 		frame.addMouseListener(mouseHandler);
 		frame.addMouseMotionListener(mouseHandler);
 		
+		// Add content
 		graphics = new PaintGraphics(HEXSTART, HEXSIZE, grid, mouseHandler);
 		frame.setPreferredSize(new Dimension(300,400));
 		frame.setMinimumSize(new Dimension(300,400));
 		endTurnButton.setVisible(true);
 		graphics.add(endTurnButton);
 		graphics.add(new JPanel());
-
 		frame.add(graphics);
-
 		endTurnButton.addActionListener(this);
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);;
 		frame.setLocationRelativeTo( null );
 		frame.setVisible(true);
-		frame.addWindowListener( new WindowAdapter() {
-	    	 public void windowClosing ( WindowEvent e ) {
-	    	 	System.exit(0); 
-	    	 }
-	    });
+		frame.addWindowListener( 
+			new WindowAdapter() {
+				public void windowClosing ( WindowEvent e ) {
+					System.exit(0); 
+				}
+			}
+		);
 	}
 	
 	/*
@@ -112,8 +113,8 @@ public class LegendsOfArborea implements ActionListener{
 	}  
 	
 	/*
-	 * This method plays the game. Here you can choose wether you want to play yourself, with multi agent AI
-	 * or with advanced multi agent AI. You do this by choosing choosing either player.playIntelligent()
+	 * This method plays the game. Here you can choose whether you want to play yourself, with multi agent AI
+	 * or with advanced multi agent AI. You do this by choosing choosing either player.playMultiAdvanced()
 	 * or player.playMultiAgent. If you play with a HumanPlayer (yourself), just enter player.play().
 	 */
 	private static String playGame(Grid grid) {
@@ -128,8 +129,8 @@ public class LegendsOfArborea implements ActionListener{
 		while (!grid.humans.isEmpty() & !grid.beasts.isEmpty()) {
 			// Player 1:
 			if (grid.team.equals("Humans")) {
-				System.out.println("Humans: ");
-				player1.playIntelligent();
+				System.out.println("Humans");
+				player1.playMultiAdvanced();
 			}
 			
 			// Player 2:

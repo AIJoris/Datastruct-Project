@@ -4,7 +4,7 @@
 public class Swordsman extends Unit {
 	
 	/*
-	 * Constructor
+	 * Constructor set default values
 	 */
 	public Swordsman(Tile ownTile) {
 		tile = ownTile;

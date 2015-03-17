@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /*
- * This class implements a computer driven player
+ * This class implements a computer driven players
  */
 public class AI {
 	String positionSelf;
@@ -14,7 +14,7 @@ public class AI {
 	boolean startFormation;
 	
 	/*
-	 * Constructor
+	 * Constructor: Initializes the to be used grid and team
 	 */
 	public AI(Grid newGrid, String newPlayerTeam) {
 		grid = newGrid;
@@ -22,7 +22,6 @@ public class AI {
 		startFormation = true;
 	}
 	
-
 	/*
 	 * This method makes a move using the multi agent AI. It loops over all units and makes the best move possible based
 	 * on the closest hostile with the lowest health and buffer. A good move is defined by the decrease of distance to the
@@ -39,7 +38,7 @@ public class AI {
 		if (team.equals("Beasts")) {
 			allFriendlies = grid.beasts;
 			allHostiles = grid.humans;
-			// First move for beasts
+			// First move for beasts is hardcoded to get a good starting formation (the humans starting formation is good already)
 			if (startFormation == true) {
 				grid.moveUnit(grid.getTile(-3,0), grid.getTile(-4, 0));
 				grid.moveUnit(grid.getTile(-2,-1), grid.getTile(-3, 0));
@@ -64,6 +63,7 @@ public class AI {
 			boolean move = false;
 			legalMoves = unit.tile.legalMoves();
 			if (!legalMoves.isEmpty()) {
+				// Initialize best move randomly
 				bestMove = legalMoves.get(rand.nextInt(legalMoves.size()));
 				
 				// Get the list of closest hostiles
@@ -94,7 +94,7 @@ public class AI {
 					int distanceAfterMove = legalMove.distanceTo(targetHostile.tile);
 					int distanceBestMove = bestMove.distanceTo(targetHostile.tile);
 					
-					// If you can't move closer to a hostile, but he is more then 2 tiles away, move anyway
+					// If you can't move closer to a hostile, but he is more than 2 tiles away, move anyway (prevents line formations)
 					if (distanceBeforeMove > 1) {
 						if (distanceAfterMove <= distanceBestMove) {
 							bestMove = legalMove;
@@ -102,8 +102,8 @@ public class AI {
 						}
 					}
 					
-					// If a move brings you closer then without moving, and remains the same or brings you 
-					// closer then the current best move, set move to true
+					// If a move brings you closer and remains the same or brings you 
+					// closer than the current best move, set move to true and update best move
 					if (distanceAfterMove < distanceBeforeMove) {
 						if (distanceAfterMove <= distanceBestMove) {					
 							bestMove = legalMove;
@@ -111,12 +111,12 @@ public class AI {
 						}
 					}
 					
-					// If a move does not bring you closer then you were, but does gain you more buffer
+					// If a move does not bring you closer than you were, but does gain you more buffer or the
+					// buffer remains the same move anyway (by always moving even when your position does not
+					// get better you make space for other units to come help)
 					else if (distanceAfterMove == distanceBeforeMove && distanceAfterMove <= distanceBestMove) {
-						// Add placeholders to calculate the buffer
 						int bufferAfterMove = legalMove.getBuffer(team);
 						int bufferBestMove = bestMove.getBuffer(team);
-						
 						if (bufferAfterMove >= bufferBestMove && bufferAfterMove >= bufferBeforeMove) {
 							bestMove = legalMove;
 							move = true;
@@ -134,11 +134,12 @@ public class AI {
 				}
 				
 			}
+			
 			surroundingHostiles = unit.surroundingHostiles();
-
 			// Attack the hostile with the lowest health
 			if (!surroundingHostiles.isEmpty()) {
 				targetHostile = surroundingHostiles.get(rand.nextInt(surroundingHostiles.size()));
+				// Loop over surrounding hostiles
 				for (Unit surroundingHostile : surroundingHostiles) {
 					if (surroundingHostile.getBuffer() < targetHostile.getBuffer()) {
 						targetHostile = surroundingHostile;
@@ -156,21 +157,10 @@ public class AI {
 	}
 	
 	/*
-	 * This method pauses the game for an amount of ms
-	 */
-	private void pause(int ms) {
-		try {
-			Thread.sleep(ms);
-		}
-		catch (InterruptedException e) {
-		}
-	}
-	
-	/*
-	 * This method extends the multi agent approach calculating all moved in advance and choosing the highest
+	 * This method extends the multi agent approach calculating all moves in advance and choosing the highest
 	 * ranked move.
 	 */
-	public void playIntelligent() {
+	public void playMultiAdvanced() {
 		// Create a list of all friendlies and enemies
 		ArrayList<Unit> allFriendlies = grid.humans;
 		ArrayList<Unit> allHostiles = grid.beasts;
@@ -178,7 +168,7 @@ public class AI {
 		if (team.equals("Beasts")) {
 			allFriendlies = grid.beasts;
 			allHostiles = grid.humans;
-			// First move is hardcoded
+			// First move for beasts is hardcoded to get a good starting formation (the humans starting formation is good already)
 			if (startFormation == true) {
 				pause(500);
 				grid.moveUnit(grid.getTile(-3,-1), grid.getTile(-2, -2));
@@ -227,7 +217,7 @@ public class AI {
 			ArrayList<Unit> surroundingHostiles;
 			Unit targetHostile;
 			
-			// Loop over 
+			// Loop over all friendly units
 			for (Unit unit : allFriendlies) {
 				surroundingHostiles = unit.surroundingHostiles();
 				// Attack the hostile with the lowest buffer and health
@@ -243,27 +233,26 @@ public class AI {
 							}
 						}
 					}
-					
+					// Always attack first before moving any units if the buffer is significantly high
 					if (unit.getBuffer() > 3){
 						grid.attackUnit(unit, targetHostile);
 					}
 				}
 			}
-			
 			grid.moveUnit(highestRankedMove.startTile, highestRankedMove.goalTile);
 			
 			
-			// Get a ranked list of all possible moves for every unit
+			// Update ranked list of all possible moves for every unit
 			rankedMoves = evaluateMoves(allFriendlies, allHostiles);
 		}
 		
 		ArrayList<Unit> surroundingHostiles;
 		Unit targetHostile;
 		
-		// After moving all units, attack with all units
+		// After moving all units, attack with all units (which have not attacked yet)
 		for (Unit unit : allFriendlies) {
 			surroundingHostiles = unit.surroundingHostiles();
-			// Attack the hostile with the lowest health
+			// Attack the hostile with the lowest health/buffer
 			if (!surroundingHostiles.isEmpty() && unit.attackLeft) {
 				targetHostile = surroundingHostiles.get(rand.nextInt(surroundingHostiles.size()));
 				for (Unit surroundingHostile : surroundingHostiles) {
@@ -283,7 +272,7 @@ public class AI {
 	}
 	
 	/*
-	 * This method generated all legal moves for every unit, and returns an arrayList of ranked moves
+	 * This method generates all legal moves for every unit, and returns an arrayList of ranked moves
 	 */
 	private ArrayList<RankedMove> evaluateMoves(ArrayList<Unit> allFriendlies, ArrayList<Unit> allHostiles) {
 		ArrayList<Tile> legalMoves;
@@ -329,7 +318,7 @@ public class AI {
 						}
 					}
 					
-					// If a move brings you closer then without moving, and remains the same or brings you 
+					// If a move brings you closer than without moving, and remains the same or brings you 
 					// closer then the current best move, set move to true
 					if (distanceAfterMove < distanceBeforeMove) {
 						if (distanceAfterMove <= distanceBestMove) {					
@@ -364,18 +353,18 @@ public class AI {
 					rankDis = 3;
 				}
 				
+				// If you are far away from the target always keep moving (except if you are very far away)
 				else if (distanceBeforeMove > 1 && distanceBeforeMove < 4) {
 					rankDis = 2;
 				}
 				
-				// Increase of decrease the rank depending on the buffer
+				// Increase or decrease the rank depending on the buffer
 				double rankBuffer = (0.1 * (bufferBestMove - bufferBeforeMove));
 						
 				// Add all gained buffer points to the rank multiplied by 0.1
 				double rank =  rankDis + rankBuffer;
 				RankedMove rankedMove = new RankedMove(unit.tile, bestMove, rank);
 				rankedMoves.add(rankedMove);	
-				//System.out.println("From " + rankedMove.startTile.key + " to " + rankedMove.goalTile.key + ". Rankdis: " + rankDis + ". RankBuffer: " + rankBuffer);
 			}
 		}
 		return rankedMoves;
@@ -398,6 +387,17 @@ public class AI {
 			}
 		}
 		
+	}
+	
+	/*
+	 * This method pauses the game for an amount of ms
+	 */
+	private void pause(int ms) {
+		try {
+			Thread.sleep(ms);
+		}
+		catch (InterruptedException e) {
+		}
 	}
 	
 }

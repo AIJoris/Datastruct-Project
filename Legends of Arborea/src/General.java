@@ -4,7 +4,7 @@
 public class General extends Unit {
 
 	/*
-	 * Constructor
+	 * Constructor sets default values
 	 */
 	public General(Tile ownTile) {
 		tile = ownTile;

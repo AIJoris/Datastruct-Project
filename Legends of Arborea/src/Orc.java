@@ -4,7 +4,7 @@
 public class Orc extends Unit {
 	
 	/*
-	 * Constructor
+	 * Constructor set default values
 	 */
 	public Orc(Tile ownTile) {
 		tile = ownTile;

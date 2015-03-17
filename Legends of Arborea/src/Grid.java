@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /* 
- * This class implements the hex-grid
+ * This class implements the hex-grid data structure
  */
 public class Grid {
 	HashMap<String,Tile> gridMap;
@@ -16,7 +16,6 @@ public class Grid {
 	ArrayList<Unit> beasts;
 	ArrayList<Unit> humans;
 	String message = null;
-	
 	
 	/*
 	 * Grid constructor which initializes the grid and 
@@ -36,14 +35,14 @@ public class Grid {
 		// Create a grid object
 		gridMap = new HashMap<String, Tile>(100);
 		
-		// Fill the first half of the grid
+		// Fill the first half of the grid by looping over axial coordinates
 		for (int x = -4; x <= 0; x++) {
 			for (int y = -4 - x; y <= 4; y++) {
 				gridMap.put(toKey(x,y), new Tile(x,y));
 			}
 		}
 		
-		// Fill the second half of the grid
+		// Fill the second half of the grid by looping over axial coordinates
 		for (int x = 1; x <= 4; x++) {
 			for (int y = -4; y <= 4 - x; y++) {
 				gridMap.put(toKey(x,y), new Tile(x,y));
