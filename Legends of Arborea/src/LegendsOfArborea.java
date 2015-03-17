@@ -79,12 +79,14 @@ public class LegendsOfArborea implements ActionListener{
 		try {
 			img = ImageIO.read(getClass().getResource("endturn.png"));
 			endTurnButton.setIcon(new ImageIcon(img));
-			img = ImageIO.read(getClass().getResource("endturnSel.png"));
 			endTurnButton.setPressedIcon(new ImageIcon(img));
+			img = ImageIO.read(getClass().getResource("endturnSel.png"));
+			endTurnButton.setRolloverEnabled(true);
+			endTurnButton.setRolloverIcon(new ImageIcon(img));
 		} catch (IOException e1) {
-			endTurnButton.setBounds(HEXSTART.x - 350, HEXSTART.y+350, 200, 35);
+			endTurnButton.setBounds(HEXSTART.x - 350, HEXSTART.y+350, 180, 35);
 		}
-		endTurnButton.setBounds(HEXSTART.x - 400, HEXSTART.y+320, 210, 35);
+		endTurnButton.setBounds(HEXSTART.x - 400, HEXSTART.y+320, 199, 35);
 		endTurnButton.setBackground(new Color(0,0,0));
 		endTurnButton.setBorder(BorderFactory.createEmptyBorder());
 		
