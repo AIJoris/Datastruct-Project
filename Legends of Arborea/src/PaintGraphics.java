@@ -232,7 +232,7 @@ public class PaintGraphics extends JComponent{
 				
 				/* If the mouse is on the to be colored tile color it light green*/
 				if (mouseHandler.pixelToHex(location.x, location.y).equals(mouseHandler.currenTileCoords)){
-					color = new Color(154, 224,158);
+					color = new Color(154, 255,158);
 				}
 				
 				/* Draw the hexagon (tile) using the appropriate color */
