@@ -94,12 +94,6 @@ public class HumanPlayer {
 			if (tileSelf.isLegal(goalTile)) {
 				System.out.println("Unit on tile " + tileSelf.key + "to tile " + goalTile.key);
 				grid.moveUnit(tileSelf, goalTile);
-				goalTile.moveLeft = false;
-				if (tileSelf.attackLeft) {
-					goalTile.attackLeft = true;
-				}
-				tileSelf.attackLeft = false;
-				tileSelf.moveLeft = false;
 			}
 		}
 		// If the tile has no move left

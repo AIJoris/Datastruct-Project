@@ -59,7 +59,7 @@ public class LegendsOfArborea implements ActionListener{
 			new LegendsOfArborea(grid);
 			
 			// Define the starting team
-			String startingTeam = "Humans";
+			String startingTeam = "Beasts";
 			grid.team = startingTeam;
 			if (playGame(grid).equals("Humans")) {
 				win++;
@@ -144,7 +144,7 @@ public class LegendsOfArborea implements ActionListener{
 			// Player 2:
 			else if (grid.team.equals("Beasts")) {
 				System.out.println("Beasts");
-				player2.playIntelligent();
+				player3.play();
 			}
 			
 			changeTeam(grid);

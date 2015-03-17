@@ -4,8 +4,8 @@
 public class Goblin extends Unit {
 	
 	public Goblin() {
-		hitPoints = 4;//3;
-		weaponSkill = 6;//4;
+		hitPoints = 3;
+		weaponSkill = 4;
 		name = "Goblin";
 		team = "Beasts";
 		weapon = "axe";

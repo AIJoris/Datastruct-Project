@@ -58,15 +58,15 @@ public class Grid {
 		System.out.println("Create the startingposition on the grid");
 		
 		// Specify which tiles have which units at the starting position
-//		String[] generals = {toKey(4,-4), toKey(4,-1), toKey(3,1)};
-//		String[] swordsmen = {toKey(3,-4), toKey(3,-3), toKey(3,-2), toKey(3,-1), toKey(3,0), toKey(4,-3)};
-//		String[] orcs = {toKey(-4,4), toKey(-3,-1)};
-//		String[] goblins = {toKey(-4,1), toKey(-3,0), toKey(-3,1), toKey(-3,2), toKey(-3,3), toKey(-3,4), toKey(-2,4), toKey(-2,-1)};
-		
 		String[] generals = {toKey(4,-4), toKey(4,-1), toKey(3,1)};
 		String[] swordsmen = {toKey(3,-4), toKey(3,-3), toKey(3,-2), toKey(3,-1), toKey(3,0), toKey(4,-3)};
-		String[] orcs = {toKey(-4,0), toKey(-4,3), toKey(-3, 4)};
-		String[] goblins = {toKey(-4,1), toKey(-3,0), toKey(-3,-1), toKey(-3,2), toKey(-3,3), toKey(-3,1)};
+		String[] orcs = {toKey(-4,4), toKey(-3,-1)};
+		String[] goblins = {toKey(-4,1), toKey(-3,0), toKey(-3,1), toKey(-3,2), toKey(-3,3), toKey(-3,4), toKey(-2,4), toKey(-2,-1)};
+		
+//		String[] generals = {toKey(4,-4), toKey(4,-1), toKey(3,1)};
+//		String[] swordsmen = {toKey(3,-4), toKey(3,-3), toKey(3,-2), toKey(3,-1), toKey(3,0), toKey(4,-3)};
+//		String[] orcs = {toKey(-4,0), toKey(-4,3), toKey(-3, 4)};
+//		String[] goblins = {toKey(-4,1), toKey(-3,0), toKey(-3,-1), toKey(-3,2), toKey(-3,3), toKey(-3,1)};
 		
 		// Keep a list of humans and beasts
 		humans = new ArrayList<Tile>();
@@ -129,7 +129,12 @@ public class Grid {
 			newTile.unit = oldTile.unit;
 			newTile.team = oldTile.team;
 			oldTile.unit = null;
-			oldTile.unit = null;
+			oldTile.team = null;
+			
+			oldTile.moveLeft = false;
+			newTile.moveLeft = false;
+			newTile.attackLeft = oldTile.attackLeft;
+			oldTile.attackLeft = false;
 			return true;
 		}
 		// If the move isn't legal, return false

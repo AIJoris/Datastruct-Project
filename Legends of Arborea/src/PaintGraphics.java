@@ -20,7 +20,7 @@ public class PaintGraphics extends JComponent{
 	Grid grid;
 	MouseHandler mouseHandler;
 	Graphics g;
-	/* Get screen information*/
+	/* Get screen information */
 	static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	/* Width and height of application window in pixels */
 	static int WIDTH = (int)screenSize.getWidth();
