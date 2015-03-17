@@ -3,12 +3,18 @@
  */
 public class Orc extends Unit {
 	
-	public Orc() {
+	/*
+	 * Constructor
+	 */
+	public Orc(Tile ownTile) {
+		tile = ownTile;
 		hitPoints = 10;
 		weaponSkill = 8;
 		name = "Orc";
 		team = "Beasts";
 		weapon = "axe";
+		moveLeft = false;
+		attackLeft = false;
 	}
 
 }

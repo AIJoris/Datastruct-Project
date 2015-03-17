@@ -31,45 +31,31 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 		}
 	}
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void mouseEntered(MouseEvent e) {		
 	}
+	
 	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void mouseExited(MouseEvent e) {		
 	}
+	
 	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void mousePressed(MouseEvent e) {		
 	}
+	
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void mouseReleased(MouseEvent e) {		
 	}
+	
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
+	
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		event = e;
 		int pixelX = e.getX();
 		int pixelY = e.getY();
 		currenTileCoords = pixelToHex(pixelX, pixelY);
-		
-//		// Check if mouse hovers over button
-//		if(e.on(button)){
-//			button = "endTurn";
-//		} else {
-//			button = "endTurnSel";
-//		}
-
-		// TODO Auto-generated method stub
 		
 	}
 	public Point hexToPixel(int q, int r){

@@ -3,12 +3,18 @@
  */
 public class Goblin extends Unit {
 	
-	public Goblin() {
+	/*
+	 * Constructor
+	 */
+	public Goblin(Tile ownTile) {
+		tile = ownTile;
 		hitPoints = 3;
 		weaponSkill = 4;
 		name = "Goblin";
 		team = "Beasts";
 		weapon = "axe";
+		moveLeft = false;
+		attackLeft = false;
 	}
 
 }

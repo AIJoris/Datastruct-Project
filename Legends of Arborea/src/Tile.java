@@ -4,18 +4,14 @@ import java.util.HashMap;
 
 
 public class Tile {
-	int x;
-	int y;
+	int x,y;
 	Unit unit;
-	String team;
 	String key;
-	ArrayList<Tile> adjacentTiles;
-	int buffer;
-	ArrayList<Tile> surroundingHostiles;
-	ArrayList<Tile> legalMoves;
+	ArrayList<Tile> adjacentTiles, legalMoves;
 	Point location;
-	boolean moveLeft;
-	boolean attackLeft;
+	boolean searching, target, option;
+	int buffer;
+	
 	/*
 	 * Constructor with only coordinates
 	 */
@@ -30,14 +26,11 @@ public class Tile {
 		x = newX;
 		y = newY;
 		unit = newUnit;	
-		key = toKey(x,y);
-		if (unit != null) {
-			team = unit.team;
-		}
-		
+		key = toKey(x,y);		
 		location = new Point(x,y);
-		moveLeft = false;
-		attackLeft = false;
+		searching = false;
+		target = false;
+		option = false;
 	}
 	
 	/*
@@ -59,69 +52,48 @@ public class Tile {
 	 * This method checks if and how many friendly units 
 	 * are present at tiles nearby, and calculates the buffer 
 	 */
-	public int getBuffer() {
-		if (unit != null) {
-			buffer = 0;
-			// Specify who are friendly and who are hostile
-			Unit friendlyGeneralUnit;
-			Unit friendlyInfantryUnit;
-			Unit hostileGeneralUnit;
-			Unit hostileInfantryUnit;
-			if (unit.team.equals("Humans")) {
-				friendlyGeneralUnit = new General();
-				friendlyInfantryUnit = new Swordsman();
-				hostileGeneralUnit = new Orc();
-				hostileInfantryUnit = new Goblin();
-			}
-			else {
-				friendlyGeneralUnit = new Orc();
-				friendlyInfantryUnit = new Goblin();
-				hostileGeneralUnit = new General();
-				hostileInfantryUnit = new Swordsman();
-			}
-			
-			// Build up buffer based on hostile/friendly units nearby
-			int nrTiles = adjacentTiles.size();
-			for (int i = 0; i < nrTiles; i++) {
-				if (adjacentTiles.get(i) != null & adjacentTiles.get(i).unit != null) {
-					if (adjacentTiles.get(i).unit.name.equals(friendlyGeneralUnit.name)){
-						buffer += 2;
-					}
-					else if (adjacentTiles.get(i).unit.name.equals(friendlyInfantryUnit.name)){
-						buffer += 1;
-					}
-					else if (adjacentTiles.get(i).unit.name.equals(hostileGeneralUnit.name)) {
-						buffer -= 2;
-					}
-					else if (adjacentTiles.get(i).unit.name.equals(hostileInfantryUnit.name)) {
-						buffer -= 1;
-					}
+	public int getBuffer(String team) {
+		buffer = 0;
+		// Specify who are friendly and who are hostile
+		String friendlyGeneral;
+		String friendlyInfantry;
+		String hostileGeneral;
+		String hostileInfantry;
+		if (team.equals("Humans")) {
+			friendlyGeneral = "General";
+			friendlyInfantry = "Swordsman";
+			hostileGeneral = "Orc";
+			hostileInfantry = "Goblin";
+		}
+		else {
+			friendlyGeneral = "Orc";
+			friendlyInfantry = "Goblin";
+			hostileGeneral = "General";
+			hostileInfantry = "Swordsman";
+		}
+		
+		// Build up buffer based on hostile/friendly units nearby
+		int nrTiles = adjacentTiles.size();
+		for (int i = 0; i < nrTiles; i++) {
+			if (adjacentTiles.get(i) != null & adjacentTiles.get(i).unit != null) {
+				String unitName = adjacentTiles.get(i).unit.name;
+				if (unitName.equals(friendlyGeneral)){
+					buffer += 2;
+				}
+				else if (unitName.equals(friendlyInfantry)){
+					buffer += 1;
+				}
+				else if (unitName.equals(hostileGeneral)) {
+					buffer -= 2;
+				}
+				else if (unitName.equals(hostileInfantry)) {
+					buffer -= 1;
 				}
 			}
-			return buffer;
 		}
-		return 0;
+		return buffer;
 	}
 
-	/*
-	 * This method returns all hostile forces around a position
-	 */
-	public ArrayList<Tile> surroundingHostiles() {
-		surroundingHostiles = new ArrayList<Tile>();
-		Unit surroundingUnit;
-		
-		// Loop over adjacent tiles to find hostile units
-		for (Tile adjacentTile : adjacentTiles) {
-			if (adjacentTile == null | adjacentTile.unit == null) {
-				continue;
-			}
-			surroundingUnit = adjacentTile.unit; 
-			if (!surroundingUnit.team.equals(unit.team)) {
-				surroundingHostiles.add(adjacentTile);
-			}
-		}
-		return surroundingHostiles;
-	}
 	
 	/*
 	 * This method calculates all possible legal moves from a position (x,y)
@@ -174,15 +146,6 @@ public class Tile {
 		}
 	}
 	
-	public boolean isHostile(Tile tile) {
-		try {
-			return surroundingHostiles().contains(tile);
-		} 
-		catch (NullPointerException e){
-			return false;
-		}
-	}
-	
 	/*
 	 * Converts axial coordinates to cube coordinates
 	 */
@@ -207,31 +170,19 @@ public class Tile {
 	/*
 	 * Returns the closest hostiles
 	 */
-	public ArrayList<Tile> getClosestHostiles(ArrayList<Tile> hostiles) {
-		ArrayList<Tile> closestHostiles = new ArrayList<Tile>();
+	public ArrayList<Unit> getClosestHostiles(ArrayList<Unit> hostiles) {
+		ArrayList<Unit> closestHostiles = new ArrayList<Unit>();
 		int bestDistance = 999;
-		for (Tile hostile : hostiles) {
-			if(this.distanceTo(hostile) < bestDistance){
-				bestDistance = this.distanceTo(hostile);
+		for (Unit hostile : hostiles) {
+			if (this.distanceTo(hostile.tile) < bestDistance) {
+				bestDistance = this.distanceTo(hostile.tile);
 			}
 		}
-		for (Tile hostile : hostiles) {
-			if(this.distanceTo(hostile) == bestDistance){
+		for (Unit hostile : hostiles) {
+			if (this.distanceTo(hostile.tile) == bestDistance) {
 				closestHostiles.add(hostile);
 			}
 		}
 		return closestHostiles;	
-	}
-	
-//	ArgMax<Double, String> argmax = new Argmax<Double, String>(
-//            Double.NEGATIVE_INFINITY, "");
-//
-//for (String str : stringList) // stringList is probably an array of Strings
-//{
-//    argmax.update(str, getScore(str));
-//}
-//
-//double maxValue = argmax.getMaxValue();
-//String argmaxString = argmax.getArgMax();
-	
+	}	
 }

@@ -11,7 +11,7 @@ public class HumanPlayer {
 	int x, y, x1, y1;	
 	Grid grid;
 	MouseHandler mouseHandler;
-	ArrayList<Tile> friendlies;
+	ArrayList<Unit> friendlies;
 	String team;
 	boolean endTurn;
 	
@@ -31,10 +31,10 @@ public class HumanPlayer {
 		team = grid.team;
 		// Check the team and decide who are friendlies
 		if (team.equals("Humans")) {
-			friendlies = new ArrayList<Tile>(grid.humans);
+			friendlies = new ArrayList<Unit>(grid.humans);
 		}
 		else {
-			friendlies = new ArrayList<Tile>(grid.beasts);
+			friendlies = new ArrayList<Unit>(grid.beasts);
 		}
 		
 		// For each unit, set moveLeft and attackLeft to true
@@ -51,10 +51,13 @@ public class HumanPlayer {
 		while (endTurn == false) {
 			// Select the start and end tile
 			selectTiles();
-			if(endTurn){
+			if (endTurn == true){
 				break;
 			}
-			while (!tileSelf.attackLeft && !tileSelf.moveLeft) {
+			
+			Unit unitSelf = tileSelf.unit;
+			// If you pick a unit a unit that has no moves left, pick another one.
+			while (!unitSelf.attackLeft && !unitSelf.moveLeft) {
 				System.out.println("You have already used this unit");
 				grid.message = "used";
 				selectTiles();
@@ -62,12 +65,13 @@ public class HumanPlayer {
 					break;
 				}
 			}
+			
 			// move
 			if (goalTile.unit == null) {
 				move();
 				// When a tile has no moves and attacks left, remove it from friendlies
-				if (tileSelf.attackLeft == false && tileSelf.moveLeft == false) {
-					friendlies.remove(tileSelf);
+				if (unitSelf.attackLeft == false && unitSelf.moveLeft == false) {
+					friendlies.remove(unitSelf);
 				}
 				playLoop();
 				break;
@@ -76,69 +80,10 @@ public class HumanPlayer {
 			else {
 				attack();
 				// When a tile has no moves and attacks left, remove it from friendlies
-				if (tileSelf.attackLeft == false && tileSelf.moveLeft == false) {
-					friendlies.remove(tileSelf);
+				if (unitSelf.attackLeft == false && unitSelf.moveLeft == false) {
+					friendlies.remove(unitSelf);
 				}
 				playLoop();
-			}
-		}
-	}
-	
-	/*
-	 * This method checks if the player wants to move, and acts accordingly
-	 */
-	private void move() {
-		// Check if the tile has a move left, and if so move
-		if (tileSelf.moveLeft) {
-			// The move has to be legal
-			if (tileSelf.isLegal(goalTile)) {
-				System.out.println("Unit on tile " + tileSelf.key + "to tile " + goalTile.key);
-				grid.moveUnit(tileSelf, goalTile);
-			}
-		}
-		// If the tile has no move left
-		else {
-			grid.message = "used";
-		}
-		mouseHandler.selectedTile = null;
-	}
-	
-	/*
-	 * This method checks if the player wants to attack, and acts accordingly
-	 */
-	private void attack() {
-		// If the goal tile contains a unit, is possible and still has attack left, then attack
-		if (grid.attackIsPossible(tileSelf, goalTile)) {
-			if (tileSelf.attackLeft) {
-				grid.attackUnit(tileSelf, goalTile);
-				tileSelf.attackLeft = false;
-				mouseHandler.selectedTile = null;
-			}								
-		}
-		// If the attack is not possible, the player can again select a unit
-		else {
-			mouseHandler.selectedTile = null;
-			playLoop();
-		}	
-	}
-	
-	/*
-	 * For all tiles with units, set turnsLeft to true
-	 */
-	private void resetTurnsLeft(Boolean toBoolean) {
-		// If you are playing with the humans, reset the humans
-		if (team.equals("Humans")) {
-			for (Tile unitTile : grid.humans){
-				unitTile.moveLeft = toBoolean;
-				unitTile.attackLeft = toBoolean;
-			}
-		}
-		
-		// If you are playing with the beasts, reset the beasts
-		else {
-			for (Tile unitTile : grid.beasts){
-				unitTile.moveLeft = toBoolean;
-				unitTile.attackLeft = toBoolean;
 			}
 		}
 	}
@@ -157,6 +102,7 @@ public class HumanPlayer {
 			goalTileSelected = selectGoalTile();
 		}
 	}
+	
 	/*
 	 * This method allows the human player to select a friendly unit
 	 */
@@ -165,11 +111,7 @@ public class HumanPlayer {
 		mouseHandler.currentUnit = null;
 		int counter = 0;
 		while (mouseHandler.currentUnit == null || !mouseHandler.currentUnit.team.equals(team)) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			pause(500);
 			counter++;
 			if (counter > 10) {
 				grid.message = null;
@@ -197,11 +139,7 @@ public class HumanPlayer {
 		
 		// Wait for click
 		while (mouseHandler.currentTile == null) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			pause(500);
 			counter++;
 			if (counter > 10) {
 				grid.message = null;
@@ -227,5 +165,77 @@ public class HumanPlayer {
 		goalTile = grid.gridMap.get(goalPosition);
 		return true;
 	}
+	
+	
+	/*
+	 * This method checks if the player wants to move, and acts accordingly
+	 */
+	private void move() {
+		// Check if the tile has a move left, and if so move
+		if (tileSelf.unit.moveLeft) {
+			// The move has to be legal
+			if (tileSelf.isLegal(goalTile)) {
+				System.out.println("Unit on tile " + tileSelf.key + "to tile " + goalTile.key);
+				grid.moveUnit(tileSelf, goalTile);
+			}
+		}
+		// If the tile has no move left
+		else {
+			grid.message = "used";
+		}
+		mouseHandler.selectedTile = null;
+	}
+	
+	/*
+	 * This method checks if the player wants to attack, and acts accordingly
+	 */
+	private void attack() {
+		// If the goal tile contains a unit, is possible and still has attack left, then attack
+		if (grid.attackIsPossible(tileSelf.unit, goalTile.unit)) {
+			if (tileSelf.unit.attackLeft) {
+				grid.attackUnit(tileSelf.unit, goalTile.unit);
+				tileSelf.unit.attackLeft = false;
+				mouseHandler.selectedTile = null;
+			}								
+		}
+		// If the attack is not possible, the player can again select a unit
+		else {
+			mouseHandler.selectedTile = null;
+			playLoop();
+		}	
+	}
+	
+	/*
+	 * For all tiles with units, set turnsLeft to true
+	 */
+	private void resetTurnsLeft(Boolean toBoolean) {
+		// If you are playing with the humans, reset the humans
+		if (team.equals("Humans")) {
+			for (Unit unit : grid.humans){
+				unit.moveLeft = toBoolean;
+				unit.attackLeft = toBoolean;
+			}
+		}
+		
+		// If you are playing with the beasts, reset the beasts
+		else {
+			for (Unit unit : grid.beasts){
+				unit.moveLeft = toBoolean;
+				unit.attackLeft = toBoolean;
+			}
+		}
+	}
+	
+	/*
+	 * This method pauses the game for an amount of ms
+	 */
+	private void pause(int ms) {
+		try {
+			Thread.sleep(ms);
+		}
+		catch (InterruptedException e) {
+		}
+	}
+	
 	
 }

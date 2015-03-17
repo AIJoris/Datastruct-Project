@@ -13,8 +13,8 @@ public class Grid {
 	int skillAttacker;
 	int skillDefender;
 	double hitChance;
-	ArrayList<Tile> beasts;
-	ArrayList<Tile> humans;
+	ArrayList<Unit> beasts;
+	ArrayList<Unit> humans;
 	String message = null;
 	
 	
@@ -69,37 +69,40 @@ public class Grid {
 //		String[] goblins = {toKey(-4,1), toKey(-3,0), toKey(-3,-1), toKey(-3,2), toKey(-3,3), toKey(-3,1)};
 		
 		// Keep a list of humans and beasts
-		humans = new ArrayList<Tile>();
-		beasts = new ArrayList<Tile>();
+		humans = new ArrayList<Unit>();
+		beasts = new ArrayList<Unit>();
 		
 		Tile tempTile;
+		Unit tempUnit;
 		// Place all units on their tiles
 		for (String coord : generals) {
 			tempTile = gridMap.get(coord);
-			tempTile.addUnit(new General());
-			humans.add(tempTile);
+			tempUnit = new General(tempTile);
+			tempTile.addUnit(tempUnit);
+			humans.add(tempUnit);
 		}
 		for (String coord : swordsmen) {
 			tempTile = gridMap.get(coord);
-			tempTile.addUnit(new Swordsman());
-			humans.add(tempTile);
+			tempUnit = new Swordsman(tempTile);
+			tempTile.addUnit(tempUnit);
+			humans.add(tempUnit);
 		}
 		for (String coord : orcs) {
 			tempTile = gridMap.get(coord);
-			tempTile.addUnit(new Orc());
-			beasts.add(tempTile);
+			tempUnit = new Orc(tempTile);
+			tempTile.addUnit(tempUnit);
+			beasts.add(tempUnit);
 		}
 		for (String coord : goblins) {
 			tempTile = gridMap.get(coord);
-			tempTile.addUnit(new Goblin());
-			beasts.add(tempTile);
+			tempUnit = new Goblin(tempTile);
+			tempTile.addUnit(tempUnit);
+			beasts.add(tempUnit);
 		}
 		
 		// Initialize the tiles by calculating adjacent tiles and buffers for every tile
-		for (Map.Entry<String, Tile> entry : gridMap.entrySet())
-		{
+		for (Map.Entry<String, Tile> entry : gridMap.entrySet()) {
 			entry.getValue().adjacentTiles(gridMap);
-			
 		}
 	}
 	
@@ -114,27 +117,15 @@ public class Grid {
 	/*
 	 * Move a unit to a specified position
 	 */
-	public boolean moveUnit(Tile oldTile, Tile newTile) {			
+	public boolean moveUnit(Tile startTile, Tile goalTile) {			
 		// Move unit if the move is legal and the goal tile is not occupied
-		if (oldTile.legalMoves().contains(newTile)) {			
-			// Update the lists containing all the units
-			if (team.equals("Humans")) {
-				humans.set(humans.indexOf(oldTile), newTile);
-			}
-			else if (team.equals("Beasts")) {
-				beasts.set(beasts.indexOf(oldTile), newTile);
-			}
-			
+		if (startTile.legalMoves().contains(goalTile)) {						
 			// Move the unit
-			newTile.unit = oldTile.unit;
-			newTile.team = oldTile.team;
-			oldTile.unit = null;
-			oldTile.team = null;
+			goalTile.unit = startTile.unit;
+			goalTile.unit.tile = goalTile;
+			startTile.unit = null;
+			goalTile.unit.moveLeft = false;
 			
-			oldTile.moveLeft = false;
-			newTile.moveLeft = false;
-			newTile.attackLeft = oldTile.attackLeft;
-			oldTile.attackLeft = false;
 			return true;
 		}
 		// If the move isn't legal, return false
@@ -145,18 +136,15 @@ public class Grid {
 	/*
 	 * Attack a unit with another unit
 	 */
-	public boolean attackUnit(Tile tileSelf , Tile tileHostile) {
-		Unit unitSelf = tileSelf.unit;
-		Unit unitHostile = tileHostile.unit;
-		
+	public boolean attackUnit(Unit unitSelf, Unit unitHostile) {	
 		// Check if it is possible to attack
-		if (!attackIsPossible(tileSelf, tileHostile)) {
+		if (!attackIsPossible(unitSelf, unitHostile)) {
 			return false;
 		}
 		
 		// Get weapon skills
-		skillAttacker = unitSelf.weaponSkill + tileSelf.getBuffer();
-		skillDefender = unitHostile.weaponSkill + tileHostile.getBuffer();
+		skillAttacker = unitSelf.weaponSkill + unitSelf.getBuffer();
+		skillDefender = unitHostile.weaponSkill + unitHostile.getBuffer();
 		hitChance = 1 / (1 + Math.exp(-0.4 * (skillAttacker - skillDefender)));
 		
 		// Attack the hostile
@@ -166,16 +154,14 @@ public class Grid {
 			
 			// Remove the unit if he died
 			if (unitHostile.hitPoints == 0) {
-				tileHostile.unit = null;
-				tileHostile.team = null;
-				tileHostile.moveLeft = false;
-				tileHostile.attackLeft = false;
+				unitHostile.tile.unit = null;
+				
 				// Remove the unit also from the lists of units
 				if (team.equals("Humans")) {
-					beasts.remove(tileHostile);
+					beasts.remove(unitHostile);
 				}
 				else if (team.equals("Beasts")) {
-					humans.remove(tileHostile);
+					humans.remove(unitHostile);
 				}
 			}
 			return true;
@@ -188,17 +174,14 @@ public class Grid {
 	 * This method implements a couple of checks explained above each check
 	 * to make sure it is possible to attack the unit at (x1,y1) with unit (x,y)
 	 */
-	public boolean attackIsPossible(Tile tileSelf, Tile tileHostile) {
-		Unit unitSelf = tileSelf.unit;
-		Unit unitHostile = tileHostile.unit;
-		
-		// Check if the tiles exist
-		if (tileHostile == null || tileSelf == null) {
+	public boolean attackIsPossible(Unit unitSelf, Unit unitHostile) {
+		// Check if the units exist
+		if (unitHostile == null || unitSelf == null) {
 			return false;
 		}	
 		
 		// Check if the tile is adjacent
-		if (!tileSelf.adjacentTiles.contains(tileHostile)) {
+		if (!unitSelf.tile.adjacentTiles.contains(unitHostile.tile)) {
 			System.out.println("Your tool of death is not long enough for this attack.");
 			message = "reach";
 			return false;
@@ -208,14 +191,7 @@ public class Grid {
 		if (unitSelf == null || !unitSelf.team.equals(team)) {
 			System.out.println("There must be a (friendly) unit to attack with!");
 			return false;
-		}
-		
-		// Check if there is a unit to attack
-		if (unitHostile == null) {
-			System.out.println("Stop attacking air");
-			return false;
-		}
-		
+		}		
 		
 		// Check if the defender is friendly or hostile
 		if (unitHostile.team.equals(unitSelf.team)) {

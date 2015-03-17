@@ -3,11 +3,17 @@
  */
 public class General extends Unit {
 
-	public General() {
+	/*
+	 * Constructor
+	 */
+	public General(Tile ownTile) {
+		tile = ownTile;
 		hitPoints = 5;
 		weaponSkill = 8;
 		name = "General";
 		team = "Humans";
 		weapon = "sword";
+		moveLeft = false;
+		attackLeft = false;
 	}
 }
